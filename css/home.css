@@ -1,0 +1,112 @@
+/*
+Primary Purple: #8b5cf6
+Secondary Purple: #7E69AB
+Tertiary Purple: #6E59A5
+
+Other shades of purple:
+    50: '#f2f0ff',
+    100: '#e5deff',
+    200: '#cac0ff',
+    300: '#b09dff',
+    400: '#9b87f5',
+    500: '#8b5cf6',
+    600: '#7e69ab',
+    700: '#6E59A5',
+    800: '#4c3275',
+    900: '#2c1d4d',
+*/
+body {
+    background-color: #fdfdfd;
+    font-family: 'Segoe UI', sans-serif;
+}
+  
+/* navbar styling */
+.navbar {
+    background-color: #fdfdfd;
+    padding: 0.8rem 1rem;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+}
+  
+/* Logo Styling */
+.navbar-brand {
+    font-weight: bold;
+    color: #8b5cf6;
+    display: flex;
+    align-items: center;
+}
+  
+.navbar-brand i {
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+}
+
+.navbar-brand:hover {
+    color: #645290;
+}
+
+/* logo styling */
+.navbar-brand img{
+    height: 30px;
+    margin-right: 8px;
+    border-radius: 8px;
+}
+
+/* toggler styling */
+.navbar-toggler {
+    border: none;
+    padding: 0.4rem 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+
+.navbar-toggler:hover{
+    background-color: #cac0ff;
+    color: #8b5cf6;
+}
+
+/* The tabs styling */
+.nav-link {
+    color: #333;
+    margin-right: 1rem;
+    font-weight: 500;
+}
+  
+.nav-link:hover {
+    color: #8b5cf6;
+}
+  
+/* log-in and sign-up styling */
+.auth-links {
+    margin-left: auto;
+    display: flex;
+    gap: 0.8rem;
+}
+  
+.btn-login {
+    background: none;
+    border: none;
+    color: #333;
+    font-weight: 500;
+    padding: 0.4rem 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-login:hover {
+    background-color: #cac0ff;
+    color: #8b5cf6;
+}
+
+.btn-signup {
+    background-color: #8b5cf6;
+    color: white;
+    font-weight: 500;
+    padding: 0.4rem 1rem;
+    border: none;
+    border-radius: 8px;
+}
+  
+.btn-signup:hover {
+    background-color: #7E69AB;
+}
+
