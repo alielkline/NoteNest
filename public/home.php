@@ -42,16 +42,17 @@
         </div>
         <div class="row"></div>
         <div class="col mx-auto">
-            <button class="btn-signup p-3 px-5 mx-2">Get Started For Free</button>
-            <button class="btn-login p-3 px-5 mx-2" style="border: 1px solid lightgrey; border-radius: 5px">Log in</button>
+            <?php if (!isset($_SESSION['user_id'])): ?>
+                <a href="signup.php" class="btn-signup p-3 px-5 mx-2">Get Started For Free</a>
+                <a href="login.php" class="btn-login p-3 px-5 mx-2" style="border: 1px solid lightgrey; border-radius: 5px">Log in</a>
+            <?php endif; ?>
         </div>
         <div class="row" style="margin-top:10%">
             <div class="col-4">
                 <div class="card shadow p-3 mb-5 bg-white rounded" style="width: 100%;">
                     <div class="card-body">
                         <h5 style="font-weight: 900">Create Classrooms</h5>
-                        <p class="card-text">Organize your study groups by creating interactive classrooms for any subject or course.</p>
-                        
+                        <p class="card-text">Organize your study groups by creating interactive classrooms for any subject or course.</p>                
                     </div>
                 </div>
             </div>
@@ -59,8 +60,7 @@
             <div class="card shadow p-3 mb-5 bg-white rounded" style="width: 100%;">
                     <div class="card-body">
                         <h5 style="font-weight: 900">Take Rich Notes</h5>
-                        <p class="card-text">Create comprehensive notes with text, images, videos, and attachments to enhance learning.</p>
-                        
+                        <p class="card-text">Create comprehensive notes with text, images, videos, and attachments to enhance learning.</p>  
                     </div>
                 </div>
             </div>
