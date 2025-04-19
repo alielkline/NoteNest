@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/signup.css">
+
+    <title>NoteNest - Log in</title>
+</head>
+    <body>
+        <div class="signup-container">
+            <div class="logo-container">
+                <img src="../assets/logo.png" alt="NoteNest Logo">
+                <div class="logo-text">NoteNest</div>
+            </div>
+
+            <h2>Log In</h2>
+            
+            <form id="signupForm" action="../includes/login_handler.php" method="POST">
+                
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="•••••••" required>
+                </div>
+                
+                <div class="divider"></div>
+                
+                <button type="submit" class="btn">Log in</button>
+                
+                <p class="login-link">
+                    Dont have an account? <a href="signup.php">Sign Up</a>
+                </p>
+            </form>
+        </div>
+
+        <script src="../js/signup.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+</html>
+
