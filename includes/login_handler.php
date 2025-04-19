@@ -33,13 +33,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit();
         } else {
             // Incorrect password
-            $_SESSION['error'] = 'Invalid email or password!';
+            $_SESSION['error'] = "Incorrect password.";
             header("Location: ../public/login.php");
             exit();
         }
     } else {
         // No user found with that email
-        $_SESSION['error'] = 'No user found with that email!';
+        $_SESSION['error'] = "No account found with that email.";
         header("Location: ../public/login.php");
         exit();
     }

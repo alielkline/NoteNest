@@ -9,6 +9,22 @@
     <title>NoteNest - Create Account</title>
 </head>
     <body>
+    <?php if (isset($_SESSION['signup_errors'])): ?>
+            <div class="error-message">
+                <?php foreach ($_SESSION['signup_errors'] as $error): ?>
+                    <div><?php echo htmlspecialchars($error); ?></div>
+                <?php endforeach; ?>
+            </div>
+            <?php unset($_SESSION['signup_errors']); ?>
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['signup_success'])): ?>
+            <div class="success-message">
+                <?php echo htmlspecialchars($_SESSION['signup_success']); ?>
+            </div>
+            <?php unset($_SESSION['signup_success']); ?>
+        <?php endif; ?>
+
         <div class="signup-container">
             <div class="logo-container">
                 <img src="../assets/logo.png" alt="NoteNest Logo">

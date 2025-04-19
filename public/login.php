@@ -9,6 +9,13 @@
     <title>NoteNest - Log in</title>
 </head>
     <body>
+        <?php 
+        session_start();
+        if (isset($_SESSION['error'])): ?>
+            <div class="error-message"><?php echo $_SESSION['error']; unset($_SESSION['error']); ?></div>
+        <?php endif; ?>
+
+
         <div class="signup-container">
             <div class="logo-container">
                 <img src="../assets/logo.png" alt="NoteNest Logo">

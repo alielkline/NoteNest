@@ -14,7 +14,10 @@
 </head>
 <body>
     <?php include '../includes/navbar.php'; ?>
-   
+    <?php if (isset($_GET['logout']) && $_GET['logout'] == 'success'): ?>
+    <div class="alert alert-success">You have been logged out successfully.</div>
+    <?php endif; ?>
+
     
     <div class="container" style="text-align: center;">
         <div class="row mt-5 justify-content-center">
@@ -43,8 +46,8 @@
         <div class="row"></div>
         <div class="col mx-auto">
             <?php if (!isset($_SESSION['user_id'])): ?>
-                <a href="signup.php" class="btn-signup p-3 px-5 mx-2">Get Started For Free</a>
-                <a href="login.php" class="btn-login p-3 px-5 mx-2" style="border: 1px solid lightgrey; border-radius: 5px">Log in</a>
+                <a href="signup.php" class="btn-signup p-3 px-5 mx-2" style="text-decoration: none;">Get Started For Free</a>
+                <a href="login.php" class="btn-login p-3 px-5 mx-2" style="border: 1px solid lightgrey; border-radius: 10px; text-decoration: none;">Log in</a>
             <?php endif; ?>
         </div>
         <div class="row" style="margin-top:10%">
