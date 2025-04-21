@@ -23,7 +23,7 @@ if (isset($_SESSION['user_id'])) {
 ?>
 
 
-<nav class="navbar navbar-expand-md">
+<nav class="navbar navbar-expand-lg">
   <div class="container">
     <!-- Logo + Name -->
     <a class="navbar-brand" href="home.php">
