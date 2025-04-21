@@ -25,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (password_verify($password, $user['password'])) {
             // Password is correct, log the user in
             $_SESSION['user_id'] = $user['id']; // Store user ID in session
+            $_SESSION["email"] = $user["email"];
             $_SESSION['username'] = $user['username']; // Store username in session
             $_SESSION['profile_picture'] = $user['profile_picture']; // Store profile picture in session
 
@@ -44,4 +45,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 }
-?>
