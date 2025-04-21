@@ -7,7 +7,7 @@ if (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];
     
     // Prepare the query to fetch user information including the profile picture
-    $query = "SELECT profile_image FROM users WHERE id = :user_id";
+    $query = "SELECT * FROM users WHERE id = :user_id";
     $stmt = $pdo->prepare($query);
     $stmt->execute([
       ':user_id' => $user_id
@@ -16,15 +16,15 @@ if (isset($_SESSION['user_id'])) {
     
     // If the user exists and has a profile picture
     $profile_picture = $user['profile_image'] ?? '../uploads/profile_images/default-image.jpg'; // fallback to a default image if no profile picture
+    $email = $user['email'];
+    $username = $user['username'];
 
 }
 ?>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-
 
 <nav class="navbar navbar-expand-md">
-  <div class="container-fluid">
+  <div class="container">
     <!-- Logo + Name -->
     <a class="navbar-brand" href="home.php">
       <img src="../assets/logo.png" alt="NoteNest Logo">
@@ -54,18 +54,14 @@ if (isset($_SESSION['user_id'])) {
           <a href="signup.php"><button class="btn-signup">Sign up</button></a>
         <?php else: ?>
 
-          <a href="profile.php" class="profile-image">
-          <img src="<?php echo htmlspecialchars($profile_picture); ?>" alt="Profile Picture"/>
-          </a>
-
           <div class="dropdown">
             <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-              <img src="../uploads/<?php echo htmlspecialchars($profile_picture); ?>" alt="Profile Picture" width="36" height="36" class="rounded-circle shadow-sm">
+              <img src="../uploads/profile_images/<?php echo htmlspecialchars($profile_picture); ?>" alt="Profile Picture" width="36" height="36" class="rounded-circle shadow-sm">
             </a>
             <ul class="dropdown-menu dropdown-menu-end shadow" style="min-width: 230px;">
               <li class="px-3 py-2">
-                <strong class="d-block"><?php echo htmlspecialchars($_SESSION["username"]); ?></strong>
-                <small class="text-muted"><?php echo htmlspecialchars($_SESSION["email"]); ?></small>
+                <strong class="d-block"><?php echo htmlspecialchars($username); ?></strong>
+                <small class="text-muted"><?php echo htmlspecialchars($email); ?></small>
               </li>
               <li>
                 <hr class="dropdown-divider">

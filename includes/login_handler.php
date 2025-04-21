@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get form data
     $email = $_POST['email'];
     $password = $_POST['password'];
-
+    
     // Prepare and execute the query to retrieve the user based on the email
     $query = "SELECT * FROM users WHERE email = :email";
     $stmt = $pdo->prepare($query);
@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_id'] = $user['id']; // Store user ID in session
             $_SESSION["email"] = $user["email"];
             $_SESSION['username'] = $user['username']; // Store username in session
-            $_SESSION['profile_picture'] = $user['profile_picture']; // Store profile picture in session
+            $_SESSION['profile_image'] = $user['profile_image']; // Store profile picture in session
 
             // Redirect to the dashboard or home page
             header("Location: ../public/dashboard.php");

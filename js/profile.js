@@ -7,3 +7,13 @@ function showTab(tabId) {
   document.querySelector(`[onclick="showTab('${tabId}')"]`).classList.add('active');
   document.getElementById(tabId).classList.add('active');
 }
+
+const fileInput = document.getElementById('upload');
+const photoForm = document.getElementById('photoForm');
+
+// When a file is selected, submit the form
+fileInput.addEventListener('change', function() {
+        if (fileInput.files.length > 0) {
+            photoForm.submit();
+        }
+});

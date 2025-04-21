@@ -34,12 +34,14 @@ $imagePath = !empty($user['profile_image'])
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/navbar.css">
     <link rel="stylesheet" href="../css/profile.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
     <title>Profile</title>
 </head>
 
 <body>
     <?php include '../includes/navbar.php'; ?>
-
+    
     <div class="header">
         <h3>Profile Settings</h3>
         <p>Manage your account information</p>
@@ -49,12 +51,13 @@ $imagePath = !empty($user['profile_image'])
         <div class="avatar-container">
             <img src="<?php echo htmlspecialchars($imagePath); ?>" alt="Profile Picture" class="avatar" id="profileImage">
             <form id="photoForm" action="../includes/profile_handler.php" method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="form_type" value="photo">
-                <input type="file" id="upload" name="profile_image" accept="image/*" style="display:none;">
-                <label for="upload" class="upload-icon">
-                    <img src="../assets/camera.png" alt="Upload">
-                </label>
-            </form>
+            <input type="hidden" name="form_type" value="photo">
+            <input type="file" id="upload" name="profile_image" accept="image/*" style="display:none;" onchange="submitForm()">
+            
+            <label for="upload" class="upload-icon" style="cursor: pointer;">
+                <img src="../assets/camera.png" alt="Upload">
+            </label>
+        </form>
         </div>
 
         <h3><?php echo htmlspecialchars($username);?></h3>
