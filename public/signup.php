@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +10,7 @@
     <title>NoteNest - Create Account</title>
 </head>
     <body>
-    <?php if (isset($_SESSION['signup_errors'])): ?>
+        <?php if (isset($_SESSION['signup_errors'])): ?>
             <div class="error-message">
                 <?php foreach ($_SESSION['signup_errors'] as $error): ?>
                     <div><?php echo htmlspecialchars($error); ?></div>
@@ -37,7 +38,7 @@
             <form id="signupForm" action="../includes/signup_handler.php" method="POST">
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" class="form-control" id="username" name="username" placeholder="John Doe" required>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="John Doe" require>
                 </div>
                 
                 <div class="form-group">

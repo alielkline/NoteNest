@@ -1,9 +1,6 @@
 <?php
 
-session_start();
-
-// Connect to database
-require 'db.inc.php';
+include '../includes/init.php';
 
 // Initialize errors array
 $errors = [];
@@ -59,11 +56,9 @@ $success = $stmt->execute([
 if ($success) {
     $_SESSION['signup_success'] = "Registration successful! You can now log in.";
     header("Location: ../public/login.php");
-    exit();
 } else {
     $_SESSION['signup_errors'] = ["There was an error with registration!"];
     header("Location: ../public/signup.php");
-    exit();
 }
-
+exit();
 ?>
