@@ -1,0 +1,133 @@
+.classroom-header {
+    margin-top: 2rem;
+    
+}
+
+
+/* ==============================
+   Card Components
+============================== */
+
+/* Classroom card */
+.card-custom {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 180px;
+    border-radius: 1rem;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05);
+    padding: 2rem;
+    transition: 0.2s ease;
+}
+
+.card-custom:hover{
+    border: 1px solid #6b21a8;
+}
+
+/* Admin badge inside classroom card */
+.admin-badge {
+    background-color: #e9d8fd;
+    color: #6b21a8;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+}
+
+/* ==============================
+   Buttons
+============================== */
+
+/* Solid purple button */
+.btn-purple {
+    background-color: #d6bcfa;
+    color: white;
+    border: none;
+    transition: background-color 0.2s ease;
+}
+
+.btn-purple:hover {
+    background-color: #c084fc;
+    color: white;
+}
+
+/* Outline purple button */
+.btn-outline-purple {
+    background-color: white;
+    color: #6b21a8;
+    border: 1px solid #d6bcfa;
+    transition: all 0.2s ease;
+}
+
+.btn-outline-purple:hover {
+    background-color: #c084fc;
+    color: white;
+}
+
+/* ==============================
+   Misc Utilities
+============================== */
+
+.error-message {
+    background-color: #FEE2E2;
+    color: #B91C1C;
+    border: 1px solid #FCA5A5;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    text-align: center;
+    width: 80%;
+    max-width: 500px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+}
+
+/* Add this fadeIn animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.form-control:focus{
+    outline: none;
+    border-color: #9371e3;
+    box-shadow: 0 0 0 2px rgba(212, 109, 240, 0.2);
+}
+
+.form-select:focus{
+    outline: none;
+    border-color: #9371e3;
+    box-shadow: 0 0 0 2px rgba(212, 109, 240, 0.2);
+}
+
+.success-message {
+    background-color: #e2fee8;
+    color: #29cb47;
+    border: 1px solid #a5fcbf;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    text-align: center;
+    width: 80%;
+    max-width: 500px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+}
