@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 
 // Fetch user data
-$stmt = $pdo->prepare("SELECT username, email, profile_image FROM users WHERE id = ?");
+$stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
 $stmt->execute([$user_id]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -19,7 +19,7 @@ if (!$user) {
 
 $username = $user['username'];
 $email = $user['email'];
-$imagePath = !empty($user['profile_image']) 
+$imagePath = !empty($user['profile_image'])
     ? "../uploads/profile_images/" . htmlspecialchars($user['profile_image'])
     : "../assets/profile-default.jpeg";
 
@@ -41,7 +41,7 @@ $imagePath = !empty($user['profile_image'])
 
 <body>
     <?php include '../includes/navbar.php'; ?>
-    
+
     <div class="header">
         <h3>Profile Settings</h3>
         <p>Manage your account information</p>
@@ -51,16 +51,16 @@ $imagePath = !empty($user['profile_image'])
         <div class="avatar-container">
             <img src="<?php echo htmlspecialchars($imagePath); ?>" alt="Profile Picture" class="avatar" id="profileImage">
             <form id="photoForm" action="../includes/profile_handler.php" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="form_type" value="photo">
-            <input type="file" id="upload" name="profile_image" accept="image/*" style="display:none;" onchange="submitForm()">
-            
-            <label for="upload" class="upload-icon" style="cursor: pointer;">
-                <img src="../assets/camera.png" alt="Upload">
-            </label>
-        </form>
+                <input type="hidden" name="form_type" value="photo">
+                <input type="file" id="upload" name="profile_image" accept="image/*" style="display:none;" onchange="submitForm()">
+
+                <label for="upload" class="upload-icon" style="cursor: pointer;">
+                    <img src="../assets/camera.png" alt="Upload">
+                </label>
+            </form>
         </div>
 
-        <h3><?php echo htmlspecialchars($username);?></h3>
+        <h3><?php echo htmlspecialchars($username); ?></h3>
         <p><?php echo htmlspecialchars($email);; ?></p>
     </div>
 
@@ -110,5 +110,5 @@ $imagePath = !empty($user['profile_image'])
     <script src="../js/profile.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html>
 
+</html>
