@@ -1,3 +1,18 @@
+<?php
+include '../includes/init.php';
+
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+// Fetch user data
+$stmt = $pdo->prepare("SELECT * FROM classrooms");
+$stmt->execute();
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

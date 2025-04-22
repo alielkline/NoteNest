@@ -21,4 +21,12 @@
 
 .custom-tabs {
     border-bottom: none !important;
+
+
+}
+
+.btn-custom-create:hover {
+    background-color: #cdb0f3;
+    color: #4a2391;
+
 }
