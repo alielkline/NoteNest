@@ -1,3 +1,25 @@
+<?php
+include '../includes/init.php';
+
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+$user_id = $_SESSION['user_id'];
+
+// Fetch user data
+$stmt = $pdo->prepare("SELECT username FROM users WHERE id = ?");
+$stmt->execute([$user_id]);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$user) {
+    die("User not found.");
+}
+
+$username = $user['username'];
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,7 +36,7 @@
 <body>
     <?php include '../includes/navbar.php'; ?>
     <div class="main-content p-4 w-100">
-        <h2>Welcome back, <?php echo $_SESSION["username"] ?></h2>
+        <h2>Welcome back, <?php echo htmlspecialchars($username) ?></h2>
         <p class="text-muted">Here’s an overview of your Notenest activities</p>
 
         <!-- Tabs -->
