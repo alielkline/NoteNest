@@ -35,21 +35,22 @@ $classrooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="../css/navbar.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link href="../css/dashboard.css" rel="stylesheet">
-
     <title>Dashboard</title>
 </head>
 
 <body>
     <?php include '../includes/navbar.php'; ?>
-    <!-- head of dashboard -->
+
     <div class="main-content p-4 w-100 container">
+        <!-- Dashboard header -->
         <div class="d-flex justify-content-between align-items-center flex-wrap mb-2">
             <div>
                 <h2 class="mb-0">Dashboard</h2>
                 <p class="text-muted mb-0">Manage your classrooms and notes</p>
             </div>
             <div class="mt-2 mt-md-0">
-                <a href="#" class="btn me-2 " data-bs-toggle="modal" data-bs-target="#createClassroomModal" style="background-color: #d9c5f5; color: #5f2eb5; border: none;">
+                <a href="#" class="btn me-2" data-bs-toggle="modal" data-bs-target="#createClassroomModal"
+                    style="background-color: #d9c5f5; color: #5f2eb5; border: none;">
                     <i class="bi bi-plus"></i> New Classroom
                 </a>
                 <a href="#" class="btn btn-outline-dark">
@@ -57,7 +58,6 @@ $classrooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </a>
             </div>
         </div>
-
 
         <!-- Tabs -->
         <ul class="nav nav-tabs mt-4 custom-tabs" id="dashboardTabs" role="tablist">
@@ -72,21 +72,19 @@ $classrooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </li>
         </ul>
 
-
         <div class="tab-content mt-3">
-            <!-- class rooms section -->
+            <!-- Classrooms Tab -->
             <div class="tab-pane fade show active" id="overview" role="tabpanel">
                 <h5 class="mt-4">
                     <i class="bi bi-mortarboard-fill text-primary me-2"></i> Your Classrooms
                 </h5>
-                <!-- class rooms if exist -->
                 <div class="container mt-4">
-                    <div class="row g-4">
+                    <div class="row row-cols-1 row-cols-md-3 g-4">
                         <!-- Loop through classrooms -->
                         <?php foreach ($classrooms as $classroom): ?>
-                            <div class="col-md-4">
-                                <div class="card shadow-sm text-center h-100">
-                                    <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                            <div class="col">
+                                <div class="card h-100 shadow-sm text-center">
+                                    <div class="card-body d-flex flex-column align-items-center justify-content-center text-center">
                                         <h5 class="card-title"><?= htmlspecialchars($classroom['name']) ?></h5>
                                         <p class="text-muted mb-0"><?= htmlspecialchars($classroom['description']) ?></p>
                                         <span class="badge bg-<?= $classroom['visibility'] === 'public' ? 'success' : 'secondary' ?>">
@@ -97,9 +95,9 @@ $classrooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             </div>
                         <?php endforeach; ?>
 
-                        <!-- Create New Classroom Card (always last) -->
-                        <div class="col-md-4">
-                            <div class="card shadow-sm text-center h-100">
+                        <!-- Create New Classroom Card -->
+                        <div class="col">
+                            <div class="card h-100 shadow-sm text-center">
                                 <div class="card-body d-flex flex-column align-items-center justify-content-center">
                                     <a href="#" class="btn d-flex align-items-center justify-content-center mb-3"
                                         data-bs-toggle="modal" data-bs-target="#createClassroomModal"
@@ -111,9 +109,12 @@ $classrooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
+
+            <!-- Other tabs -->
             <div class="tab-pane fade" id="notes" role="tabpanel">
                 <p>This is My Notes tab content.</p>
             </div>
@@ -121,16 +122,12 @@ $classrooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <p>This is the Bookmarked tab content.</p>
             </div>
         </div>
-
-
     </div>
-    </div>
-
 
     <!-- Create Classroom Modal -->
     <div class="modal fade" id="createClassroomModal" tabindex="-1" aria-labelledby="createClassroomLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <form method="POST" action="../includes/dashboard_handler.php">
+            <form method="POST" action="../includes/create_classroom.php">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="createClassroomLabel">Create a New Classroom</h5>
@@ -154,7 +151,9 @@ $classrooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Create</button>
+                        <button type="submit" class="btn" style="background-color: #d9c5f5; color: #5f2eb5; border: none;">
+                            Create Classroom
+                        </button>
                     </div>
                 </div>
             </form>
