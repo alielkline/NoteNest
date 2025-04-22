@@ -83,10 +83,10 @@ $classrooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <!-- Loop through classrooms -->
                         <?php foreach ($classrooms as $classroom): ?>
                             <div class="col">
-                                <div class="card h-100 shadow-sm text-center">
+                                <div class="card shadow-sm text-center" style="height: 240px;">
                                     <div class="card-body d-flex flex-column align-items-center justify-content-center text-center">
                                         <h5 class="card-title"><?= htmlspecialchars($classroom['name']) ?></h5>
-                                        <p class="text-muted mb-0"><?= htmlspecialchars($classroom['description']) ?></p>
+                                        <p class="text-muted mb-0" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%;"><?= htmlspecialchars($classroom['description']) ?></p>
                                         <span class="badge bg-<?= $classroom['visibility'] === 'public' ? 'success' : 'secondary' ?>">
                                             <?= ucfirst($classroom['visibility']) ?>
                                         </span>
@@ -97,7 +97,7 @@ $classrooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                         <!-- Create New Classroom Card -->
                         <div class="col">
-                            <div class="card h-100 shadow-sm text-center">
+                            <div class="card shadow-sm text-center" style="height: 240px;">
                                 <div class="card-body d-flex flex-column align-items-center justify-content-center">
                                     <a href="#" class="btn d-flex align-items-center justify-content-center mb-3"
                                         data-bs-toggle="modal" data-bs-target="#createClassroomModal"
@@ -105,23 +105,23 @@ $classrooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         <i class="bi bi-plus fs-3"></i>
                                     </a>
                                     <h5 class="card-title">Create a New Classroom</h5>
-                                    <p class="text-muted mb-0">Start collaborating with your classmates</p>
+                                    <p class="text-muted mb-0" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%;">Start collaborating with your classmates</p>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
-
-            <!-- Other tabs -->
-            <div class="tab-pane fade" id="notes" role="tabpanel">
-                <p>This is My Notes tab content.</p>
-            </div>
-            <div class="tab-pane fade" id="bookmarked" role="tabpanel">
-                <p>This is the Bookmarked tab content.</p>
-            </div>
         </div>
+
+        <!-- Other tabs -->
+        <div class="tab-pane fade" id="notes" role="tabpanel">
+            <p>This is My Notes tab content.</p>
+        </div>
+        <div class="tab-pane fade" id="bookmarked" role="tabpanel">
+            <p>This is the Bookmarked tab content.</p>
+        </div>
+    </div>
     </div>
 
     <!-- Create Classroom Modal -->
