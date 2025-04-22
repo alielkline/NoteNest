@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Apr 22, 2025 at 05:57 PM
+-- Generation Time: Apr 22, 2025 at 06:02 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `notenestdb`
 --
-CREATE DATABASE IF NOT EXISTS `notenestdb` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `notenestdb`;
 
 -- --------------------------------------------------------
 
@@ -44,10 +42,11 @@ CREATE TABLE `classrooms` (
   `classroom_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `creator_id` int(11) NOT NULL,
-  `invite_code` varchar(10) DEFAULT NULL,
+  `invite_code` varchar(10) NOT NULL,
   `created_at` datetime DEFAULT current_timestamp(),
   `members` int(11) DEFAULT 0,
-  `description` text DEFAULT NULL
+  `description` text DEFAULT NULL,
+  `visibility` enum('public','private') NOT NULL DEFAULT 'public'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -129,19 +128,6 @@ CREATE TABLE `users` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `profile_image` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`id`, `username`, `email`, `password`, `created_at`, `profile_image`) VALUES
-(22, 'AliElkline', 'alielkline7@gmail.com', '$2y$10$kdmArEs53pmoq0Ak5x7jd..reiF9vHzlnK/at2XeaojGOKtpWLqU2', '2025-04-19 14:50:49', '22_profile.jpg'),
-(23, 'omar', 'omar@gmail.com', '$2y$10$jVBckmFU35c2pZZqaDA1MeBCFNqLGjl1P5niTGyTWaGMU1qk3xgAC', '2025-04-19 14:52:11', NULL),
-(24, 'adam', 'adam@gmail.com', '$2y$10$RaeK48Y.oxKP/.lmH95u0ebb.rrftn/GeF.EHtsUMpUiNnLB8Kx4a', '2025-04-19 15:13:15', NULL);
-
---
--- Indexes for dumped tables
---
 
 --
 -- Indexes for table `bookmarks`
