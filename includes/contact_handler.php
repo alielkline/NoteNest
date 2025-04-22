@@ -1,7 +1,6 @@
 <?php
 
-session_start();
-
+include '../includes/init.php';
 
 //Check if the user accessed this page legitimately
 if (isset($_POST['submit'])){
@@ -37,6 +36,7 @@ if (isset($_POST['submit'])){
     $headers = "From: " . $email;
     
     //mail($mailto, $subject, $message, $headers);
-
+    header("Location: ../public/contact.php");
+    exit();
 }
 

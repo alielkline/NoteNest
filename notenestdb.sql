@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Apr 19, 2025 at 04:36 PM
+-- Generation Time: Apr 22, 2025 at 05:57 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `notenestdb`
 --
+CREATE DATABASE IF NOT EXISTS `notenestdb` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `notenestdb`;
 
 -- --------------------------------------------------------
 
@@ -28,7 +30,6 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `bookmarks` (
-  `bookmark_id` int(11) NOT NULL,
   `note_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -44,7 +45,9 @@ CREATE TABLE `classrooms` (
   `name` varchar(255) NOT NULL,
   `creator_id` int(11) NOT NULL,
   `invite_code` varchar(10) DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp()
+  `created_at` datetime DEFAULT current_timestamp(),
+  `members` int(11) DEFAULT 0,
+  `description` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -54,7 +57,6 @@ CREATE TABLE `classrooms` (
 --
 
 CREATE TABLE `classroom_members` (
-  `membership_id` int(11) NOT NULL,
   `classroom_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -71,7 +73,9 @@ CREATE TABLE `classroom_notes` (
   `title` varchar(255) NOT NULL,
   `content` text NOT NULL,
   `uploader_user_id` int(11) NOT NULL,
-  `upload_date` datetime DEFAULT current_timestamp()
+  `upload_date` datetime DEFAULT current_timestamp(),
+  `likes` int(11) DEFAULT 0,
+  `bookmarkes` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -107,9 +111,8 @@ CREATE TABLE `comments` (
 --
 
 CREATE TABLE `likes` (
-  `like_id` int(11) NOT NULL,
   `note_id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL
+  `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -131,9 +134,10 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `email`, `password`, `created_at`, `profile_picture`) VALUES
-(20, 'Ali', 'alielkline7@gmail.com', '$2y$10$Ou4QVfTL/bYzSNiP0UbrVuEe5awgUCQdYH3vbgsrQ4Xmqh85RNUay', '2025-04-19 13:18:27', NULL),
-(21, 'john', 'john@gmail.com', '$2y$10$gtBY/xgXDKpAVLFAaGBQM.0MOsmdcQuzyxRWYN.x6FtYm0RVTF6tG', '2025-04-19 14:17:08', NULL);
+INSERT INTO `users` (`id`, `username`, `email`, `password`, `created_at`, `profile_image`) VALUES
+(22, 'AliElkline', 'alielkline7@gmail.com', '$2y$10$kdmArEs53pmoq0Ak5x7jd..reiF9vHzlnK/at2XeaojGOKtpWLqU2', '2025-04-19 14:50:49', '22_profile.jpg'),
+(23, 'omar', 'omar@gmail.com', '$2y$10$jVBckmFU35c2pZZqaDA1MeBCFNqLGjl1P5niTGyTWaGMU1qk3xgAC', '2025-04-19 14:52:11', NULL),
+(24, 'adam', 'adam@gmail.com', '$2y$10$RaeK48Y.oxKP/.lmH95u0ebb.rrftn/GeF.EHtsUMpUiNnLB8Kx4a', '2025-04-19 15:13:15', NULL);
 
 --
 -- Indexes for dumped tables
@@ -143,9 +147,8 @@ INSERT INTO `users` (`id`, `username`, `email`, `password`, `created_at`, `profi
 -- Indexes for table `bookmarks`
 --
 ALTER TABLE `bookmarks`
-  ADD PRIMARY KEY (`bookmark_id`),
-  ADD KEY `note_id` (`note_id`),
-  ADD KEY `user_id` (`user_id`);
+  ADD PRIMARY KEY (`user_id`,`note_id`),
+  ADD KEY `note_id` (`note_id`);
 
 --
 -- Indexes for table `classrooms`
@@ -159,9 +162,8 @@ ALTER TABLE `classrooms`
 -- Indexes for table `classroom_members`
 --
 ALTER TABLE `classroom_members`
-  ADD PRIMARY KEY (`membership_id`),
-  ADD KEY `classroom_id` (`classroom_id`),
-  ADD KEY `user_id` (`user_id`);
+  ADD PRIMARY KEY (`user_id`,`classroom_id`),
+  ADD KEY `classroom_id` (`classroom_id`);
 
 --
 -- Indexes for table `classroom_notes`
@@ -190,9 +192,8 @@ ALTER TABLE `comments`
 -- Indexes for table `likes`
 --
 ALTER TABLE `likes`
-  ADD PRIMARY KEY (`like_id`),
-  ADD KEY `note_id` (`note_id`),
-  ADD KEY `user_id` (`user_id`);
+  ADD PRIMARY KEY (`user_id`,`note_id`),
+  ADD KEY `note_id` (`note_id`);
 
 --
 -- Indexes for table `users`
@@ -206,22 +207,10 @@ ALTER TABLE `users`
 --
 
 --
--- AUTO_INCREMENT for table `bookmarks`
---
-ALTER TABLE `bookmarks`
-  MODIFY `bookmark_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `classrooms`
 --
 ALTER TABLE `classrooms`
   MODIFY `classroom_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `classroom_members`
---
-ALTER TABLE `classroom_members`
-  MODIFY `membership_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `classroom_notes`
@@ -242,16 +231,10 @@ ALTER TABLE `comments`
   MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `likes`
---
-ALTER TABLE `likes`
-  MODIFY `like_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- Constraints for dumped tables
@@ -302,7 +285,7 @@ ALTER TABLE `comments`
 --
 ALTER TABLE `likes`
   ADD CONSTRAINT `likes_ibfk_1` FOREIGN KEY (`note_id`) REFERENCES `classroom_notes` (`note_id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `likes_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+  ADD CONSTRAINT `likes_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
