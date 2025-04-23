@@ -20,6 +20,27 @@
     z-index: 9999;
 }
 
+.success-message {
+  background-color: #e2fee8;
+  color: #29cb47;
+  border: 1px solid #a5fcbf;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-family: 'Inter', sans-serif;
+  text-align: center;
+  width: 80%;
+  max-width: 500px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  opacity: 0;
+  animation: fadeIn 0.5s forwards;
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+}
+
 @keyframes fadeIn {
     to {
       opacity: 1;

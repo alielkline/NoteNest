@@ -13,7 +13,13 @@
         <?php 
         session_start();
         if (isset($_SESSION['error'])): ?>
-            <div class="error-message"><?php echo $_SESSION['error']; unset($_SESSION['error']); ?></div>
+            <div class="error-message" id = "error-message"><?php echo $_SESSION['error']; unset($_SESSION['error']); ?></div>
+        <?php endif; ?>
+        <?php if (isset($_SESSION['signup_success'])): ?>
+            <div class="success-message" id = success-message>
+                <?php echo htmlspecialchars($_SESSION['signup_success']); ?>
+            </div>
+            <?php unset($_SESSION['signup_success']); ?>
         <?php endif; ?>
 
 
@@ -48,6 +54,8 @@
         </div>
 
         <script src="../js/signup.js"></script>
+        <script src="../js/error.js"></script>
+        <script src="../js/success.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

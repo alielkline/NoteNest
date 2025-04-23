@@ -20,7 +20,7 @@
     
         <!-- Check session incase the user left a field empty !-->
         <?php if (isset($_SESSION['contact_errors'])): ?>
-            <div class="error-message">
+            <div class="error-message" id="error-message">
                 <?php foreach ($_SESSION['contact_errors'] as $error): ?>
                     <div><?php echo htmlspecialchars($error); ?></div>
                 <?php endforeach; ?>
@@ -66,6 +66,7 @@
             </div>
         </div>
     </div>
+    <script src="../js/error.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

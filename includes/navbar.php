@@ -15,7 +15,7 @@ if (isset($_SESSION['user_id'])) {
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
     
     // If the user exists and has a profile picture
-    $profile_picture = $user['profile_image'] ?? '../uploads/profile_images/default-image.jpg'; // fallback to a default image if no profile picture
+    $profile_picture = !empty($user['profile_image']) ? $user['profile_image'] : '../assets/profile-default.jpeg';// fallback to a default image if no profile picture
     $email = $user['email'];
     $username = $user['username'];
 
