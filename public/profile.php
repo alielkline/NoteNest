@@ -42,7 +42,6 @@ $imagePath = !empty($user['profile_image'])
 <body>
     <?php include '../includes/navbar.php'; ?>
 
-
     <div class="container py-5">
         <div class="text-center mb-4">
             <h2 class="fw-bold">Profile Settings</h2>
@@ -67,7 +66,6 @@ $imagePath = !empty($user['profile_image'])
                     <p class="text-muted"><?php echo htmlspecialchars($email); ?></p>
                 </div>
             </div>
-
 
             <!-- Tabs + Forms Section -->
             <div class="col-md-8">

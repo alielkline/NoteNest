@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Apr 24, 2025 at 02:49 PM
+-- Generation Time: Apr 24, 2025 at 04:49 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `notenestdb`
 --
-CREATE DATABASE IF NOT EXISTS `notenestdb` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `notenestdb`;
 
 -- --------------------------------------------------------
 
@@ -62,6 +60,8 @@ CREATE TABLE `classroom_members` (
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+
+
 -- --------------------------------------------------------
 
 --
@@ -88,7 +88,8 @@ CREATE TABLE `classroom_notes` (
 CREATE TABLE `classroom_subjects` (
   `subject_id` int(11) NOT NULL,
   `classroom_id` int(11) NOT NULL,
-  `subject_name` varchar(255) NOT NULL
+  `subject_name` varchar(255) NOT NULL,
+  `notes` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -216,7 +217,7 @@ ALTER TABLE `classroom_notes`
 -- AUTO_INCREMENT for table `classroom_subjects`
 --
 ALTER TABLE `classroom_subjects`
-  MODIFY `subject_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `subject_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `comments`
