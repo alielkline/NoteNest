@@ -13,9 +13,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($creator_id && $name && $description) {
         $invite_code = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 6);
-        $created_at = date('Y-m-d H:i:s');
 
-        $stmt = $pdo->prepare("INSERT INTO classrooms (name, creator_id, invite_code, created_at, description) VALUES (?, ?, ?, ?, ?)");
+
+        $stmt = $pdo->prepare("INSERT INTO classrooms (name, creator_id, invite_code description) VALUES (?, ?, ?, ?, ?)");
         $stmt->execute([$name, $creator_id, $invite_code, $created_at, $description]);
 
         header("Location: dashboard.php");
