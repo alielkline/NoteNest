@@ -67,7 +67,6 @@ if (isset($_SESSION['user_id'])) {
                 <hr class="dropdown-divider">
               </li>
               <li><a class="dropdown-item" href="profile.php"><i class="bi bi-person me-2"></i>Profile</a></li>
-              <li><a class="dropdown-item" href="settings.php"><i class="bi bi-gear me-2"></i>Settings</a></li>
               <li><a class="dropdown-item text-danger" href="../includes/logout_handler.php"><i class="bi bi-box-arrow-right me-2"></i>Log out</a></li>
             </ul>
           </div>

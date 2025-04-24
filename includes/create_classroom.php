@@ -53,4 +53,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         header("Location: ../public/classrooms.php");
         exit();
     }
+}else{
+    $_SESSION['error'] = "An error occurder. Try Again Later";
+    header("Location: ../public/classrooms.php");
+    exit();
 }

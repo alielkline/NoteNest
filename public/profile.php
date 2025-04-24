@@ -41,31 +41,6 @@ $imagePath = !empty($user['profile_image'])
 
 <body>
     <?php include '../includes/navbar.php'; ?>
-<<<<<<< HEAD
-
-    <div class="header">
-        <h3>Profile Settings</h3>
-        <p>Manage your account information</p>
-    </div>
-
-    <div class="picture-container">
-        <div class="avatar-container">
-            <img src="<?php echo htmlspecialchars($imagePath); ?>" alt="Profile Picture" class="avatar" id="profileImage">
-            <form id="photoForm" action="../includes/profile_handler.php" method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="form_type" value="photo">
-                <input type="file" id="upload" name="profile_image" accept="image/*" style="display:none;" onchange="submitForm()">
-
-                <label for="upload" class="upload-icon" style="cursor: pointer;">
-                    <img src="../assets/camera.png" alt="Upload">
-                </label>
-            </form>
-        </div>
-
-        <h3><?php echo htmlspecialchars($username); ?></h3>
-        <p><?php echo htmlspecialchars($email);; ?></p>
-    </div>
-=======
-
     <div class="container py-5">
         <div class="text-center mb-4">
             <h2 class="fw-bold">Profile Settings</h2>
@@ -90,7 +65,6 @@ $imagePath = !empty($user['profile_image'])
                     <p class="text-muted"><?php echo htmlspecialchars($email); ?></p>
                 </div>
             </div>
->>>>>>> recovered-dashboard
 
             <!-- Tabs + Forms Section -->
             <div class="col-md-8">
