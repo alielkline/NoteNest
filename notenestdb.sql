@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Apr 22, 2025 at 06:02 PM
+-- Generation Time: Apr 24, 2025 at 02:49 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `notenestdb`
 --
+CREATE DATABASE IF NOT EXISTS `notenestdb` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `notenestdb`;
 
 -- --------------------------------------------------------
 
@@ -44,7 +46,7 @@ CREATE TABLE `classrooms` (
   `creator_id` int(11) NOT NULL,
   `invite_code` varchar(10) NOT NULL,
   `created_at` datetime DEFAULT current_timestamp(),
-  `members` int(11) DEFAULT 0,
+  `members` int(11) DEFAULT 1,
   `description` text DEFAULT NULL,
   `visibility` enum('public','private') NOT NULL DEFAULT 'public'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -89,6 +91,7 @@ CREATE TABLE `classroom_subjects` (
   `subject_name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+
 -- --------------------------------------------------------
 
 --
@@ -128,6 +131,11 @@ CREATE TABLE `users` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `profile_image` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+--
+-- Indexes for dumped tables
+--
 
 --
 -- Indexes for table `bookmarks`
@@ -196,7 +204,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `classrooms`
 --
 ALTER TABLE `classrooms`
-  MODIFY `classroom_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `classroom_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `classroom_notes`
@@ -208,7 +216,7 @@ ALTER TABLE `classroom_notes`
 -- AUTO_INCREMENT for table `classroom_subjects`
 --
 ALTER TABLE `classroom_subjects`
-  MODIFY `subject_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `subject_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `comments`
@@ -220,7 +228,7 @@ ALTER TABLE `comments`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- Constraints for dumped tables

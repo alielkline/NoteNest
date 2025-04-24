@@ -30,7 +30,7 @@
     background-color: #e9d8fd;
     color: #6b21a8;
     padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
+    border-radius: 0.8rem;
     font-size: 0.875rem;
 }
 
@@ -130,4 +130,44 @@
     left: 50%;
     transform: translateX(-50%);
     z-index: 9999;
+}
+
+.card-custom .stretched-link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 1;
+  }
+
+  /* Style for <a> tags inside the classroom cards */
+.card-custom a {
+    display: block; /* Ensures the entire card is clickable */
+    color: #000; /* Default text color */
+    text-decoration: none; /* Removes the default underline */
+    background-color: transparent; /* Transparent background */
+    border-radius: 8px; /* Rounded corners for smoother interaction */
+    padding: 15px; /* Adding some padding inside the card */
+    transition: all 0.3s ease; /* Smooth transition for hover effect */
+}
+
+/* Hover effect on <a> tag */
+.card-custom a:hover {
+    background-color: #f8f9fa; /* Light background when hovered */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Shadow for emphasis */
+    transform: translateY(-5px); /* Slightly lift the card on hover */
+    text-decoration: none; /* Ensure no underline on hover */
+}
+
+/* Focus state for accessibility */
+.card-custom a:focus {
+    outline: none; /* Removes default focus outline */
+    box-shadow: 0 0 0 3px rgba(140, 98, 203, 0.5); /* Custom focus ring */
+}
+
+/* Active state for when the link is clicked */
+.card-custom a:active {
+    transform: translateY(2px); /* Slightly push down on click */
+    box-shadow: none; /* Remove shadow on active */
 }

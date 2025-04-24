@@ -28,19 +28,20 @@ $classrooms = $stmt->fetchAll();
 </head>
 <body>
     <?php include '../includes/navbar.php'; ?>
+    
     <?php if (isset($_SESSION['error'])): ?>
         <div class="error-message" id="error-message">
             <div><?php echo htmlspecialchars($_SESSION['error']); ?></div>
         </div>
         <?php unset($_SESSION['error']); ?>
     <?php endif; ?>
+
     <?php if (isset($_SESSION['success'])): ?>
         <div class="success-message" id="success-message">
             <div><?php echo htmlspecialchars($_SESSION['success']); ?></div>
         </div>
         <?php unset($_SESSION['success']); ?>
     <?php endif; ?>
-
 
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-4 classroom-header">
@@ -62,16 +63,19 @@ $classrooms = $stmt->fetchAll();
         <div class="row g-4 card-grid">
             <?php foreach ($classrooms as $classroom): ?>
                 <div class="col-md-6 col-lg-4 d-flex">
-                    <div class="card card-custom p-3 flex-fill">
-                        <h5 class="fw-semibold"><?= htmlspecialchars($classroom['name']) ?></h5>
-                        <p class="text-muted"><?= htmlspecialchars($classroom['description']) ?></p>
-                        <div class="d-flex justify-content-between text-muted small mt-auto">
-                            <span>👥 <?= $classroom['members'] ?> members</span>
-                            <?php if ($user_id == $classroom['creator_id']): ?>
-                                <span class="admin-badge">Admin</span>
-                            <?php endif; ?>
+                    <a href="../public/subjects.php?classroom_id=<?= $classroom['classroom_id'] ?>" class="text-decoration-none text-dark w-100">
+                        <div class="card card-custom p-3 flex-fill position-relative">
+                            <h5 class="fw-semibold"><?= htmlspecialchars($classroom['name']) ?></h5>
+                            <p class="text-muted"><?= htmlspecialchars($classroom['description']) ?></p>
+                            <div class="d-flex justify-content-between text-muted small mt-auto">
+                                <span>👥 <?= $classroom['members'] ?> members</span>
+                                <?php if ($user_id == $classroom['creator_id']): ?>
+                                    <span class="admin-badge">Admin</span>
+                                <?php endif; ?>
+                            </div>
+                            <span class="stretched-link"></span> <!-- Makes the whole card clickable -->
                         </div>
-                    </div>
+                    </a>
                 </div>
             <?php endforeach; ?>
         </div>
@@ -127,8 +131,9 @@ $classrooms = $stmt->fetchAll();
                     </div>
                 </div>
             </div>
-
+        </div>
     </div>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../js/error.js"></script>
     <script src="../js/success.js"></script>

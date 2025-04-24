@@ -1,0 +1,14 @@
+.classroom-link {
+    transition: color 0.3s ease, transform 0.3s ease;
+    text-decoration: none;
+    color:rgb(112, 112, 108);
+}
+
+.classroom-link:hover {
+    color: #000000; 
+    transform: scale(1.05);
+}
+
+.desc{
+    color:rgb(119, 119, 119);
+}
