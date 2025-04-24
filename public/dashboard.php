@@ -20,9 +20,38 @@ if (!$user) {
 $username = $user['username'];
 
 // Fetch classrooms (public or those created by the user)
-$stmt = $pdo->prepare("SELECT * FROM classrooms WHERE creator_id = ? ");
+$stmt = $pdo->prepare("SELECT c.*
+FROM classrooms c
+JOIN classroom_members cm ON c.classroom_id = cm.classroom_id
+WHERE cm.user_id = ?;");
 $stmt->execute([$user_id]);
 $classrooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// 1. Get selected filter/sort from request (GET or POST)
+$classroom_filter = isset($_GET['classroom_id']) && $_GET['classroom_id'] !== 'all' ? $_GET['classroom_id'] : null;
+$sort_order = isset($_GET['sort']) && $_GET['sort'] === 'oldest' ? 'ASC' : 'DESC';
+
+// 2. Base query to get notes
+$note_query = "
+    SELECT cn.*
+    FROM classroom_notes cn
+    JOIN classroom_subjects cs ON cn.subject_id = cs.subject_id
+";
+
+// 3. Apply filter if a specific classroom is selected
+$params = [];
+if ($classroom_filter) {
+    $note_query .= " WHERE cs.classroom_id = ?";
+    $params[] = $classroom_filter;
+}
+
+// 4. Add sorting
+$note_query .= " ORDER BY cn.upload_date $sort_order";
+
+// 5. Prepare and execute
+$note_stmt = $pdo->prepare($note_query);
+$note_stmt->execute($params);
+$notes = $note_stmt->fetchAll();
 ?>
 
 <!DOCTYPE html>
@@ -36,6 +65,7 @@ $classrooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link href="../css/dashboard.css" rel="stylesheet">
     <link href="../css/classroom.css" rel="stylesheet">
+    <link herf="../css/filter_notes.css" rel="stylesheet">
     <title>Dashboard</title>
 </head>
 
@@ -106,38 +136,50 @@ $classrooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <!-- notes -->
 
         <div class="d-flex justify-content-between align-items-center flex-wrap mb-2">
-            <h5 class="mt-4">
-                <i class="bi bi-book-fill text-purple me-2"></i> My Notes
-            </h5>
-            <div class="mt-2 mt-md-0 d-flex gap-2">
-                <!-- New Classroom Dropdown -->
-                <div class="dropdown">
-                    <button class="btn dropdown-toggle" type="button" id="sortClassroomDropdown" data-bs-toggle="dropdown" aria-expanded="false"
-                        style="background-color: #d9c5f5; color: #5f2eb5; border: none;">
-                        <i class="bi bi-funnel"></i> Sort Classrooms
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="sortClassroomDropdown">
-                        <li><a class="dropdown-item" href="?sort_classroom=newest">Newest</a></li>
-                        <li><a class="dropdown-item" href="?sort_classroom=oldest">Oldest</a></li>
-                    </ul>
-                </div>
-
-                <!-- New Note Dropdown -->
-                <div class="dropdown">
-                    <button class="btn btn-outline-dark dropdown-toggle" type="button" id="filterNoteDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-bookmark-plus"></i> Filter Notes
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="filterNoteDropdown">
-                        <li><a class="dropdown-item" href="?classroom_id=all">All Classrooms</a></li>
-                        <?php foreach ($classrooms as $classroom): ?>
-                            <li><a class="dropdown-item" href="?classroom_id=<?= $classroom['classroom_id'] ?>">
-                                    <?= htmlspecialchars($classroom['name']) ?>
-                                </a></li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
+            <div class="text-center my-4">
+                <h5 class="d-inline-flex align-items-center justify-content-center">
+                    <i class="bi bi-book-fill text-purple me-2"></i> My Notes
+                </h5>
             </div>
+            <?php include "../includes/filter_notes.php"; ?>
+
+            <div class="row g-4" id="notes-container">
+                <?php foreach ($notes as $index => $note): ?>
+                    <div class="col-12 note-card <?= $index >= 4 ? 'd-none extra-note' : '' ?>">
+                        <div class="card card-custom p-3 d-flex flex-column position-relative w-100">
+                            <h5 class="fw-semibold mb-2"><?= htmlspecialchars($note['title']) ?></h5>
+                            <p class="text-muted mb-3"><?= htmlspecialchars(mb_strimwidth($note['content'], 0, 120, '...')) ?></p>
+                            <div class="mt-auto d-flex justify-content-between align-items-center text-muted small">
+                                <span>📅 <?= date('M d, Y', strtotime($note['upload_date'])) ?></span>
+                                <span>👍 <?= $note['likes'] ?? 0 ?> | 🔖 <?= $note['bookmarkes'] ?? 0 ?></span>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+            <?php if (count($notes) > 4): ?>
+                <div class="text-center mt-3">
+                    <button class="btn btn-outline-dark" id="toggle-notes-btn">View More</button>
+                </div>
+            <?php endif; ?>
+
+            <?php if (empty($notes)): ?>
+                <div class="col-12">
+                    <div class="alert alert-secondary text-center" role="alert">
+                        No notes found.
+                    </div>
+                </div>
+            <?php endif; ?>
         </div>
+
+
+
+
+
+
+
+
 
 
 
@@ -176,6 +218,7 @@ $classrooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/dashboard.js"></script>
 </body>
 
 </html>
