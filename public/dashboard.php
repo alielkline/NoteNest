@@ -20,7 +20,7 @@ if (!$user) {
 $username = $user['username'];
 
 // Fetch classrooms (public or those created by the user)
-$stmt = $pdo->prepare("SELECT * FROM classrooms WHERE creator_id = ? OR visibility = 'public'");
+$stmt = $pdo->prepare("SELECT * FROM classrooms WHERE creator_id = ? ");
 $stmt->execute([$user_id]);
 $classrooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -35,6 +35,7 @@ $classrooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="../css/navbar.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link href="../css/dashboard.css" rel="stylesheet">
+    <link href="../css/classroom.css" rel="stylesheet">
     <title>Dashboard</title>
 </head>
 
@@ -59,71 +60,86 @@ $classrooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
 
-        <!-- Tabs -->
-        <ul class="nav nav-tabs mt-4 custom-tabs" id="dashboardTabs" role="tablist">
-            <li class="nav-item" role="presentation">
-                <a class="nav-link active" id="overview-tab" data-bs-toggle="tab" href="#overview" role="tab">Overview</a>
-            </li>
-            <li class="nav-item" role="presentation">
-                <a class="nav-link" id="notes-tab" data-bs-toggle="tab" href="#notes" role="tab">My Notes</a>
-            </li>
-            <li class="nav-item" role="presentation">
-                <a class="nav-link" id="bookmarked-tab" data-bs-toggle="tab" href="#bookmarked" role="tab">Bookmarked</a>
-            </li>
-        </ul>
 
-        <div class="tab-content mt-3">
-            <!-- Classrooms Tab -->
-            <div class="tab-pane fade show active" id="overview" role="tabpanel">
-                <h5 class="mt-4">
-                    <i class="bi bi-mortarboard-fill text-primary me-2"></i> Your Classrooms
-                </h5>
+        <!-- class rooms -->
+        <h5 class="mt-4">
+            <i class="bi bi-mortarboard-fill text-primary me-2"></i> Your Classrooms
+        </h5>
 
-                <div class="container mt-4">
-                    <div class="row row-cols-1 row-cols-md-3 g-4">
-                        <!-- Loop through classrooms -->
-                        <?php foreach ($classrooms as $classroom): ?>
-                            <div class="col">
-                                <div class="card shadow-sm text-center" style="height: 240px;">
-                                    <div class="card-body d-flex flex-column align-items-center justify-content-center text-center">
-                                        <h5 class="card-title"><?= htmlspecialchars($classroom['name']) ?></h5>
-                                        <p class="text-muted mb-0" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%;">
-                                            <?= htmlspecialchars($classroom['description']) ?>
-                                        </p>
-                                        <span class="badge bg-<?= $classroom['visibility'] === 'public' ? 'success' : 'secondary' ?>">
-                                            <?= ucfirst($classroom['visibility']) ?>
-                                        </span>
-                                    </div>
+        <div class="container mt-4">
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                <!-- Loop through classrooms -->
+                <?php foreach ($classrooms as $classroom): ?>
+                    <div class="col-md-6 col-lg-4 d-flex">
+                        <a href="../public/subjects.php?classroom_id=<?= $classroom['classroom_id'] ?>" class="text-decoration-none text-dark w-100">
+                            <div class="card card-custom p-3 flex-fill position-relative">
+                                <h5 class="fw-semibold"><?= htmlspecialchars($classroom['name']) ?></h5>
+                                <p class="text-muted"><?= htmlspecialchars($classroom['description']) ?></p>
+                                <div class="d-flex justify-content-between text-muted small mt-auto">
+                                    <span>👥 <?= $classroom['members'] ?> members</span>
+                                    <?php if ($user_id == $classroom['creator_id']): ?>
+                                        <span class="admin-badge">Admin</span>
+                                    <?php endif; ?>
                                 </div>
+                                <span class="stretched-link"></span> <!-- Makes the whole card clickable -->
                             </div>
-                        <?php endforeach; ?>
+                        </a>
+                    </div>
+                <?php endforeach; ?>
 
-                        <!-- Create New Classroom Card -->
-                        <div class="col">
-                            <div class="card shadow-sm text-center" style="height: 240px;">
-                                <div class="card-body d-flex flex-column align-items-center justify-content-center">
-                                    <a href="#" class="btn d-flex align-items-center justify-content-center mb-3"
-                                        data-bs-toggle="modal" data-bs-target="#createClassroomModal"
-                                        style="width: 60px; height: 60px; border-radius: 50%; background-color: #d9c5f5; color: #5f2eb5; border: none;">
-                                        <i class="bi bi-plus fs-3"></i>
-                                    </a>
-                                    <h5 class="card-title">Create a New Classroom</h5>
-                                    <p class="text-muted mb-0">Start collaborating with your classmates</p>
-                                </div>
-                            </div>
+                <!-- Create New Classroom Card -->
+                <div class="col-md-6 col-lg-4 d-flex">
+                    <div class="card card-custom p-3 flex-fill text-center position-relative">
+                        <div class="d-flex flex-column align-items-center justify-content-center h-100">
+                            <a href="#" class="btn d-flex align-items-center justify-content-center mb-3"
+                                data-bs-toggle="modal" data-bs-target="#createClassroomModal"
+                                style="width: 60px; height: 60px; border-radius: 50%; background-color: #d9c5f5; color: #5f2eb5; border: none; z-index: 2;">
+                                <i class="bi bi-plus fs-3"></i>
+                            </a>
+                            <h5 class="fw-semibold mt-2">Create a New Classroom</h5>
+                            <p class="text-muted small">Start collaborating with your classmates</p>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+        <!-- notes -->
 
-            <!-- Other Tabs -->
-            <div class="tab-pane fade" id="notes" role="tabpanel">
-                <p>This is My Notes tab content.</p>
-            </div>
-            <div class="tab-pane fade" id="bookmarked" role="tabpanel">
-                <p>This is the Bookmarked tab content.</p>
+        <div class="d-flex justify-content-between align-items-center flex-wrap mb-2">
+            <h5 class="mt-4">
+                <i class="bi bi-book-fill text-purple me-2"></i> My Notes
+            </h5>
+            <div class="mt-2 mt-md-0 d-flex gap-2">
+                <!-- New Classroom Dropdown -->
+                <div class="dropdown">
+                    <button class="btn dropdown-toggle" type="button" id="sortClassroomDropdown" data-bs-toggle="dropdown" aria-expanded="false"
+                        style="background-color: #d9c5f5; color: #5f2eb5; border: none;">
+                        <i class="bi bi-funnel"></i> Sort Classrooms
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="sortClassroomDropdown">
+                        <li><a class="dropdown-item" href="?sort_classroom=newest">Newest</a></li>
+                        <li><a class="dropdown-item" href="?sort_classroom=oldest">Oldest</a></li>
+                    </ul>
+                </div>
+
+                <!-- New Note Dropdown -->
+                <div class="dropdown">
+                    <button class="btn btn-outline-dark dropdown-toggle" type="button" id="filterNoteDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-bookmark-plus"></i> Filter Notes
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="filterNoteDropdown">
+                        <li><a class="dropdown-item" href="?classroom_id=all">All Classrooms</a></li>
+                        <?php foreach ($classrooms as $classroom): ?>
+                            <li><a class="dropdown-item" href="?classroom_id=<?= $classroom['classroom_id'] ?>">
+                                    <?= htmlspecialchars($classroom['name']) ?>
+                                </a></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
             </div>
         </div>
+
+
 
         <!-- Create Classroom Modal -->
         <div class="modal fade" id="createClassroomModal" tabindex="-1" aria-labelledby="createClassroomLabel" aria-hidden="true">
@@ -158,9 +174,7 @@ $classrooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </form>
             </div>
         </div>
-
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
