@@ -53,7 +53,7 @@
                 <div class="dropdown">
 
                     <!--Classroom Dropdown!-->
-                    <button class="btn btn-notes-dropdown dropdown-toggle border w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button class="btn btn-notes-dropdown dropdown-toggle border w-100" type="button" id="dropdownClassroomButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         All Classrooms
                     </button>
                     <div class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
@@ -75,7 +75,7 @@
 
                         foreach($classrooms as $classroom)
                         {
-                            echo "<button class='dropdown-item'>" . $classroom . "</button>";
+                            echo "<button class='dropdown-item' type='button'>" . $classroom['name'] . "</button>";
                         }
 
                         ?>
@@ -87,7 +87,7 @@
                 <div class="dropdown">
 
                     <!--Notes Dropdown!-->
-                    <button class="btn btn-notes-dropdown dropdown-toggle border w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button class="btn btn-notes-dropdown dropdown-toggle border w-100" type="button" id="dropdownNotesButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         All Notes 
                     </button>
                     <div class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
