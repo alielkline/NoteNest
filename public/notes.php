@@ -113,9 +113,9 @@ $notes = $note_stmt->fetchAll();
                     <!--Classroom Dropdown!-->
 
 
-                    <form method="GET" class="d-flex flex-wrap justify-content-center align-items-center gap-3">
-    <!-- Filter by Classroom -->
-    <div>
+                                <form method="GET" class="d-flex flex-wrap justify-content-center align-items-center gap-3">
+                <!-- Filter by Classroom -->
+                <div>
                 <div>
                 <label for="classroomFilter" class="form-label custom-label me-2">Filter by Classroom:</label>
                 <select name="classroom_id" id="classroomFilter" class="form-select custom-style d-inline-block w-auto ">
