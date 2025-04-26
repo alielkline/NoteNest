@@ -56,7 +56,7 @@ body {
 
 .navbar-toggler:hover {
     background-color: #cac0ff;
-    color: #8b5cf6;
+    color: #6E59A5;
 }
 
 /* The tabs styling */
@@ -67,7 +67,7 @@ body {
 }
 
 .nav-link:hover {
-    color: #8b5cf6;
+    color: #9173d7;
 }
 
 /* log-in and sign-up styling */

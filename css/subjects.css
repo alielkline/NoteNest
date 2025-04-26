@@ -18,14 +18,14 @@
     
 }
 .btn-purple {
-    background-color: #d6bcfa;
+    background-color: #9371e3;
     color: white;
     border: none;
     transition: background-color 0.2s ease;
 }
 
 .btn-purple:hover {
-    background-color: #c084fc;
+    background-color: #bda6f3;
     color: white;
 }
 
@@ -124,4 +124,17 @@
 
 .card-custom:hover{
     border: 1px solid #6b21a8;
+}
+
+
+.custom-grey-btn {
+    background-color: #858383; /* light grey */
+    color: #ffffff;
+    border: 1px solid #ccc;
+    transition: background-color 0.3s ease;
+}
+
+.custom-grey-btn:hover {
+    background-color: #393939; /* darker grey on hover */
+    color: hsl(0, 12%, 97%);
 }

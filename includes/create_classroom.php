@@ -15,7 +15,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     
     if (empty($name) || empty($description) || empty($visibility)) {
         $_SESSION['error'] = "All fields are required.";
-        header("Location: ../public/classrooms.php");
+        header("Location: ../public/dashboard.php");
         exit();
     }
     
@@ -44,17 +44,17 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         $pdo->commit();
 
         $_SESSION['success'] = "Classroom created successfully. Invite code: $invite_code";
-        header("Location: ../public/classrooms.php");
+        header("Location: ../public/dashboard.php");
         exit();
     } catch (Exception $e) {
         // Rollback transaction on error
         $pdo->rollBack();
         $_SESSION['error'] = "Failed to create classroom: " . $e->getMessage();
-        header("Location: ../public/classrooms.php");
+        header("Location: ../public/dashboard.php");
         exit();
     }
 }else{
     $_SESSION['error'] = "An error occurder. Try Again Later";
-    header("Location: ../public/classrooms.php");
+    header("Location: ../public/dashboard.php");
     exit();
 }

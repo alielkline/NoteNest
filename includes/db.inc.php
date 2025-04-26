@@ -1,5 +1,5 @@
 <?php
-$dsn = 'mysql:host=localhost;dbname=notenestDB';
+$dsn = 'mysql:host=localhost;port=3307;dbname=notenestDB';
 $dbusername = 'root';
 $dbpassword = '';
 
