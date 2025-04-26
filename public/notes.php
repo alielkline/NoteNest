@@ -1,3 +1,59 @@
+<?php
+include '../includes/init.php';
+
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+$user_id = $_SESSION['user_id'];
+
+// Fetch user data
+$stmt = $pdo->prepare("SELECT username FROM users WHERE id = ?");
+$stmt->execute([$user_id]);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$user) {
+    die("User not found.");
+}
+
+$username = $user['username'];
+
+// Fetch classrooms (public or those created by the user)
+$stmt = $pdo->prepare("SELECT c.*
+FROM classrooms c
+JOIN classroom_members cm ON c.classroom_id = cm.classroom_id
+WHERE cm.user_id = ?;");
+$stmt->execute([$user_id]);
+$classrooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// 1. Get selected filter/sort from request (GET or POST)
+$classroom_filter = isset($_GET['classroom_id']) && $_GET['classroom_id'] !== 'all' ? $_GET['classroom_id'] : null;
+$sort_order = isset($_GET['sort']) && $_GET['sort'] === 'oldest' ? 'ASC' : 'DESC';
+
+// 2. Base query to get notes
+$note_query = "
+    SELECT cn.*
+    FROM classroom_notes cn
+    JOIN classroom_subjects cs ON cn.subject_id = cs.subject_id
+";
+
+// 3. Apply filter if a specific classroom is selected
+$params = [];
+if ($classroom_filter) {
+    $note_query .= " WHERE cs.classroom_id = ?";
+    $params[] = $classroom_filter;
+}
+
+// 4. Add sorting
+$note_query .= " ORDER BY cn.upload_date $sort_order";
+
+// 5. Prepare and execute
+$note_stmt = $pdo->prepare($note_query);
+$note_stmt->execute($params);
+$notes = $note_stmt->fetchAll();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,8 +67,10 @@
     <title>Notes</title>
 </head>
 <body>
+    <script src="../js/notes.js"></script>
     <?php include '../includes/navbar.php'; ?>
     <?php include '../includes/init.php'; ?>
+    
 
     <!--Headers and early buttons!-->
     <div class="container d-flex justify-content-between mt-4">
@@ -53,36 +111,19 @@
                 <div class="dropdown">
 
                     <!--Classroom Dropdown!-->
-                    <button class="btn btn-notes-dropdown dropdown-toggle border w-100" type="button" id="dropdownClassroomButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        All Classrooms
-                    </button>
-                    <div class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
-                        
-                    
 
-                        <button class="dropdown-item">All Classrooms</button>
-
-                        <?php
-                        $stmt = $pdo->prepare("SELECT name FROM classrooms t1 
-                        JOIN classroom_members t2 ON t1.classroom_id = t2.classroom_id
-                        JOIN users u ON u.id = t2.user_id
-                        WHERE username = :username;");
-
-                        $stmt->bindParam(":username", $_SESSION["username"]);
-                        $stmt->execute();
-
-                        $classrooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                        foreach($classrooms as $classroom)
-                        {
-                            echo "<button class='dropdown-item' type='button'>" . $classroom['name'] . "</button>";
-                        }
-
-                        ?>
-
-                    </div>
-                </div>
+                <div>
+                <label for="classroomFilter" class="form-label custom-label me-2">Filter by Classroom:</label>
+                <select name="classroom_id" id="classroomFilter" class="form-select custom-style d-inline-block w-auto ">
+                    <option value="all" <?= !isset($_GET['classroom_id']) || $_GET['classroom_id'] === 'all' ? 'selected' : '' ?>>All Classrooms</option>
+                    <?php foreach ($classrooms as $class): ?>
+                        <option value="<?= $class['classroom_id'] ?>" <?= (isset($_GET['classroom_id']) && $_GET['classroom_id'] == $class['classroom_id']) ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($class['name']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
             </div>
+            
             <div class="col-12 col-md-3 mb-3 mb-md-0">
                 <div class="dropdown">
 
@@ -108,6 +149,7 @@
     //Selecting the data
     $stmt = $pdo->prepare("
     SELECT 
+        t1.note_id,
         t1.title, 
         t1.upload_date,
         t1.content,
@@ -132,9 +174,12 @@
 
         //checking if there are 0 notes
         if(empty($notes)){
+            
             ?>
+            <div class="container">
             <h4>No notes currently!</h4>
-            <a href="classrooms.php" class="btn-no-notes">Join a classroom!</a>
+            <a href="classrooms.php" class="btn-no-notes p-1">Join a classroom!</a>
+            </div>
             <?php
         }
         else{
