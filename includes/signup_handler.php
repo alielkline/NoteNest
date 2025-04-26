@@ -46,11 +46,12 @@ if (!empty($errors)) {
 // If no errors, proceed with registration
 $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-$stmt = $pdo->prepare("INSERT INTO users (username, email, password) VALUES (:username, :email, :password)");
+$stmt = $pdo->prepare("INSERT INTO users (username, email, password, profile_image) VALUES (:username, :email, :password, :image)");
 $success = $stmt->execute([
     ':username' => $username,
     ':email' => $email,
-    ':password' => $hashedPassword
+    ':password' => $hashedPassword,
+    ':image' => 'profile-default.jpg'
 ]);
 
 if ($success) {

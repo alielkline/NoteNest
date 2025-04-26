@@ -15,15 +15,14 @@ if (isset($_SESSION['user_id'])) {
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
     
     // If the user exists and has a profile picture
-    $profile_picture = $user['profile_image'] ?? '../uploads/profile_images/default-image.jpg'; // fallback to a default image if no profile picture
+    $profile_picture = '../uploads/profile_images/' . $user['profile_image'];
     $email = $user['email'];
     $username = $user['username'];
-
 }
 ?>
 
 
-<nav class="navbar navbar-expand-md">
+<nav class="navbar navbar-expand-lg">
   <div class="container">
     <!-- Logo + Name -->
     <a class="navbar-brand" href="home.php">
@@ -56,7 +55,7 @@ if (isset($_SESSION['user_id'])) {
 
           <div class="dropdown">
             <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-              <img src="../uploads/profile_images/<?php echo htmlspecialchars($profile_picture); ?>" alt="Profile Picture" width="36" height="36" class="rounded-circle shadow-sm">
+            <img src="<?php echo htmlspecialchars($profile_picture); ?>" alt="Profile Picture" width="36" height="36" class="rounded-circle shadow-sm">
             </a>
             <ul class="dropdown-menu dropdown-menu-end shadow" style="min-width: 230px;">
               <li class="px-3 py-2">
@@ -67,7 +66,6 @@ if (isset($_SESSION['user_id'])) {
                 <hr class="dropdown-divider">
               </li>
               <li><a class="dropdown-item" href="profile.php"><i class="bi bi-person me-2"></i>Profile</a></li>
-              <li><a class="dropdown-item" href="settings.php"><i class="bi bi-gear me-2"></i>Settings</a></li>
               <li><a class="dropdown-item text-danger" href="../includes/logout_handler.php"><i class="bi bi-box-arrow-right me-2"></i>Log out</a></li>
             </ul>
           </div>

@@ -13,19 +13,12 @@
 </head>
     <body>
         <?php if (isset($_SESSION['signup_errors'])): ?>
-            <div class="error-message">
+            <div class="error-message" id = "error-message">
                 <?php foreach ($_SESSION['signup_errors'] as $error): ?>
                     <div><?php echo htmlspecialchars($error); ?></div>
                 <?php endforeach; ?>
             </div>
             <?php unset($_SESSION['signup_errors']); ?>
-        <?php endif; ?>
-
-        <?php if (isset($_SESSION['signup_success'])): ?>
-            <div class="success-message">
-                <?php echo htmlspecialchars($_SESSION['signup_success']); ?>
-            </div>
-            <?php unset($_SESSION['signup_success']); ?>
         <?php endif; ?>
 
         <div class="signup-container">
@@ -70,6 +63,7 @@
         </div>
 
         <script src="../js/signup.js"></script>
+        <script src="../js/error.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
