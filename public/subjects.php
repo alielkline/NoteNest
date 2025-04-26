@@ -28,6 +28,7 @@ $classroom_name = $classroom['name'];
 $classroom_desc = $classroom['description'];
 $classroom_date = $classroom['created_at'];
 $classroom_invCode = $classroom['invite_code'];
+$classroom_visibility = $classroom['visibility'];
 
 $stmt = $pdo->prepare("SELECT * FROM classroom_subjects WHERE classroom_id = ?");
 $stmt->execute([$classroom_id]);
@@ -178,6 +179,13 @@ $is_member = $stmt->fetch() ? true : false;
                             <div class="mb-3">
                                 <label for="describtion" class="form-label">Description:</label>
                                 <input type="text" class="form-control" id="describtion" name="describtion" value="<?php echo htmlspecialchars($classroom_desc); ?>">
+                            </div>
+                            <div class="mb-3">
+                                <label for="visibility" class="form-label">Visibility</label>
+                                <select class="form-select" id="visibility" name="visibility">
+                                    <option value="public" <?php echo ($classroom_visibility === 'public') ? 'selected' : ''; ?>>Public</option>
+                                    <option value="private" <?php echo ($classroom_visibility === 'private') ? 'selected' : ''; ?>>Private</option>
+                                </select>
                             </div>
                             <button type="submit" class="btn btn-outline-purple">Save Changes</button>
                         </form>

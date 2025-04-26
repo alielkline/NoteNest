@@ -138,7 +138,7 @@ $notes = $note_stmt->fetchAll();
         <div class="d-flex justify-content-between align-items-center flex-wrap mb-2">
             <div class="text-center my-4">
                 <h5 class="d-inline-flex align-items-center justify-content-center">
-                    <i class="bi bi-book-fill text-purple me-2"></i> My Notes
+                    <i class="bi bi-book text-primary me-2"></i> My Notes
                 </h5>
             </div>
             <?php include "../includes/filter_notes.php"; ?>
