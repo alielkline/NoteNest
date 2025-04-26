@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($name) || empty($classroom_id)) {
         $_SESSION['error'] = "All fields are required.";
-        header("Location: ../public/subjects.php?classroom_id=" . urlencode($classroom_id));
+        header("Location: ../public/subjects.php?classroom_id=$classroom_id");
         exit();
     }
 
@@ -22,11 +22,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->execute([$name, $classroom_id]);
 
     $_SESSION['success'] = "Subject created successfully.";
-    header("Location: ../public/subjects.php?classroom_id=" . urlencode($classroom_id));
+    header("Location: ../public/subjects.php?classroom_id=$classroom_id");
     exit();
 } else {
     $_SESSION['error'] = "An error occurred. Try again later.";
-    header("Location: ../public/classrooms.php");
+    header("Location: ../public/subjects.php?classroom_id=$classroom_id");
     exit();
 }
 ?>

@@ -15,10 +15,9 @@ if (isset($_SESSION['user_id'])) {
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
     
     // If the user exists and has a profile picture
-    $profile_picture = !empty($user['profile_image']) ? $user['profile_image'] : '../assets/profile-default.jpeg';// fallback to a default image if no profile picture
+    $profile_picture = '../uploads/profile_images/' . $user['profile_image'];
     $email = $user['email'];
     $username = $user['username'];
-
 }
 ?>
 
@@ -56,7 +55,7 @@ if (isset($_SESSION['user_id'])) {
 
           <div class="dropdown">
             <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-              <img src="../uploads/profile_images/<?php echo htmlspecialchars($profile_picture); ?>" alt="Profile Picture" width="36" height="36" class="rounded-circle shadow-sm">
+            <img src="<?php echo htmlspecialchars($profile_picture); ?>" alt="Profile Picture" width="36" height="36" class="rounded-circle shadow-sm">
             </a>
             <ul class="dropdown-menu dropdown-menu-end shadow" style="min-width: 230px;">
               <li class="px-3 py-2">

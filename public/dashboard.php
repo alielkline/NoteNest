@@ -20,7 +20,10 @@ if (!$user) {
 $username = $user['username'];
 
 // Fetch classrooms (public or those created by the user)
-$stmt = $pdo->prepare("SELECT * FROM classrooms WHERE creator_id = ? ");
+$stmt = $pdo->prepare("SELECT c.*
+FROM classrooms c
+JOIN classroom_members cm ON c.classroom_id = cm.classroom_id
+WHERE cm.user_id = ?;");
 $stmt->execute([$user_id]);
 $classrooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>

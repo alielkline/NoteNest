@@ -33,6 +33,10 @@ $stmt = $pdo->prepare("SELECT * FROM classroom_subjects WHERE classroom_id = ?")
 $stmt->execute([$classroom_id]);
 $subjects = $stmt->fetchAll();
 
+$stmt = $pdo->prepare("SELECT * FROM classroom_members WHERE user_id = ? AND classroom_id = ?");
+$stmt->execute([$user_id, $classroom_id]);
+$is_member = $stmt->fetch() ? true : false;
+
 ?>
 
 <!DOCTYPE html>
@@ -74,9 +78,31 @@ $subjects = $stmt->fetchAll();
             <h2 class="fw-bold mb-0"><?= htmlspecialchars($classroom_name) ?> - Subjects</h2>
 
             <?php if ($classroom['creator_id'] == $user_id): ?>
-                <button class="btn btn-purple text-white" data-bs-toggle="modal" data-bs-target="#createSubjectModal">
-                    <i class="bi bi-plus-lg me-1"></i> New Subject
-                </button>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-purple text-white" data-bs-toggle="modal" data-bs-target="#createSubjectModal">
+                        <i class="bi bi-plus-lg me-1"></i> New Subject
+                    </button>
+                    <button class="btn custom-grey-btn" data-bs-toggle="modal" data-bs-target="#settingsModal">
+                        <i class="bi bi-gear me-1"></i> Settings
+                    </button>
+                </div>    
+            <?php endif; ?>
+            <?php if ($is_member): ?>
+            <?php if ($classroom['creator_id'] != $user_id): ?>
+                <form action="../includes/leave_classroom.php" method="POST" class="ms-2">
+                    <input type="hidden" name="classroom_id" value="<?= $classroom_id ?>">
+                    <button class="btn btn-outline-danger" type="submit">
+                        <i class="bi bi-box-arrow-left me-1"></i> Leave Classroom
+                    </button>
+                </form>
+            <?php endif; ?>
+            <?php else: ?>
+                <form action="../includes/join_classroomWithoutCode.php" method="POST" class="ms-2">
+                    <input type="hidden" name="classroom_id" value="<?= $classroom_id ?>">
+                    <button class="btn btn-outline-success" type="submit">
+                        <i class="bi bi-box-arrow-in-right me-1"></i> Join Classroom
+                    </button>
+                </form>
             <?php endif; ?>
         </div>
         <!-- Classroom details in a row -->
@@ -127,10 +153,43 @@ $subjects = $stmt->fetchAll();
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="settingsModalLabel">Settings</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="../includes/edit_classroom.php" method="POST">
+                            <input type="hidden" name="classroom_id" value="<?= htmlspecialchars($classroom_id) ?>">
+                            <div class="mb-3">
+                                <label for="classroomName" class="form-label">Classroom Name</label>
+                                <input type="text" class="form-control" id="classroomName" name="classroomName" value="<?php echo htmlspecialchars($classroom_name); ?>">
+                            </div>
+                            <div class="mb-3">
+                                <label for="inviteCode" class="form-label">Invite Code:</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="inviteCode" value="<?php echo htmlspecialchars($classroom_invCode); ?>" readonly>
+                                    <button class="btn btn-purple text-white" type="button" onclick="copyInviteCode()">Copy</button>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="describtion" class="form-label">Description:</label>
+                                <input type="text" class="form-control" id="describtion" name="describtion" value="<?php echo htmlspecialchars($classroom_desc); ?>">
+                            </div>
+                            <button type="submit" class="btn btn-outline-purple">Save Changes</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../js/error.js"></script>
     <script src="../js/success.js"></script>
+    <script src="../js/copy.js"></script>
 </body>
 </html>
