@@ -60,7 +60,7 @@
                         
                     
 
-                        <button class="dropdown-item" href="#">All Classrooms</button>
+                        <button class="dropdown-item">All Classrooms</button>
 
                         <?php
                         $stmt = $pdo->prepare("SELECT name FROM classrooms t1 
@@ -91,9 +91,9 @@
                         All Notes 
                     </button>
                     <div class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="#">All Notes</a>
-                        <a class="dropdown-item" href="#">Liked Notes</a>
-                        <a class="dropdown-item" href="#">Bookmarked Notes</a>
+                        <a class="dropdown-item">All Notes</a>
+                        <a class="dropdown-item">Liked Notes</a>
+                        <a class="dropdown-item">Bookmarked Notes</a>
                     </div>
                 </div>
             </div>
