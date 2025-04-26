@@ -105,22 +105,6 @@
     }
 }
 
-.notes-count{
-    margin-left:120px;
-
-}
-
-.card-custom {
-    flex: 1 1 auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 180px;
-    border-radius: 1rem;
-    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05);
-    /* padding: 2rem; */
-    transition: 0.2s ease;
-}
 
 .card-custom:hover{
     border: 1px solid #6b21a8;
@@ -137,4 +121,15 @@
 .custom-grey-btn:hover {
     background-color: #393939; /* darker grey on hover */
     color: hsl(0, 12%, 97%);
+}
+
+.view-notes-btn {
+    color: #6c757d; /* Same as text-muted */
+    font-size: 0.875rem; /* Same as small */
+    text-decoration: none;
+    pointer-events: none; /* Allows click to pass through to stretched link */
+}
+
+.card-custom:hover .view-notes-btn {
+    color: #8464d0; /* Changes color on hover like a link */
 }

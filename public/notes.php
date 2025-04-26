@@ -51,7 +51,7 @@ $note_query .= " ORDER BY cn.upload_date $sort_order";
 // 5. Prepare and execute
 $note_stmt = $pdo->prepare($note_query);
 $note_stmt->execute($params);
-$notes = $note_stmt->fetchAll();
+$hamada = $note_stmt->fetchAll();
 ?>
 
 <!DOCTYPE html>
@@ -165,10 +165,9 @@ $notes = $note_stmt->fetchAll();
         t1.title, 
         t1.upload_date,
         t1.content,
-        t1.likes
+        t1.likes,
         t2.subject_name, 
-        u.username,
-        
+        u.username
     FROM 
         classroom_notes t1
     JOIN 

@@ -44,7 +44,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         $pdo->commit();
 
         $_SESSION['success'] = "Classroom created successfully. Invite code: $invite_code";
-        header("Location: ../public/dashboard.php");
+        header("Location: ../public/subjects.php?classroom_id=$classroom_id");
         exit();
     } catch (Exception $e) {
         // Rollback transaction on error

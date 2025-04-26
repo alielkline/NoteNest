@@ -50,6 +50,7 @@ $is_member = $stmt->fetch() ? true : false;
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/navbar.css">
     <link rel="stylesheet" href="../css/subjects.css">
+    <link rel="stylesheet" href="../css/classroom.css">
 </head>
 <body>
     <?php include '../includes/navbar.php'; ?>
@@ -66,6 +67,7 @@ $is_member = $stmt->fetch() ? true : false;
         </div>
         <?php unset($_SESSION['success']); ?>
     <?php endif; ?>
+    
 
     <div class="container my-4">
 
@@ -113,18 +115,19 @@ $is_member = $stmt->fetch() ? true : false;
                 <p class="desc"><?= htmlspecialchars($classroom_desc) ?></p>
             </div>
         </div>
-        
+
 
         <!-- Subjects display -->
-        <div class="row g-4">
+        <div class="row g-4 card-grid">
             <?php if (count($subjects) > 0): ?>
                 <?php foreach ($subjects as $subject): ?>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="card card-custom">
-                            <div class="card-body">
-                                <h5 class="card-title"><?= htmlspecialchars($subject['subject_name']) ?></h5>
-                                <a href="subject_detail.php?subject_id=<?= urlencode($subject['subject_id']) ?>&classroom_id=<?= urlencode($classroom_id) ?>" class="btn btn-outline-purple">View Details</a>
-                                <span class="notes-count">📝 <?= $subject['notes'] ?> notes</span>
+                    <div class="col-md-6 col-lg-4 d-flex">
+                        <div class="card card-custom p-3 flex-fill position-relative">
+                            <h5 class="fw-semibold"><?= htmlspecialchars($subject['subject_name']) ?></h5>
+                            <p class="text-muted"><?= htmlspecialchars($subject['subject_desc']) ?></p>
+                            <div class="d-flex justify-content-between text-muted small mt-auto">
+                                <span>📝 <?= $subject['notes'] ?> notes</span>
+                                <span class="view-notes-btn">View Notes →</span>
                             </div>
                         </div>
                     </div>
@@ -133,6 +136,7 @@ $is_member = $stmt->fetch() ? true : false;
                 <p class="text-muted">No subjects available for this classroom.</p>
             <?php endif; ?>
         </div>
+
 
         <div class="modal fade" id="createSubjectModal" tabindex="-1" aria-labelledby="createSubjectModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -163,32 +167,44 @@ $is_member = $stmt->fetch() ? true : false;
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form action="../includes/edit_classroom.php" method="POST">
+                        <!-- Edit Classroom Form -->
+                        <form id="editForm" action="../includes/edit_classroom.php" method="POST">
                             <input type="hidden" name="classroom_id" value="<?= htmlspecialchars($classroom_id) ?>">
                             <div class="mb-3">
                                 <label for="classroomName" class="form-label">Classroom Name</label>
-                                <input type="text" class="form-control" id="classroomName" name="classroomName" value="<?php echo htmlspecialchars($classroom_name); ?>">
+                                <input type="text" class="form-control" id="classroomName" name="classroomName" value="<?= htmlspecialchars($classroom_name) ?>">
                             </div>
                             <div class="mb-3">
                                 <label for="inviteCode" class="form-label">Invite Code:</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="inviteCode" value="<?php echo htmlspecialchars($classroom_invCode); ?>" readonly>
+                                    <input type="text" class="form-control" id="inviteCode" value="<?= htmlspecialchars($classroom_invCode); ?>" readonly>
                                     <button class="btn btn-purple text-white" type="button" onclick="copyInviteCode()">Copy</button>
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <label for="describtion" class="form-label">Description:</label>
-                                <input type="text" class="form-control" id="describtion" name="describtion" value="<?php echo htmlspecialchars($classroom_desc); ?>">
+                                <input type="text" class="form-control" id="describtion" name="describtion" value="<?= htmlspecialchars($classroom_desc); ?>">
                             </div>
                             <div class="mb-3">
                                 <label for="visibility" class="form-label">Visibility</label>
                                 <select class="form-select" id="visibility" name="visibility">
-                                    <option value="public" <?php echo ($classroom_visibility === 'public') ? 'selected' : ''; ?>>Public</option>
-                                    <option value="private" <?php echo ($classroom_visibility === 'private') ? 'selected' : ''; ?>>Private</option>
+                                    <option value="public" <?= ($classroom_visibility === 'public') ? 'selected' : ''; ?>>Public</option>
+                                    <option value="private" <?= ($classroom_visibility === 'private') ? 'selected' : ''; ?>>Private</option>
                                 </select>
                             </div>
-                            <button type="submit" class="btn btn-outline-purple">Save Changes</button>
                         </form>
+
+                        <!-- Buttons Row -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <!-- Save Changes Button -->
+                            <button form="editForm" type="submit" class="btn btn-outline-purple">Save Changes</button>
+
+                            <!-- Delete Classroom Form + Button -->
+                            <form action="../includes/delete_classroom.php" method="POST" onsubmit="return confirm('Are you sure you want to delete this classroom? This action cannot be undone.');">
+                                <input type="hidden" name="classroom_id" value="<?= htmlspecialchars($classroom_id) ?>">
+                                <button type="submit" class="btn btn-danger">Delete Classroom</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
