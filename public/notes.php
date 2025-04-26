@@ -112,6 +112,10 @@ $notes = $note_stmt->fetchAll();
 
                     <!--Classroom Dropdown!-->
 
+
+                    <form method="GET" class="d-flex flex-wrap justify-content-center align-items-center gap-3">
+    <!-- Filter by Classroom -->
+    <div>
                 <div>
                 <label for="classroomFilter" class="form-label custom-label me-2">Filter by Classroom:</label>
                 <select name="classroom_id" id="classroomFilter" class="form-select custom-style d-inline-block w-auto ">
@@ -123,7 +127,15 @@ $notes = $note_stmt->fetchAll();
                     <?php endforeach; ?>
                 </select>
             </div>
-            
+
+            <!-- Submit Button -->
+    <div>
+        <button type="submit" class="btn custom-style">
+            <i class="bi bi-filter"></i> Apply
+        </button>
+    </div>
+</form>
+
             <div class="col-12 col-md-3 mb-3 mb-md-0">
                 <div class="dropdown">
 
@@ -153,9 +165,10 @@ $notes = $note_stmt->fetchAll();
         t1.title, 
         t1.upload_date,
         t1.content,
+        t1.likes
         t2.subject_name, 
         u.username,
-        COUNT(l.like_id) AS likes
+        
     FROM 
         classroom_notes t1
     JOIN 
