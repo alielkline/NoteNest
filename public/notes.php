@@ -34,9 +34,10 @@ $like_order = isset($_GET['sort_likes']) && $_GET['sort_likes'] === 'mostLiked' 
 
 // 2. Base query to get notes
 $note_query = "
-    SELECT cn.*
+    SELECT cn.*, subject_name, username
     FROM classroom_notes cn
     JOIN classroom_subjects cs ON cn.subject_id = cs.subject_id
+    JOIN users u ON u.id = cn.creator_id
 ";
 
 // 3. Apply filter if a specific classroom is selected
@@ -50,12 +51,13 @@ if ($classroom_filter) {
 $note_query .= " ORDER BY ";
 $sorting_criteria = [];
 
-if (isset($_GET['sort_date'])) {
-    $sorting_criteria[] = "cn.upload_date $sort_date_order";
-}
-
 if (isset($_GET['sort_likes'])) {
     $sorting_criteria[] = "cn.likes $like_order";
+}
+
+// Only apply date sorting *if likes sorting is not active* OR add it as secondary
+if (isset($_GET['sort_date'])) {
+    $sorting_criteria[] = "cn.upload_date $sort_order";
 }
 
 if (count($sorting_criteria) > 0) {
