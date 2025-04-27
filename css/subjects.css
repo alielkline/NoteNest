@@ -54,6 +54,24 @@
     color: white;
 }
 
+
+.card-custom {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 170px;
+    border-radius: 1rem;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05);
+    padding: 2rem;
+    transition: 0.2s ease;
+    pointer-events: auto; 
+}
+
+.card-custom:hover{
+    border: 1px solid #6b21a8;
+}
+
 .success-message {
     background-color: #e2fee8;
     color: #29cb47;
@@ -106,11 +124,6 @@
 }
 
 
-.card-custom:hover{
-    border: 1px solid #6b21a8;
-}
-
-
 .custom-grey-btn {
     background-color: #858383; /* light grey */
     color: #ffffff;
@@ -124,12 +137,20 @@
 }
 
 .view-notes-btn {
-    color: #6c757d; /* Same as text-muted */
-    font-size: 0.875rem; /* Same as small */
+    color: #8b5cf6;
+    font-size: 0.875rem;
     text-decoration: none;
-    pointer-events: none; /* Allows click to pass through to stretched link */
+    display: inline-block;
+    cursor: pointer; 
+    transition: color 0.2s ease;
+    margin-top: 18px;
+    pointer-events: auto; 
 }
 
-.card-custom:hover .view-notes-btn {
-    color: #8464d0; /* Changes color on hover like a link */
+.view-notes-btn:hover {
+    color: #654fa3; 
+}
+
+.notes-count {
+    margin-top: 18px;
 }

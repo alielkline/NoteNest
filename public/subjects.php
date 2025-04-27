@@ -50,7 +50,6 @@ $is_member = $stmt->fetch() ? true : false;
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/navbar.css">
     <link rel="stylesheet" href="../css/subjects.css">
-    <link rel="stylesheet" href="../css/classroom.css">
 </head>
 <body>
     <?php include '../includes/navbar.php'; ?>
@@ -123,11 +122,13 @@ $is_member = $stmt->fetch() ? true : false;
                 <?php foreach ($subjects as $subject): ?>
                     <div class="col-md-6 col-lg-4 d-flex">
                         <div class="card card-custom p-3 flex-fill position-relative">
-                            <h5 class="fw-semibold"><?= htmlspecialchars($subject['subject_name']) ?></h5>
+                            <h5 class="fw-semibold"><i class="bi bi-folder" style="color: #8b5cf6;"></i> <?= htmlspecialchars($subject['subject_name']) ?></h5>
                             <p class="text-muted"><?= htmlspecialchars($subject['subject_desc']) ?></p>
                             <div class="d-flex justify-content-between text-muted small mt-auto">
-                                <span>📝 <?= $subject['notes'] ?> notes</span>
-                                <span class="view-notes-btn">View Notes →</span>
+                                <span class="notes-count">📝 <?= $subject['notes'] ?> notes</span>
+                                <a href="notes.php?subject_id=<?= $subject['subject_id'] ?>" class="view-notes-btn">
+                                    View Notes →
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -151,6 +152,10 @@ $is_member = $stmt->fetch() ? true : false;
                             <div class="mb-3">
                                 <label for="subjectName" class="form-label">Subject Name</label>
                                 <input type="text" class="form-control" id="subjectName" name="name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="subjectDesc" class="form-label">Subject Description</label>
+                                <input type="text" class="form-control" id="subjectDesc" name="desc" required>
                             </div>
                             <button type="submit" class="btn btn-outline-purple">Create Subject</button>
                         </form>
