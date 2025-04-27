@@ -44,11 +44,11 @@ $params = [];
 $where_clauses = [];
 
 if ($note_filter === 'liked') {
-    $note_query .= " JOIN likes l ON cn.note_id = l.note_id ";
+    $note_query .= " INNER JOIN likes l ON cn.note_id = l.note_id ";
     $where_clauses[] = "l.user_id = ?";
     $params[] = $user_id;
 } elseif ($note_filter === 'bookmarked') {
-    $note_query .= " JOIN bookmarks b ON cn.note_id = b.note_id ";
+    $note_query .= " INNER JOIN bookmarks b ON cn.note_id = b.note_id ";
     $where_clauses[] = "b.user_id = ?";
     $params[] = $user_id;
 }
