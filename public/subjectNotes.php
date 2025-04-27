@@ -1,6 +1,7 @@
 <?php
 include '../includes/init.php';
 
+// Ensure the user is logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../public/login.php");
     exit();
@@ -8,36 +9,61 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-if(!isset($_GET['classroom_id'])){
+// Ensure classroom ID is provided
+if (!isset($_GET['classroom_id'])) {
     header("Location: ../public/classrooms.php");
     exit();
 }
 
 $classroom_id = $_GET['classroom_id'];
 
+// Fetch the classroom details
 $stmt = $pdo->prepare("SELECT * FROM classrooms WHERE classroom_id = ?");
 $stmt->execute([$classroom_id]);
 $classroom = $stmt->fetch();
 
-if(!$classroom){
+if (!$classroom) {
     header("Location: ../public/classrooms.php");
     exit();
 }
 
-$classroom_name = $classroom['name'];
-$classroom_desc = $classroom['description'];
-$classroom_date = $classroom['created_at'];
-$classroom_invCode = $classroom['invite_code'];
-$classroom_visibility = $classroom['visibility'];
+// Ensure subject ID is provided
+if (!isset($_GET['subject_id'])) {
+    header("Location: ../public/dashboard.php");
+    exit();
+}
 
-$stmt = $pdo->prepare("SELECT * FROM classroom_subjects WHERE classroom_id = ?");
-$stmt->execute([$classroom_id]);
-$subjects = $stmt->fetchAll();
+$subject_id = $_GET['subject_id'];
 
-$stmt = $pdo->prepare("SELECT * FROM classroom_members WHERE user_id = ? AND classroom_id = ?");
-$stmt->execute([$user_id, $classroom_id]);
-$is_member = $stmt->fetch() ? true : false;
+// Fetch the subject details
+$stmt = $pdo->prepare("SELECT * FROM classroom_subjects WHERE subject_id = ?");
+$stmt->execute([$subject_id]);
+$subject = $stmt->fetch();
 
+if (!$subject) {
+    header("Location: ../public/dashboard.php");
+    exit();
+}
+
+// Classroom and subject filter logic
+$classroom_filter = isset($_GET['classroom_id']) && $_GET['classroom_id'] !== 'all' ? $_GET['classroom_id'] : null;
+$subject_filter = isset($subject_id) ? $subject_id : null;
+
+// Construct the query to fetch notes
+$note_query = "
+    SELECT cn.* 
+    FROM classroom_notes cn 
+    JOIN classroom_subjects cs ON cn.subject_id = cs.subject_id
+    WHERE cs.classroom_id = ? AND cs.subject_id = ? 
+    ORDER BY cn.likes DESC
+";
+
+$params = [$classroom_filter, $subject_filter];
+
+// Prepare and execute the query
+$note_stmt = $pdo->prepare($note_query);
+$note_stmt->execute($params);
+$notes = $note_stmt->fetchAll();
 ?>
 
 <!DOCTYPE html>
@@ -45,14 +71,16 @@ $is_member = $stmt->fetch() ? true : false;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars($classroom_name) ?> - Subjects</title>
+    <title><?= htmlspecialchars($subject['subject_name']) ?> - Notes</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/navbar.css">
-    <link rel="stylesheet" href="../css/subjects.css">
+    <link rel="stylesheet" href="../css/subjectNotes.css">
 </head>
 <body>
     <?php include '../includes/navbar.php'; ?>
+
+    <!-- Error and Success Messages -->
     <?php if (isset($_SESSION['error'])): ?>
         <div class="error-message" id="error-message">
             <div><?php echo htmlspecialchars($_SESSION['error']); ?></div>
@@ -66,104 +94,82 @@ $is_member = $stmt->fetch() ? true : false;
         </div>
         <?php unset($_SESSION['success']); ?>
     <?php endif; ?>
-    
 
     <div class="container my-4">
-
+        <!-- Breadcrumb and Subject Title -->
         <div class="row mb-1">
-            <div class = "col-12">
-                <p class="text-muted"><a href="../public/classrooms.php" class="classroom-link">Classrooms</a> / <strong><?= htmlspecialchars($classroom_name) ?></p>
+            <div class="col-12">
+                <p class="text-muted">
+                    <a href="../public/subjects.php?classroom_id=<?= $classroom_id ?>" class="subject-link">Subjects</a> / 
+                    <strong><?= htmlspecialchars($subject['subject_name']) ?></strong>
+                </p>
             </div>
         </div>
 
+        <!-- Heading with Buttons (for classroom creator) -->
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="fw-bold mb-0"><?= htmlspecialchars($classroom_name) ?> - Subjects</h2>
-
+            <h2 class="fw-bold mb-0"><?= htmlspecialchars($subject['subject_name']) ?> - Notes</h2>
             <?php if ($classroom['creator_id'] == $user_id): ?>
                 <div class="d-flex gap-2">
-                    <button class="btn btn-purple text-white" data-bs-toggle="modal" data-bs-target="#createSubjectModal">
-                        <i class="bi bi-plus-lg me-1"></i> New Subject
-                    </button>
+                    <a href="../public/create_note.php" class="btn btn-purple text-white">
+                        <i class="bi bi-plus-lg me-1"></i> New Note
+                    </a>
                     <button class="btn custom-grey-btn" data-bs-toggle="modal" data-bs-target="#settingsModal">
                         <i class="bi bi-gear me-1"></i> Settings
                     </button>
-                </div>    
-            <?php endif; ?>
-            <?php if ($is_member): ?>
-            <?php if ($classroom['creator_id'] != $user_id): ?>
-                <form action="../includes/leave_classroom.php" method="POST" class="ms-2">
-                    <input type="hidden" name="classroom_id" value="<?= $classroom_id ?>">
-                    <button class="btn btn-outline-danger" type="submit">
-                        <i class="bi bi-box-arrow-left me-1"></i> Leave Classroom
-                    </button>
-                </form>
-            <?php endif; ?>
-            <?php else: ?>
-                <form action="../includes/join_classroomWithoutCode.php" method="POST" class="ms-2">
-                    <input type="hidden" name="classroom_id" value="<?= $classroom_id ?>">
-                    <button class="btn btn-outline-success" type="submit">
-                        <i class="bi bi-box-arrow-in-right me-1"></i> Join Classroom
-                    </button>
-                </form>
+                </div>
             <?php endif; ?>
         </div>
-        <!-- Classroom details in a row -->
+
+        <!-- Classroom Description -->
         <div class="row mb-4">
-            <!-- Description on a separate row -->
             <div class="col-12">
-                <p class="desc"><?= htmlspecialchars($classroom_desc) ?></p>
+                <p class="desc"><?= htmlspecialchars($subject['subject_desc']) ?></p>
             </div>
         </div>
 
+        <!-- Notes Header -->
+        <div class="d-flex justify-content-between align-items-center flex-wrap mb-2">
+            <div class="text-center my-4">
+                <h5 class="d-inline-flex align-items-center justify-content-center">
+                    <i class="bi bi-book text-purple me-2"></i> Subject - Notes
+                </h5>
+            </div>
+        </div>
 
-        <!-- Subjects display -->
-        <div class="row g-4 card-grid">
-            <?php if (count($subjects) > 0): ?>
-                <?php foreach ($subjects as $subject): ?>
-                    <div class="col-md-6 col-lg-4 d-flex">
-                        <div class="card card-custom p-3 flex-fill position-relative">
-                            <h5 class="fw-semibold"><i class="bi bi-folder" style="color: #8b5cf6;"></i> <?= htmlspecialchars($subject['subject_name']) ?></h5>
-                            <p class="text-muted"><?= htmlspecialchars($subject['subject_desc']) ?></p>
-                            <div class="d-flex justify-content-between text-muted small mt-auto">
-                                <span class="notes-count">📝 <?= $subject['notes'] ?> notes</span>
-                                <a href="subjectNotes.php?subject_id=<?= $subject['subject_id'] ?>&classroom_id=<?=$classroom_id ?>" class="view-notes-btn">
-                                    View Notes →
-                                </a>
-                            </div>
+        <!-- Notes List -->
+        <div class="row g-4 justify-content-center" id="notes-container">
+            <?php foreach ($notes as $index => $note): ?>
+                <div class="col-12 note-card <?= $index >= 4 ? 'd-none extra-note' : '' ?>">
+                    <div class="card custom-style card-custom p-3 d-flex flex-column position-relative w-100">
+                        <h5 class="fw-semibold mb-2"><?= htmlspecialchars($note['title']) ?></h5>
+                        <p class="text-muted mb-3"><?= htmlspecialchars(mb_strimwidth($note['content'], 0, 120, '...')) ?></p>
+                        <div class="mt-auto d-flex justify-content-between align-items-center text-muted small">
+                            <span>📅 <?= date('M d, Y', strtotime($note['upload_date'])) ?></span>
+                            <span>👍 <?= $note['likes'] ?? 0 ?> | 🔖 <?= $note['bookmarkes'] ?? 0 ?></span>
                         </div>
                     </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <p class="text-muted">No subjects available for this classroom.</p>
-            <?php endif; ?>
+                </div>
+            <?php endforeach; ?>
         </div>
 
+        <!-- View More Button -->
+        <?php if (count($notes) > 4): ?>
+            <div class="text-center mt-3">
+                <button class="btn btn-outline-dark" id="toggle-notes-btn">View More</button>
+            </div>
+        <?php endif; ?>
 
-        <div class="modal fade" id="createSubjectModal" tabindex="-1" aria-labelledby="createSubjectModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="createSubjectModalLabel">Create a New Subject</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="../includes/create_subject.php" method="POST">
-                            <input type="hidden" name="classroom_id" value="<?= htmlspecialchars($classroom_id) ?>">
-                            <div class="mb-3">
-                                <label for="subjectName" class="form-label">Subject Name</label>
-                                <input type="text" class="form-control" id="subjectName" name="name" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="subjectDesc" class="form-label">Subject Description</label>
-                                <input type="text" class="form-control" id="subjectDesc" name="desc" required>
-                            </div>
-                            <button type="submit" class="btn btn-outline-purple">Create Subject</button>
-                        </form>
-                    </div>
+        <!-- No Notes Found Alert -->
+        <?php if (empty($notes)): ?>
+            <div class="col-12">
+                <div class="alert alert-secondary text-center" role="alert">
+                    No notes found.
                 </div>
             </div>
-        </div>
+        <?php endif; ?>
 
+        <!-- Settings Modal -->
         <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -174,9 +180,9 @@ $is_member = $stmt->fetch() ? true : false;
                     <div class="modal-body">
                         <!-- Edit Classroom Form -->
                         <form id="editForm" action="../includes/edit_classroom.php" method="POST">
-                            <input type="hidden" name="classroom_id" value="<?= htmlspecialchars($classroom_id) ?>">
+                            <input type="hidden" name="subject_id" value="<?= htmlspecialchars($subject_id) ?>">
                             <div class="mb-3">
-                                <label for="classroomName" class="form-label">Classroom Name</label>
+                                <label for="subjectName" class="form-label">Classroom Name</label>
                                 <input type="text" class="form-control" id="classroomName" name="classroomName" value="<?= htmlspecialchars($classroom_name) ?>">
                             </div>
                             <div class="mb-3">
@@ -201,10 +207,7 @@ $is_member = $stmt->fetch() ? true : false;
 
                         <!-- Buttons Row -->
                         <div class="d-flex justify-content-between mt-4">
-                            <!-- Save Changes Button -->
                             <button form="editForm" type="submit" class="btn btn-outline-purple">Save Changes</button>
-
-                            <!-- Delete Classroom Form + Button -->
                             <form action="../includes/delete_classroom.php" method="POST" onsubmit="return confirm('Are you sure you want to delete this classroom? This action cannot be undone.');">
                                 <input type="hidden" name="classroom_id" value="<?= htmlspecialchars($classroom_id) ?>">
                                 <button type="submit" class="btn btn-danger">Delete Classroom</button>
@@ -215,10 +218,8 @@ $is_member = $stmt->fetch() ? true : false;
             </div>
         </div>
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../js/error.js"></script>
     <script src="../js/success.js"></script>
-    <script src="../js/copy.js"></script>
 </body>
 </html>
