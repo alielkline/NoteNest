@@ -40,7 +40,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-6 mx-auto" style="color: #64748B">
+            <div class="col-6 mx-auto text-muted">
                 <p style="font-size: 25px">Create classrooms, share notes, and learn together with your classmates in a collaborative environment.</p>
             </div>
         </div>

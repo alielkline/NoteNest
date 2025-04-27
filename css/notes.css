@@ -1,0 +1,45 @@
+.btn-notes-dropdown {
+    background: white;
+    border: none;
+    color: #333;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    min-width: 8rem;
+    text-align:left;
+}
+.dropdown-item {
+    background: white;
+    border: none;
+    color: #333;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    min-width: 8rem;
+    text-align:left;
+}
+.note-pane {
+    background: white;
+    border-radius: 8px;
+    color: #333;
+}
+.btn-no-notes {
+    background-color: #8b5cf6;
+    color: white;
+    font-weight: 500;
+    padding: 0.4rem 1rem;
+    border: none;
+    border-radius: 8px;
+}
+.subject-pill{
+    background-color: #cac0ff;
+    border-radius: 5px;
+}
+
+.btn-notes-dropdown:hover {
+    background-color: #cac0ff;
+    color: #8b5cf6;
+}
+.dropdown-item:hover {
+    background: #F4EBFF;
+}
