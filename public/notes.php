@@ -29,43 +29,43 @@ $classrooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // 1. Get selected filter/sort from request (GET or POST)
 $classroom_filter = isset($_GET['classroom_id']) && $_GET['classroom_id'] !== 'all' ? $_GET['classroom_id'] : null;
-$sort_order = isset($_GET['sort']) && $_GET['sort'] === 'oldest' ? 'ASC' : 'DESC';
-$note_filter = isset($_GET['note_filter']) ? $_GET['note_filter'] : 'all';
+$sort_order = isset($_GET['sort_date']) && $_GET['sort_date'] === 'oldest' ? 'ASC' : 'DESC';
+$like_order = isset($_GET['sort_likes']) && $_GET['sort_likes'] === 'mostLiked' ? 'ASC' : 'DESC';
 
 // 2. Base query to get notes
 $note_query = "
-    SELECT DISTINCT cn.*, cs.subject_name, u.username
+    SELECT cn.*
     FROM classroom_notes cn
     JOIN classroom_subjects cs ON cn.subject_id = cs.subject_id
-    JOIN users u ON cn.uploader_user_id = u.id
 ";
 
+// 3. Apply filter if a specific classroom is selected
 $params = [];
-$where_clauses = [];
-
-if ($note_filter === 'liked') {
-    $note_query .= " INNER JOIN likes l ON cn.note_id = l.note_id ";
-    $where_clauses[] = "l.user_id = ?";
-    $params[] = $user_id;
-} elseif ($note_filter === 'bookmarked') {
-    $note_query .= " INNER JOIN bookmarks b ON cn.note_id = b.note_id ";
-    $where_clauses[] = "b.user_id = ?";
-    $params[] = $user_id;
-}
-
 if ($classroom_filter) {
-    $where_clauses[] = "cs.classroom_id = ?";
+    $note_query .= " WHERE cs.classroom_id = ?";
     $params[] = $classroom_filter;
 }
 
-// Apply WHERE if needed
-if (!empty($where_clauses)) {
-    $note_query .= " WHERE " . implode(' AND ', $where_clauses);
+// 4. Apply sorting
+$note_query .= " ORDER BY ";
+$sorting_criteria = [];
+
+if (isset($_GET['sort_date'])) {
+    $sorting_criteria[] = "cn.upload_date $sort_date_order";
 }
 
-// Always sort by upload date
-$note_query .= " ORDER BY cn.upload_date $sort_order";
+if (isset($_GET['sort_likes'])) {
+    $sorting_criteria[] = "cn.likes $like_order";
+}
 
+if (count($sorting_criteria) > 0) {
+    $note_query .= implode(", ", $sorting_criteria);
+} else {
+    // If no sorting is applied, default to upload date descending
+    $note_query .= "cn.upload_date DESC";
+}
+
+// 5. Prepare and execute
 $note_stmt = $pdo->prepare($note_query);
 $note_stmt->execute($params);
 $notes = $note_stmt->fetchAll();
@@ -103,13 +103,6 @@ $notes = $note_stmt->fetchAll();
         <div class="p-3">
             <button class="btn-login border px-3">
             
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-sort-down me-2" viewBox="0 0 16 16">
-            <path  d="M3.5 2.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 11.293zm3.5 1a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"/>
-            </svg>
-            
-            Most Liked</button>
-            <button class="btn-signup px-3">
-                
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus-lg me-2" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
             </svg>
@@ -119,22 +112,11 @@ $notes = $note_stmt->fetchAll();
 
     </div>
 
-    <!--Two Dropdowns!-->
-    <div class="container">
-
-    <div class="d-flex my-4">
-        <div class="row justify-content-left w-100">
-            <div class="col-12 col-md-3 mb-3 mb-md-0">
-                <div class="dropdown">
-
-                    <!--Classroom Dropdown!-->
-
-
-                    <form method="GET" class="d-flex flex-wrap justify-content-center align-items-center gap-3">
+    <form method="GET" class="d-flex flex-wrap justify-content-center align-items-center gap-3">
     <!-- Filter by Classroom -->
     <div>
         <label for="classroomFilter" class="form-label custom-label me-2">Filter by Classroom:</label>
-        <select name="classroom_id" id="classroomFilter" class="form-select custom-style d-inline-block w-auto">
+        <select name="classroom_id" id="classroomFilter" class="form-select custom-style d-inline-block w-auto ">
             <option value="all" <?= !isset($_GET['classroom_id']) || $_GET['classroom_id'] === 'all' ? 'selected' : '' ?>>All Classrooms</option>
             <?php foreach ($classrooms as $class): ?>
                 <option value="<?= $class['classroom_id'] ?>" <?= (isset($_GET['classroom_id']) && $_GET['classroom_id'] == $class['classroom_id']) ? 'selected' : '' ?>>
@@ -144,13 +126,21 @@ $notes = $note_stmt->fetchAll();
         </select>
     </div>
 
-    <!-- Filter by Notes (All / Liked / Bookmarked) -->
+    <!-- Sort by Upload Date -->
     <div>
-        <label for="noteFilter" class="form-label custom-label me-2">Filter by Notes:</label>
-        <select name="note_filter" id="noteFilter" class="form-select custom-style d-inline-block w-auto">
-            <option value="all" <?= (!isset($_GET['note_filter']) || $_GET['note_filter'] === 'all') ? 'selected' : '' ?>>All Notes</option>
-            <option value="liked" <?= (isset($_GET['note_filter']) && $_GET['note_filter'] === 'liked') ? 'selected' : '' ?>>Liked Notes</option>
-            <option value="bookmarked" <?= (isset($_GET['note_filter']) && $_GET['note_filter'] === 'bookmarked') ? 'selected' : '' ?>>Bookmarked Notes</option>
+        <label for="sortDate" class="form-label custom-label me-2">Sort by Date:</label>
+        <select name="sort_date" id="sortDate" class="form-select d-inline-block w-auto">
+            <option value="newest" <?= (!isset($_GET['sort_date']) || $_GET['sort_date'] === 'newest') ? 'selected' : '' ?>>Newest</option>
+            <option value="oldest" <?= (isset($_GET['sort_date']) && $_GET['sort_date'] === 'oldest') ? 'selected' : '' ?>>Oldest</option>
+        </select>
+    </div>
+
+    <!-- Sort by Likes -->
+    <div>
+        <label for="likeOrder" class="form-label custom-label me-2">Sort by Likes:</label>
+        <select name="sort_likes" id="likeOrder" class="form-select d-inline-block w-auto">
+            <option value="mostLiked" <?= (!isset($_GET['sort_likes']) || $_GET['sort_likes'] === 'mostLiked') ? 'selected' : '' ?>>Most Liked</option>
+            <option value="leastLiked" <?= (isset($_GET['sort_likes']) && $_GET['sort_likes'] === 'leastLiked') ? 'selected' : '' ?>>Least Liked</option>
         </select>
     </div>
 
@@ -162,6 +152,7 @@ $notes = $note_stmt->fetchAll();
     </div>
 </form>
 
+    
 
                 </div>
             </div>
@@ -207,4 +198,3 @@ $notes = $note_stmt->fetchAll();
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
