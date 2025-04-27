@@ -34,6 +34,7 @@
 .subject-pill{
     background-color: #cac0ff;
     border-radius: 5px;
+    text-align: center;
 }
 
 .btn-notes-dropdown:hover {

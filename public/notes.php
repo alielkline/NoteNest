@@ -30,25 +30,42 @@ $classrooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
 // 1. Get selected filter/sort from request (GET or POST)
 $classroom_filter = isset($_GET['classroom_id']) && $_GET['classroom_id'] !== 'all' ? $_GET['classroom_id'] : null;
 $sort_order = isset($_GET['sort']) && $_GET['sort'] === 'oldest' ? 'ASC' : 'DESC';
+$note_filter = isset($_GET['note_filter']) ? $_GET['note_filter'] : 'all';
 
 // 2. Base query to get notes
 $note_query = "
-    SELECT cn.*
+    SELECT DISTINCT cn.*, cs.subject_name, u.username
     FROM classroom_notes cn
     JOIN classroom_subjects cs ON cn.subject_id = cs.subject_id
+    JOIN users u ON cn.uploader_user_id = u.id
 ";
 
-// 3. Apply filter if a specific classroom is selected
 $params = [];
+$where_clauses = [];
+
+if ($note_filter === 'liked') {
+    $note_query .= " JOIN likes l ON cn.note_id = l.note_id ";
+    $where_clauses[] = "l.user_id = ?";
+    $params[] = $user_id;
+} elseif ($note_filter === 'bookmarked') {
+    $note_query .= " JOIN bookmarks b ON cn.note_id = b.note_id ";
+    $where_clauses[] = "b.user_id = ?";
+    $params[] = $user_id;
+}
+
 if ($classroom_filter) {
-    $note_query .= " WHERE cs.classroom_id = ?";
+    $where_clauses[] = "cs.classroom_id = ?";
     $params[] = $classroom_filter;
 }
 
-// 4. Add sorting
+// Apply WHERE if needed
+if (!empty($where_clauses)) {
+    $note_query .= " WHERE " . implode(' AND ', $where_clauses);
+}
+
+// Always sort by upload date
 $note_query .= " ORDER BY cn.upload_date $sort_order";
 
-// 5. Prepare and execute
 $note_stmt = $pdo->prepare($note_query);
 $note_stmt->execute($params);
 $hamada = $note_stmt->fetchAll();
@@ -113,22 +130,31 @@ $hamada = $note_stmt->fetchAll();
                     <!--Classroom Dropdown!-->
 
 
-                                <form method="GET" class="d-flex flex-wrap justify-content-center align-items-center gap-3">
-                <!-- Filter by Classroom -->
-                <div>
-                <div>
-                <label for="classroomFilter" class="form-label custom-label me-2">Filter by Classroom:</label>
-                <select name="classroom_id" id="classroomFilter" class="form-select custom-style d-inline-block w-auto ">
-                    <option value="all" <?= !isset($_GET['classroom_id']) || $_GET['classroom_id'] === 'all' ? 'selected' : '' ?>>All Classrooms</option>
-                    <?php foreach ($classrooms as $class): ?>
-                        <option value="<?= $class['classroom_id'] ?>" <?= (isset($_GET['classroom_id']) && $_GET['classroom_id'] == $class['classroom_id']) ? 'selected' : '' ?>>
-                            <?= htmlspecialchars($class['name']) ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
+                    <form method="GET" class="d-flex flex-wrap justify-content-center align-items-center gap-3">
+    <!-- Filter by Classroom -->
+    <div>
+        <label for="classroomFilter" class="form-label custom-label me-2">Filter by Classroom:</label>
+        <select name="classroom_id" id="classroomFilter" class="form-select custom-style d-inline-block w-auto">
+            <option value="all" <?= !isset($_GET['classroom_id']) || $_GET['classroom_id'] === 'all' ? 'selected' : '' ?>>All Classrooms</option>
+            <?php foreach ($classrooms as $class): ?>
+                <option value="<?= $class['classroom_id'] ?>" <?= (isset($_GET['classroom_id']) && $_GET['classroom_id'] == $class['classroom_id']) ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($class['name']) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </div>
 
-            <!-- Submit Button -->
+    <!-- Filter by Notes (All / Liked / Bookmarked) -->
+    <div>
+        <label for="noteFilter" class="form-label custom-label me-2">Filter by Notes:</label>
+        <select name="note_filter" id="noteFilter" class="form-select custom-style d-inline-block w-auto">
+            <option value="all" <?= (!isset($_GET['note_filter']) || $_GET['note_filter'] === 'all') ? 'selected' : '' ?>>All Notes</option>
+            <option value="liked" <?= (isset($_GET['note_filter']) && $_GET['note_filter'] === 'liked') ? 'selected' : '' ?>>Liked Notes</option>
+            <option value="bookmarked" <?= (isset($_GET['note_filter']) && $_GET['note_filter'] === 'bookmarked') ? 'selected' : '' ?>>Bookmarked Notes</option>
+        </select>
+    </div>
+
+    <!-- Submit Button -->
     <div>
         <button type="submit" class="btn custom-style">
             <i class="bi bi-filter"></i> Apply
@@ -136,18 +162,7 @@ $hamada = $note_stmt->fetchAll();
     </div>
 </form>
 
-            <div class="col-12 col-md-3 mb-3 mb-md-0">
-                <div class="dropdown">
 
-                    <!--Notes Dropdown!-->
-                    <button class="btn btn-notes-dropdown dropdown-toggle border w-100" type="button" id="dropdownNotesButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        All Notes 
-                    </button>
-                    <div class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item">All Notes</a>
-                        <a class="dropdown-item">Liked Notes</a>
-                        <a class="dropdown-item">Bookmarked Notes</a>
-                    </div>
                 </div>
             </div>
             </div>

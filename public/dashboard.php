@@ -142,7 +142,7 @@ $notes = $note_stmt->fetchAll();
                 </h5>
             </div>
             <?php include "../includes/filter_notes.php"; ?>
-
+        </div>
             <div class="row g-4 justify-content-center" id="notes-container">
                 <?php foreach ($notes as $index => $note): ?>
                     <div class="col-12 note-card <?= $index >= 4 ? 'd-none extra-note' : '' ?>">
@@ -171,7 +171,6 @@ $notes = $note_stmt->fetchAll();
                     </div>
                 </div>
             <?php endif; ?>
-        </div>
 
 
 
