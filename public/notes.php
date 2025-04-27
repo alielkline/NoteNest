@@ -68,7 +68,7 @@ $note_query .= " ORDER BY cn.upload_date $sort_order";
 
 $note_stmt = $pdo->prepare($note_query);
 $note_stmt->execute($params);
-$notes = $note_stmt->fetchAll();
+$hamada = $note_stmt->fetchAll();
 ?>
 
 <!DOCTYPE html>
@@ -86,7 +86,7 @@ $notes = $note_stmt->fetchAll();
 <body>
     <script src="../js/notes.js"></script>
     <?php include '../includes/navbar.php'; ?>
-    
+    <?php include '../includes/init.php'; ?>
     
 
     <!--Headers and early buttons!-->
@@ -174,7 +174,29 @@ $notes = $note_stmt->fetchAll();
     <?php 
     
     //Selecting the data
-    
+    $stmt = $pdo->prepare("
+    SELECT 
+        t1.note_id,
+        t1.title, 
+        t1.upload_date,
+        t1.content,
+        t1.likes,
+        t2.subject_name, 
+        u.username
+    FROM 
+        classroom_notes t1
+    JOIN 
+        classroom_subjects t2 ON t1.subject_id = t2.subject_id
+    JOIN 
+        users u ON u.id = t1.uploader_user_id
+    LEFT JOIN
+        likes l ON l.note_id = t1.note_id
+    GROUP BY 
+        t1.note_id, t1.title, t1.upload_date, t1.content, t2.subject_name, u.username
+        ");
+        $stmt->execute();
+
+        $notes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
         //checking if there are 0 notes

@@ -65,7 +65,7 @@ $notes = $note_stmt->fetchAll();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link href="../css/dashboard.css" rel="stylesheet">
     <link href="../css/classroom.css" rel="stylesheet">
-    <link herf="../css/filter_notes.css" rel="stylesheet">
+    <link href="../css/filter_notes.css" rel="stylesheet">
     <title>Dashboard</title>
 </head>
 
@@ -138,12 +138,12 @@ $notes = $note_stmt->fetchAll();
         <div class="d-flex justify-content-between align-items-center flex-wrap mb-2">
             <div class="text-center my-4">
                 <h5 class="d-inline-flex align-items-center justify-content-center">
-                    <i class="bi bi-book text-primary me-2"></i> My Notes
+                    <i class="bi bi-book-fill text-purple me-2"></i> My Notes
                 </h5>
             </div>
             <?php include "../includes/filter_notes.php"; ?>
 
-            <div class="row g-4" id="notes-container">
+            <div class="row g-4 justify-content-center" id="notes-container">
                 <?php foreach ($notes as $index => $note): ?>
                     <div class="col-12 note-card <?= $index >= 4 ? 'd-none extra-note' : '' ?>">
                         <div class="card card-custom p-3 d-flex flex-column position-relative w-100">
