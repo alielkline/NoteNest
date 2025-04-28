@@ -30,14 +30,14 @@ $classrooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
 // 1. Get selected filter/sort from request (GET or POST)
 $classroom_filter = isset($_GET['classroom_id']) && $_GET['classroom_id'] !== 'all' ? $_GET['classroom_id'] : null;
 $sort_order = isset($_GET['sort_date']) && $_GET['sort_date'] === 'oldest' ? 'ASC' : 'DESC';
-$like_order = isset($_GET['sort_likes']) && $_GET['sort_likes'] === 'mostLiked' ? 'ASC' : 'DESC';
+$like_order = isset($_GET['sort_likes']) && $_GET['sort_likes'] === 'leastLiked' ? 'ASC' : 'DESC';
 
 // 2. Base query to get notes
 $note_query = "
     SELECT cn.*, subject_name, username
     FROM classroom_notes cn
     JOIN classroom_subjects cs ON cn.subject_id = cs.subject_id
-    JOIN users u ON u.id = cn.creator_id
+    JOIN users u ON u.id = cn.uploader_user_id
 ";
 
 // 3. Apply filter if a specific classroom is selected
