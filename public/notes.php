@@ -114,14 +114,14 @@ $notes = $note_stmt->fetchAll();
 
     </div>
 
-    <form method="GET" class="d-flex flex-wrap align-items-center gap-3">
+    <form method="GET" class="container d-flex flex-wrap align-items-center gap-3 my-3">
     <!-- Filter by Classroom -->
     <div>
         <label for="classroomFilter" class="form-label custom-label me-2 visually-hidden">Filter by Classroom:</label>
         <select name="classroom_id" id="classroomFilter" class="form-select custom-style d-inline-block w-auto btn-notes-dropdown">
-            <option value="all" <?= !isset($_GET['classroom_id']) || $_GET['classroom_id'] === 'all' ? 'selected' : '' ?>>All Classrooms</option>
+            <option class="dropdown-item" value="all" <?= !isset($_GET['classroom_id']) || $_GET['classroom_id'] === 'all' ? 'selected' : '' ?>>All Classrooms</option>
             <?php foreach ($classrooms as $class): ?>
-                <option value="<?= $class['classroom_id'] ?>" <?= (isset($_GET['classroom_id']) && $_GET['classroom_id'] == $class['classroom_id']) ? 'selected' : '' ?>>
+                <option class="dropdown-item" value="<?= $class['classroom_id'] ?>" <?= (isset($_GET['classroom_id']) && $_GET['classroom_id'] == $class['classroom_id']) ? 'selected' : '' ?>>
                     <?= htmlspecialchars($class['name']) ?>
                 </option>
             <?php endforeach; ?>
@@ -132,8 +132,8 @@ $notes = $note_stmt->fetchAll();
     <div>
         <label for="sortDate" class="form-label custom-label me-2 visually-hidden">Sort by Date:</label>
         <select name="sort_date" id="sortDate" class="form-select d-inline-block w-auto btn-notes-dropdown">
-            <option value="newest" <?= (!isset($_GET['sort_date']) || $_GET['sort_date'] === 'newest') ? 'selected' : '' ?>>Newest</option>
-            <option value="oldest" <?= (isset($_GET['sort_date']) && $_GET['sort_date'] === 'oldest') ? 'selected' : '' ?>>Oldest</option>
+            <option class="dropdown-item" value="newest" <?= (!isset($_GET['sort_date']) || $_GET['sort_date'] === 'newest') ? 'selected' : '' ?>>Newest</option>
+            <option class="dropdown-item" value="oldest" <?= (isset($_GET['sort_date']) && $_GET['sort_date'] === 'oldest') ? 'selected' : '' ?>>Oldest</option>
         </select>
     </div>
 
@@ -141,8 +141,8 @@ $notes = $note_stmt->fetchAll();
     <div>
         <label for="likeOrder" class="form-label custom-label me-2 visually-hidden">Sort by Likes:</label>
         <select name="sort_likes" id="likeOrder" class="form-select d-inline-block w-auto btn-notes-dropdown">
-            <option value="mostLiked" <?= (!isset($_GET['sort_likes']) || $_GET['sort_likes'] === 'mostLiked') ? 'selected' : '' ?>>Most Liked</option>
-            <option value="leastLiked" <?= (isset($_GET['sort_likes']) && $_GET['sort_likes'] === 'leastLiked') ? 'selected' : '' ?>>Least Liked</option>
+            <option class="dropdown-item" value="mostLiked" <?= (!isset($_GET['sort_likes']) || $_GET['sort_likes'] === 'mostLiked') ? 'selected' : '' ?>>Most Liked</option>
+            <option class="dropdown-item" value="leastLiked" <?= (isset($_GET['sort_likes']) && $_GET['sort_likes'] === 'leastLiked') ? 'selected' : '' ?>>Least Liked</option>
         </select>
     </div>
 
@@ -185,19 +185,23 @@ $notes = $note_stmt->fetchAll();
                 $excerpt = substr($note['content'], 0, 60) . '...';
                 $date = date("M d, Y", strtotime($note['upload_date']));
 
-                echo "<div class='container'";
-                echo "<div class='note-pane border p-3 mb-3'><div class='d-flex justify-content-between'>";
-                echo "<div class='d-flex'><p class='mb-1'>" . htmlspecialchars($note['username']) . "</p>";
-                echo "<p class='mb-1 text-muted'> •" . htmlspecialchars($date) . "</p></div>";
-                echo "<div><h4 class='mb-2'>" . htmlspecialchars($note['title']) . "</h4>";
-                echo "<p class='mt-2 text-muted'>" . htmlspecialchars($excerpt) . "</p></div>";
-                echo "<p class='subject-pill mb-1'> " . htmlspecialchars($note['subject_name']) . "</p>";
-                echo "<div><p class='mt-2'>" . "<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-heart-fill like-heart' viewBox='0 0 16 16'>
+                echo "<div class='container'>";
+                echo "<div class='note-pane border mb-3'>";
+                echo "<div class='d-flex justify-content-between'>";
+                echo "<div><span class='d-flex'><p>" . htmlspecialchars($note['username']) . "</p>";
+                echo "<p class='mx-2'>•</p>";
+                echo "<p class='text-muted'>" . htmlspecialchars($date) . "</p></span>";
+                echo "<h4>" . htmlspecialchars($note['title']) . "</h4>";
+                echo "<p class='text-muted'>" . htmlspecialchars($excerpt) . "</p>";
+                echo "<p class='subject-pill px-2 py-1'> " . htmlspecialchars($note['subject_name']) . "</p></div>";
+                echo "<div class='d-flex mx-2'><p class='mx-1'>" . "<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-heart-fill like-heart' viewBox='0 0 16 16'>
                     <path fill-rule='evenodd' d='M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314'/>
-                    </svg>" . htmlspecialchars($note['likes']) . "</p></div>"; 
+                    </svg></p>";
+                    echo "<p class='like-counter'>" . htmlspecialchars($note['likes']) . "</p></div>"; 
                 echo "</div></div></div>";
             }
         }
+        
     ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
