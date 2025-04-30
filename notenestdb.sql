@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Apr 27, 2025 at 04:34 PM
+-- Generation Time: Apr 30, 2025 at 04:46 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `notenestdb`
 --
+CREATE DATABASE IF NOT EXISTS `notenestdb` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `notenestdb`;
 
 -- --------------------------------------------------------
 
@@ -31,15 +33,6 @@ CREATE TABLE `bookmarks` (
   `note_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `bookmarks`
---
-
-INSERT INTO `bookmarks` (`note_id`, `user_id`) VALUES
-(2, 28),
-(3, 28),
-(3, 29);
 
 -- --------------------------------------------------------
 
@@ -109,17 +102,23 @@ CREATE TABLE `classroom_notes` (
   `uploader_user_id` int(11) NOT NULL,
   `upload_date` datetime DEFAULT current_timestamp(),
   `likes` int(11) DEFAULT 0,
-  `bookmarkes` int(11) DEFAULT 0
+  `bookmarkes` int(11) DEFAULT 0,
+  `visibility` enum('public','private') NOT NULL DEFAULT 'public',
+  `attachment` varchar(500) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `classroom_notes`
 --
 
-INSERT INTO `classroom_notes` (`note_id`, `subject_id`, `title`, `content`, `uploader_user_id`, `upload_date`, `likes`, `bookmarkes`) VALUES
-(1, 2, 'Transformers', 'HELLO THIS IS Transforms note', 22, '2025-04-26 15:27:10', 0, 0),
-(2, 4, 'Gandgun style', 'HELLO THIS IS gungum style', 22, '2025-04-26 15:27:58', 0, 0),
-(3, 7, 'Testing note', 'asdasdasdasd', 22, '2025-04-26 15:29:22', 0, 0);
+INSERT INTO `classroom_notes` (`note_id`, `subject_id`, `title`, `content`, `uploader_user_id`, `upload_date`, `likes`, `bookmarkes`, `visibility`, `attachment`) VALUES
+(5, 7, 'abaas', 'fernas', 22, '2025-04-30 16:58:47', 0, 0, 'public', NULL),
+(6, 7, 'abaas', 'fernas', 22, '2025-04-30 17:00:16', 0, 0, 'public', NULL),
+(7, 4, 'Physics', '123', 22, '2025-04-30 17:03:09', 0, 0, 'public', NULL),
+(8, 4, '123', '12334545545', 22, '2025-04-30 17:20:35', 0, 0, 'private', NULL),
+(9, 8, 'Chem', 'chemistry', 22, '2025-04-30 17:25:08', 0, 0, 'public', NULL),
+(10, 5, 'Data Science', 'DS IS data structure', 22, '2025-04-30 17:33:25', 0, 0, 'public', NULL),
+(11, 5, 'DAta preprocessing', 'hohohoh', 22, '2025-04-30 17:34:03', 0, 0, 'public', '../uploads/attachments/note_681234db165a94.32776131.pdf');
 
 -- --------------------------------------------------------
 
@@ -141,10 +140,10 @@ CREATE TABLE `classroom_subjects` (
 
 INSERT INTO `classroom_subjects` (`subject_id`, `classroom_id`, `subject_name`, `notes`, `subject_desc`) VALUES
 (2, 4, 'ML', 0, 'this is the ml'),
-(4, 4, 'Science', 0, 'hohohh'),
-(5, 4, 'DATA', 0, 'hehehehe'),
+(4, 4, 'Science', 2, 'hohohh'),
+(5, 4, 'DATA', 2, 'hehehehe'),
 (7, 1, 'testing', 0, 'hahahaha'),
-(8, 1, 'daqs', 0, NULL),
+(8, 1, 'daqs', 1, NULL),
 (9, 1, 'asd', 0, ''),
 (10, 1, 'asd', 0, 'asd');
 
@@ -172,15 +171,6 @@ CREATE TABLE `likes` (
   `note_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `likes`
---
-
-INSERT INTO `likes` (`note_id`, `user_id`) VALUES
-(3, 24),
-(1, 28),
-(3, 29);
 
 -- --------------------------------------------------------
 
@@ -291,7 +281,7 @@ ALTER TABLE `classrooms`
 -- AUTO_INCREMENT for table `classroom_notes`
 --
 ALTER TABLE `classroom_notes`
-  MODIFY `note_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `note_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `classroom_subjects`

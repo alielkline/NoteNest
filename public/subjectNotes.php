@@ -54,7 +54,7 @@ $note_query = "
     SELECT cn.* 
     FROM classroom_notes cn 
     JOIN classroom_subjects cs ON cn.subject_id = cs.subject_id
-    WHERE cs.classroom_id = ? AND cs.subject_id = ? 
+    WHERE cs.classroom_id = ? AND cs.subject_id = ? AND cn.visibility = 'public'
     ORDER BY cn.likes DESC
 ";
 
@@ -111,7 +111,7 @@ $notes = $note_stmt->fetchAll();
             <h2 class="fw-bold mb-0"><?= htmlspecialchars($subject['subject_name']) ?> - Notes</h2>
             <?php if ($classroom['creator_id'] == $user_id): ?>
                 <div class="d-flex gap-2">
-                    <a href="../public/create_note.php" class="btn btn-purple text-white">
+                    <a href="../public/create_note.php?subject_id=<?= $subject_id ?>&classroom_id=<?= $classroom_id?>" class="btn btn-purple text-white">
                         <i class="bi bi-plus-lg me-1"></i> New Note
                     </a>
                     <button class="btn custom-grey-btn" data-bs-toggle="modal" data-bs-target="#settingsModal">

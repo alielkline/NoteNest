@@ -7,101 +7,128 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-$user_id = $_SESSION['user_id'];
-
-// Check if form is submitted
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $note_title = $_POST['noteTitle'];
-    $note_content = $_POST['noteContent'];
-    $visibility = $_POST['visibility'];
-    $comments = $_POST['comments'];
-
-    // Handle file upload
-    if (isset($_FILES['attachment']) && $_FILES['attachment']['error'] === UPLOAD_ERR_OK) {
-        $upload_dir = '../uploads/';
-        $file_name = basename($_FILES['attachment']['name']);
-        $file_path = $upload_dir . $file_name;
-
-        // Move uploaded file to the server
-        if (move_uploaded_file($_FILES['attachment']['tmp_name'], $file_path)) {
-            $attachment = $file_path;
-        } else {
-            $attachment = null;
-        }
-    } else {
-        $attachment = null;
-    }
-
-    // Insert the new note into the database
-    $stmt = $pdo->prepare("INSERT INTO classroom_notes (user_id, title, content, visibility, attachment) 
-                           VALUES (?, ?, ?, ?, ?,)");
-    $stmt->execute([$user_id, $note_title, $note_content, $visibility, $attachment]);
-
-    // Redirect to the notes page after submission
-    $_SESSION['success'] = 'Note created successfully!';
-    header("Location: ../public/classroom_notes.php");
-    exit();
-}
+$subject_id = $_GET['subject_id'];
+$classroom_id = $_GET['classroom_id'];
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
+    <title>Create Note</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create New Note</title>
+
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="../css/navbar.css">
-    <link rel="stylesheet" href="../css/subjectNotes.css">
-</head>
 
+    <link rel="stylesheet" href="../css/navbar.css">
+    <link rel="stylesheet" href="../css/create_note.css">
+</head>
 <body>
     <?php include '../includes/navbar.php'; ?>
+    <?php if (isset($_SESSION['error'])): ?>
+        <div class="error-message" id="error-message">
+            <div><?php echo htmlspecialchars($_SESSION['error']); ?></div>
+        </div>
+        <?php unset($_SESSION['error']); ?>
+    <?php endif; ?>
+    
+    <div class="container my-5">
+        <div class="row">
+            <!-- Note form -->
+            <div class="col-lg-8 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title mb-3">Create a New Note</h2>
+                        <p class="text-muted mb-4">Add a new note to Web Development / JavaScript Fundamentals</p>
 
-    <div class="container my-4">
-        <h2 class="fw-bold mb-4">Create New Note</h2>
+                        <form action="../includes/save_note.php" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" name="subject_id" value="<?= htmlspecialchars($subject_id) ?>">
+                            <input type="hidden" name="classroom_id" value="<?= htmlspecialchars($classroom_id) ?>">
+                            <div class="mb-3">
+                                <label for="noteTitle" class="form-label">Title</label>
+                                <input type="text" class="form-control" id="noteTitle" name="noteTitle" required>
+                            </div>
 
-        <!-- New Note Form -->
-        <form action="../includes/create_note.php" method="POST" enctype="multipart/form-data">
-            <div class="mb-3">
-                <label for="noteTitle" class="form-label">Note Title</label>
-                <input type="text" class="form-control" id="noteTitle" name="noteTitle" required>
-            </div>
+                            <div class="mb-3">
+                                <label for="noteContent" class="form-label">Content</label>
+                                <textarea class="form-control" id="noteContent" name="noteContent" rows="6" required></textarea>
+                                <div class="form-text">[Please fill out this field]</div>
+                            </div>
 
-            <div class="mb-3">
-                <label for="noteContent" class="form-label">Note Content</label>
-                <textarea class="form-control" id="noteContent" name="noteContent" rows="4" required></textarea>
-            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Visibility</label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="visibility" value="public" id="public" checked>
+                                    <label class="form-check-label" for="public">Public</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="visibility" value="private" id="private">
+                                    <label class="form-check-label" for="private">Private</label>
+                                </div>
+                            </div>
 
-            <!-- File Attachment -->
-            <div class="mb-3">
-                <label for="attachment" class="form-label">Add Attachment (Photo or Video)</label>
-                <input type="file" class="form-control" id="attachment" name="attachment" accept="image/*,video/*">
-            </div>
+                            <div class="mb-3">
+                                <label for="attachment" class="form-label">Attachments</label>
+                                <label class="custom-file-upload">
+                                    <div class="upload-icon">
+                                        <!-- Upload Icon SVG -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-upload" viewBox="0 0 16 16">
+                                            <path d="M.5 9.9a.5.5 0 0 1 .5.6v3a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3a.5.5 0 0 1 1 0v3a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-3a.5.5 0 0 1 .5-.6z"/>
+                                            <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V10.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="upload-title">Upload Attachments</div>
+                                    <div class="upload-subtext">Click to browse files</div>
+                                    <input type="file" id="attachment" name="attachment">
+                                    <div id="file-name" class="mt-2 text-muted" style="font-size: 0.9rem;"></div>
+                                </label>
+                            </div>
 
-            <!-- Privacy Option -->
-            <div class="mb-3">
-                <label class="form-label">Visibility</label>
-                <div>
-                    <input type="radio" id="public" name="visibility" value="public" checked>
-                    <label for="public">Public</label>
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-md btn-purple">Create Note</button>
+                            </div>
 
-                    <input type="radio" id="private" name="visibility" value="private">
-                    <label for="private">Private</label>
+                        </form>
+                    </div>
                 </div>
             </div>
-            <!-- Submit Button -->
-            <div class="mt-4">
-                <button type="submit" class="btn btn-purple text-white">
-                    <i class="bi bi-cloud-upload me-2"></i> Upload Note
-                </button>
+
+            <!-- Tips section -->
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title mb-3">Tips for Great Notes</h4>
+
+                        <div class="mb-3">
+                            <h6 class="fw-semibold">Add Rich Content</h6>
+                            <p class="text-muted">Use markdown for formatting like <strong>bold</strong>, <em>italic</em>, and <code>code blocks</code>.</p>
+                        </div>
+
+                        <div class="mb-3">
+                            <h6 class="fw-semibold">Include Visual Content</h6>
+                            <p class="text-muted">Add images or diagrams to explain complex topics.</p>
+                        </div>
+
+                        <div class="mb-3">
+                            <h6 class="fw-semibold">Organize with Headings</h6>
+                            <p class="text-muted">Structure your notes with clear sections.</p>
+                        </div>
+
+                        <div>
+                            <h6 class="fw-semibold">Attach Relevant Files</h6>
+                            <p class="text-muted">Include PDFs, code samples, or helpful resources.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </form>
+        </div>
     </div>
 
+<!-- Bootstrap JS -->
+    <script src="../js/error.js"></script>
+    <script src="../js/create_note.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>
