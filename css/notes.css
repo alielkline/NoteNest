@@ -23,6 +23,11 @@
     border-radius: 8px;
     color: #333;
 }
+
+.like-heart {
+    color: #9B87F5;
+}
+
 .btn-no-notes {
     background-color: #8b5cf6;
     color: white;
@@ -44,3 +49,4 @@
 .dropdown-item:hover {
     background: #F4EBFF;
 }
+
