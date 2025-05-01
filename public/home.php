@@ -52,7 +52,7 @@
             <?php endif; ?>
         </div>
         <div class="row" id="cardsRow">
-            <div class="col-4">
+            <div class="col-lg-4 col-md-6 col-sm-12">
                 <div class="card shadow p-3 mb-5 bg-white rounded w-100">
                     <div class="card-body">
                         <div id="iconCircle">
@@ -65,7 +65,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-4">
+            <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="card shadow p-3 mb-5 bg-white rounded w-100">
                     <div class="card-body">
                         <div id="iconCircle">
@@ -80,7 +80,7 @@
                 </div>
             </div>
                 
-            <div class="col-4">
+            <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="card shadow p-3 mb-5 bg-white rounded w-100">
                     <div class="card-body">
                         <div id="iconCircle">
