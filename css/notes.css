@@ -50,6 +50,10 @@
     border: none;
     border-radius: 8px;
 }
+.title-anchor {
+    text-decoration:none;
+    color: #333;
+}
 .subject-pill{
     display: inline-block;
     background-color: #F4EBFF;

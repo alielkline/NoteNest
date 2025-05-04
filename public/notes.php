@@ -213,7 +213,7 @@ $hamada = $note_stmt->fetchAll();
                 echo "<div><span class='d-flex'><p>" . htmlspecialchars($note['username']) . "</p>";
                 echo "<p class='mx-2'>•</p>";
                 echo "<p class='text-muted'>" . htmlspecialchars($date) . "</p></span>";
-                echo "<h4>" . htmlspecialchars($note['title']) . "</h4>";
+                echo "<a class='title-anchor' href='single_note.php?note_id=" . htmlspecialchars($note['note_id']) . "'><h4>" . htmlspecialchars($note['title']) . "</h4></a>";
                 echo "<p class='text-muted'>" . htmlspecialchars($excerpt) . "</p>";
                 echo "<p class='subject-pill px-2 py-1'> " . htmlspecialchars($note['subject_name']) . "</p></div>";
                 echo "<div class='d-flex mx-2'><p class='mx-1'>" . "<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-heart-fill like-heart' viewBox='0 0 16 16'>
