@@ -19,7 +19,6 @@
     transition: all 0.3s ease;
     min-width: 8rem;
     text-align:left;
-    color:red;
 }
 .dropdown-item:hover {
     background: #cac0ff;

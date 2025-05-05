@@ -58,10 +58,17 @@
     background: #F4EBFF;
     border-radius: 8px;
 }
+.attachment-title {
+    font-weight: 600;
+}
 .download-icon-bg {
-
     background: #E5DEFF;
     border-radius: 8px;
+    aspect-ratio: 1;
+}
+.bi-book {
+    font-size: 20px;
+    color:#8b5cf6;
 }
 .download-btn {
     font-weight: 500;
