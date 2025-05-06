@@ -139,8 +139,8 @@
 
                 <div class="mb-3">
                     <label for="subjectSelect" class="form-label">Select Subject</label>
-                    <select class="form-select" id="subjectSelect" name="subject_id" required>
-                    <option value="">-- Select Subject --</option>
+                    <select class="form-select" id="subjectSelect" name="subject_id" required disabled>
+                        <option value="">-- Select Subject --</option>
                     </select>
                 </div>
 
@@ -159,23 +159,28 @@
         document.getElementById('classroomSelect').addEventListener('change', function () {
             const classroomId = this.value;
             const subjectSelect = document.getElementById('subjectSelect');
-            
+
             subjectSelect.innerHTML = '<option value="">-- Select Subject --</option>';
 
             if (classroomId) {
+                subjectSelect.disabled = false;
+
                 fetch(`../../public/ajax/get_subjects.php?classroom_id=${classroomId}`)
                     .then(response => response.json())
                     .then(subjects => {
                         subjects.forEach(subject => {
                             const option = document.createElement('option');
-                            option.value = subject.id;
+                            option.value = subject.subject_id;
                             option.textContent = subject.subject_name;
                             subjectSelect.appendChild(option);
                         });
                     })
                     .catch(error => console.error('Error fetching subjects:', error));
+            } else {
+                subjectSelect.disabled = true;
             }
         });
+
     </script>
 
 </body>

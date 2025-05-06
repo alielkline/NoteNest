@@ -50,24 +50,24 @@ class NoteController {
         ];
     }
 
-    public function save() {
+    public function createNote($classroom_id, $subject_id)
+    {
         if (!isset($_SESSION['user_id'])) {
             header("Location: ../views/auth/login.php");
             exit();
         }
     
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $_SESSION['error'] = 'Invalid request method.';
-            header("Location: ../views/main/home.php");
+        // Validate input
+        if (empty($_POST['noteTitle']) || empty($_POST['noteContent'])) {
+            $_SESSION['error'] = 'Please fill in all required fields.';
+            header("Location: ../controllers/NoteController.php?action=create&classroom_id=$classroom_id&subject_id=$subject_id");
             exit();
         }
     
         $user_id = $_SESSION['user_id'];
         $title = trim($_POST['noteTitle']);
         $content = trim($_POST['noteContent']);
-        $visibility = $_POST['visibility'] === 'private' ? 'private' : 'public';
-        $subject_id = $_POST['subject_id'];
-        $classroom_id = $_POST['classroom_id'];
+        $visibility = ($_POST['visibility'] === 'private') ? 'private' : 'public';
         $attachmentPath = null;
     
         // Handle file upload
@@ -88,12 +88,12 @@ class NoteController {
             }
         }
     
-        // Use model methods
+        // Save to DB
         $this->noteModel->createNote($user_id, $title, $content, $visibility, $attachmentPath, $subject_id);
         $this->noteModel->incrementNoteCount($subject_id);
     
         $_SESSION['success'] = 'Note created successfully.';
-        header("Location: ../views/subjectNotes.php?subject_id=$subject_id&classroom_id=$classroom_id");
+        header("Location: ../views/notes/subject_notes.php?subject_id=$subject_id&classroom_id=$classroom_id");
         exit();
     }
     
@@ -129,5 +129,15 @@ class NoteController {
             'subject' => $subject,
             'notes' => $notes,
         ];
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $noteController = new NoteController();
+
+    if (isset($_POST['create_note'])) {
+        $classroom_id = $_POST['classroom_id'] ?? null;
+        $subject_id = $_POST['subject_id'] ?? null;
+        $noteController->createNote($classroom_id, $subject_id);
     }
 }

@@ -1,0 +1,110 @@
+.btn-purple {
+    background-color: #6f42c1;
+    color: #fff;
+    border: none;
+}
+
+.btn-purple:hover {
+    background-color: #5a32a3;
+    color: #fff;
+}
+
+.custom-file-upload {
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    padding: 40px;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    transition: border-color 0.3s;
+}
+
+.custom-file-upload:hover {
+    border-color: #888;
+}
+
+.custom-file-upload input[type="file"] {
+    display: none;
+}
+
+.upload-icon {
+    background-color: #f1e7ff;
+    border-radius: 50%;
+    padding: 10px;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+.upload-icon svg {
+    width: 30px;
+    height: 30px;
+    color: #8000ff;
+}
+
+.upload-title {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.upload-subtext {
+    color: #6c757d;
+    font-size: 0.9em;
+}
+
+.form-label {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #4b0082; /* deep purple tone */
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+/* errors styling */
+.error-message {
+    background-color: #FEE2E2;
+    color: #B91C1C;
+    border: 1px solid #FCA5A5;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    text-align: center;
+    width: 80%;
+    max-width: 500px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+}
+
+.success-message {
+    background-color: #e2fee8;
+    color: #29cb47;
+    border: 1px solid #a5fcbf;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    text-align: center;
+    width: 80%;
+    max-width: 500px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}

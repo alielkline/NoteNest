@@ -7,13 +7,8 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-require_once __DIR__ . '/../../controllers/NoteController.php'; 
-
-$controller = new NoteController();
-$data = $controller->create();
-
-$subject_id = $data['subject_id'];
-$classroom_id = $data['classroom_id'];
+$subject_id = $_GET['subject_id'];
+$classroom_id = $_GET['classroom_id'];
 ?>
 
 
@@ -28,11 +23,38 @@ $classroom_id = $data['classroom_id'];
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="../css/navbar.css">
-    <link rel="stylesheet" href="../css/create_note.css">
+    <link rel="stylesheet" href="../../public/assets/css/navbar.css">
+    <link rel="stylesheet" href="../../public/assets/css/create_note.css">
 </head>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const fileInput = document.getElementById('attachment');
+        const fileNameDisplay = document.getElementById('file-name');
+        const uploadIcon = document.querySelector('.upload-icon');
+        const uploadTitle = document.querySelector('.upload-title');
+        const uploadSubtext = document.querySelector('.upload-subtext');
+
+        fileInput.addEventListener('change', function () {
+            if (fileInput.files.length > 0) {
+                const fileName = fileInput.files[0].name;
+                fileNameDisplay.textContent = `Selected: ${fileName}`;
+                uploadIcon.innerHTML = '<i class="bi bi-file-earmark-check" style="font-size: 1.5rem; color: green;"></i>';
+                uploadTitle.textContent = 'File Attached';
+            } else {
+                fileNameDisplay.textContent = '';
+                uploadIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-upload" viewBox="0 0 16 16">
+                    <path d="M.5 9.9a.5.5 0 0 1 .5.6v3a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3a.5.5 0 0 1 1 0v3a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-3a.5.5 0 0 1 .5-.6z"/>
+                    <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V10.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+                </svg>`;
+                uploadTitle.textContent = 'Upload Attachments';
+                uploadSubtext.textContent = 'Click to browse files';
+            }
+        });
+    });
+</script>
 <body>
-    <?php include '../includes/navbar.php'; ?>
+    <?php include '../partials/navbar.php'; ?>
+
     <?php if (isset($_SESSION['error'])): ?>
         <div class="error-message" id="error-message">
             <div><?php echo htmlspecialchars($_SESSION['error']); ?></div>
@@ -49,9 +71,10 @@ $classroom_id = $data['classroom_id'];
                         <h2 class="card-title mb-3">Create a New Note</h2>
                         <p class="text-muted mb-4">Add a new note to Web Development / JavaScript Fundamentals</p>
 
-                        <form action="../includes/save_note.php" method="POST" enctype="multipart/form-data">
+                        <form action="../../controllers/NoteController.php" method="POST" enctype="multipart/form-data">
                             <input type="hidden" name="subject_id" value="<?= htmlspecialchars($subject_id) ?>">
                             <input type="hidden" name="classroom_id" value="<?= htmlspecialchars($classroom_id) ?>">
+                            <input type="hidden" name="create_note" value="1">
                             <div class="mb-3">
                                 <label for="noteTitle" class="form-label">Title</label>
                                 <input type="text" class="form-control" id="noteTitle" name="noteTitle" required>
@@ -133,8 +156,8 @@ $classroom_id = $data['classroom_id'];
     </div>
 
 <!-- Bootstrap JS -->
-    <script src="../js/error.js"></script>
-    <script src="../js/create_note.js"></script>
+    <script src="../../public/assets/js/error.js"></script>
+    <script src="../../public/assets/js/success.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
