@@ -5,20 +5,23 @@ require_once __DIR__ . '/../core/database.php';
 require_once __DIR__ . '/../models/Classroom.php';
 require_once __DIR__ . '/../models/Note.php';
 
-class DashboardController {
+class DashboardController
+{
     private $classroomModel;
     private $noteModel;
     private $pdo;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->pdo = Database::getConnection();
         $this->classroomModel = new Classroom($this->pdo);
         $this->noteModel = new Note($this->pdo);
     }
 
-    public function getDashboardData() {
+    public function getDashboardData()
+    {
         if (!isset($_SESSION['user_id'])) {
-            header("Location: ../views/auth/login.php");
+            header("Location: ../auth/login.php");
             exit();
         }
 

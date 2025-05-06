@@ -10,6 +10,7 @@
     min-width: 5rem;
     text-align: left;
 }
+
 .dropdown-item {
     background: white;
     border: none;
@@ -18,12 +19,14 @@
     border-radius: 8px;
     transition: all 0.3s ease;
     min-width: 8rem;
-    text-align:left;
+    text-align: left;
 }
+
 .dropdown-item:hover {
     background: #cac0ff;
-    
+
 }
+
 .note-pane {
     background: white;
     border-radius: 8px;
@@ -35,7 +38,8 @@
     color: #9B87F5;
     margin-top: 25%;
 }
-.like-counter{
+
+.like-counter {
     font-size: 20px;
     font-weight: 500;
     color: #64748B;
@@ -49,11 +53,13 @@
     border: none;
     border-radius: 8px;
 }
+
 .title-anchor {
-    text-decoration:none;
+    text-decoration: none;
     color: #333;
 }
-.subject-pill{
+
+.subject-pill {
     display: inline-block;
     background-color: #F4EBFF;
     border-radius: 12px;
@@ -63,13 +69,13 @@
 
 
 
-.form-control:focus{
+.form-control:focus {
     outline: none;
     border-color: #9371e3;
     box-shadow: 0 0 0 2px rgba(212, 109, 240, 0.2);
 }
 
-.form-select:focus{
+.form-select:focus {
     outline: none;
     border-color: #9371e3;
     box-shadow: 0 0 0 2px rgba(212, 109, 240, 0.2);
@@ -86,4 +92,15 @@
 .btn-outline-purple:hover {
     background-color: #c084fc;
     color: white;
+}
+
+.veiw-more-btn {
+    color: var(--primary-color);
+    border: var(--primary-color) 1px solid;
+    transition: all 0.3s ease;
+}
+
+.veiw-more-btn:hover {
+    color: white;
+    background-color: var(--primary-color);
 }

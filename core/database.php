@@ -1,12 +1,14 @@
 <?php
 // app/core/Database.php
 
-class Database {
+class Database
+{
     private static $pdo = null;
 
-    public static function getConnection() {
+    public static function getConnection()
+    {
         if (self::$pdo === null) {
-            $dsn = 'mysql:host=localhost;port=3307;dbname=notenestdb';
+            $dsn = 'mysql:host=localhost;dbname=notenestdb';
             $username = 'root';
             $password = '';
 

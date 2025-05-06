@@ -1,7 +1,7 @@
 <?php
 // app/views/main/dashboard.php
-require_once __DIR__ . '/../../controllers/DashboardController.php'; 
-require_once __DIR__ . '/../../controllers/ClassroomController.php'; 
+require_once __DIR__ . '/../../controllers/DashboardController.php';
+require_once __DIR__ . '/../../controllers/ClassroomController.php';
 require_once __DIR__ . '/../../config/init.php';
 
 $controller = new DashboardController();
@@ -21,6 +21,8 @@ $user_id = $data['user_id'];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../public/assets/css/navbar.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../public/assets/css/main.css">
+    <link rel="stylesheet" href="../../public/assets/css/notes.css">
     <link rel="stylesheet" href="../../public/assets/css/dashboard.css">
     <link rel="stylesheet" href="../../public/assets/css/classroom.css">
     <link rel="stylesheet" href="../../public/assets/css/filter_notes.css">
@@ -30,10 +32,10 @@ $user_id = $data['user_id'];
 <body>
     <?php include '../partials/navbar.php'; ?>
     <?php if (isset($_SESSION['error'])): ?>
-    <div class="error-message" id="error-message">
-        <div><?= htmlspecialchars($_SESSION['error']); ?></div>
-    </div>
-    <?php unset($_SESSION['error']); ?>
+        <div class="error-message" id="error-message">
+            <div><?= htmlspecialchars($_SESSION['error']); ?></div>
+        </div>
+        <?php unset($_SESSION['error']); ?>
     <?php endif; ?>
 
     <?php if (isset($_SESSION['success'])): ?>
@@ -49,19 +51,15 @@ $user_id = $data['user_id'];
                 <p class="text-muted mb-0">Manage your classrooms and notes</p>
             </div>
             <div class="mt-2 mt-md-0">
-                <a href="#" class="btn me-2" data-bs-toggle="modal" data-bs-target="#createClassroomModal"
-                    style="background-color: #d9c5f5; color: #5f2eb5; border: none;">
+                <a href="#" class="btn new-classroom-btn me-2" data-bs-toggle="modal" data-bs-target="#createClassroomModal">
                     <i class="bi bi-plus"></i> New Classroom
-                </a>
-                <a href="#" class="btn btn-outline-dark">
-                    <i class="bi bi-plus"></i> New Note
                 </a>
             </div>
         </div>
 
         <!-- classrooms -->
         <h5 class="mt-4">
-            <i class="bi bi-mortarboard-fill text-primary me-2"></i> Your Classrooms
+            <i class="bi bi-mortarboard-fill purple-icon me-2"></i> Your Classrooms
         </h5>
 
         <div class="container mt-4">
@@ -86,18 +84,17 @@ $user_id = $data['user_id'];
             </div>
         </div>
 
-        <!-- Filter Form -->
+        <!-- notes -->
         <div class="d-flex justify-content-between align-items-center flex-wrap mb-2">
             <div class="text-center my-4">
                 <h5 class="d-inline-flex align-items-center justify-content-center">
-                    <i class="bi bi-book-fill text-purple me-2"></i> My Notes
+                    <i class="bi bi-book-fill purple-icon me-2"></i> My Notes
                 </h5>
             </div>
             <form method="GET" class="d-flex flex-wrap justify-content-center align-items-center gap-3">
                 <!-- Filter by Classroom -->
                 <div>
-                    <label for="classroomFilter" class="form-label custom-label me-2">Filter by Classroom:</label>
-                    <select name="classroom_id" id="classroomFilter" class="form-select custom-style d-inline-block w-auto ">
+                    <select name="classroom_id" id="classroomFilter" class="form-select d-inline-block w-auto ">
                         <option value="all" <?= !isset($_GET['classroom_id']) || $_GET['classroom_id'] === 'all' ? 'selected' : '' ?>>All Classrooms</option>
                         <?php foreach ($classrooms as $class): ?>
                             <option value="<?= $class['classroom_id'] ?>" <?= (isset($_GET['classroom_id']) && $_GET['classroom_id'] == $class['classroom_id']) ? 'selected' : '' ?>>
@@ -109,7 +106,6 @@ $user_id = $data['user_id'];
 
                 <!-- Sort by Upload Date -->
                 <div>
-                    <label for="sortOrder" class="form-label custom-label me-2">Sort:</label>
                     <select name="sort" id="sortOrder" class="form-select d-inline-block w-auto">
                         <option value="newest" <?= (!isset($_GET['sort']) || $_GET['sort'] === 'newest') ? 'selected' : '' ?>>Newest</option>
                         <option value="oldest" <?= (isset($_GET['sort']) && $_GET['sort'] === 'oldest') ? 'selected' : '' ?>>Oldest</option>
@@ -123,7 +119,7 @@ $user_id = $data['user_id'];
                     </button>
                 </div>
             </form>
-        </div>                                
+        </div>
 
         <!-- Notes List -->
         <div id="notes-container">
@@ -169,11 +165,11 @@ $user_id = $data['user_id'];
     <script src="../../public/assets/js/error.js"></script>
     <script src="../../public/assets/js/success.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const filterForm = document.querySelector('form');
             const notesContainer = document.getElementById('notes-container');
 
-            notesContainer.addEventListener('click', function (event) {
+            notesContainer.addEventListener('click', function(event) {
                 if (event.target && event.target.id === 'toggle-notes-btn') {
                     document.querySelectorAll('.extra-note').forEach(note => {
                         note.classList.toggle('d-none');
@@ -182,21 +178,23 @@ $user_id = $data['user_id'];
                 }
             });
 
-            filterForm.addEventListener('submit', function (event) {
+            filterForm.addEventListener('submit', function(event) {
                 event.preventDefault();
                 const params = new URLSearchParams(new FormData(filterForm)).toString();
 
                 fetch(window.location.pathname + '?' + params, {
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(response => response.text())
-                .then(data => {
-                    notesContainer.innerHTML = data;
-                    notesContainer.scrollIntoView({ behavior: 'smooth' });
-                })
-                .catch(error => console.error('Error:', error));
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => response.text())
+                    .then(data => {
+                        notesContainer.innerHTML = data;
+                        notesContainer.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    })
+                    .catch(error => console.error('Error:', error));
             });
         });
     </script>

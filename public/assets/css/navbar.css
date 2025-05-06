@@ -30,13 +30,13 @@ body {
 /* Logo Styling */
 .navbar-brand {
     font-weight: bold;
-    color: #6E59A5;
+    color: var(--primary-color);
     display: flex;
     align-items: center;
 }
 
 .navbar-brand:hover {
-    color: #bfb1e2;
+    color: #6E59A5;
 }
 
 /* logo styling */
@@ -67,7 +67,7 @@ body {
 }
 
 .nav-link:hover {
-    color: #9173d7;
+    color: var(--primary-color);
 }
 
 /* log-in and sign-up styling */
@@ -88,8 +88,8 @@ body {
 }
 
 .btn-login:hover {
-    background-color: #cac0ff;
-    color: #8b5cf6;
+    background-color: var(--primary-color);
+    color: white;
 }
 
 .btn-signup {
@@ -99,10 +99,11 @@ body {
     padding: 0.4rem 1rem;
     border: none;
     border-radius: 8px;
+    transition: all 0.3s ease;
 }
 
 .btn-signup:hover {
-    background-color: #7E69AB;
+    background-color: var(--primary-color);
 }
 
 /* Profile Image Styling */
