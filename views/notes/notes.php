@@ -141,14 +141,6 @@
                     <label for="subjectSelect" class="form-label">Select Subject</label>
                     <select class="form-select" id="subjectSelect" name="subject_id" required>
                     <option value="">-- Select Subject --</option>
-                    <?php foreach ($subjects as $subject): ?>
-                        <option 
-                            value="<?= htmlspecialchars($subject['id']) ?>" 
-                            data-classroom="<?= htmlspecialchars($subject['classroom_id']) ?>"
-                        >
-                            <?= htmlspecialchars($subject['name']) ?>
-                        </option>
-                    <?php endforeach; ?>
                     </select>
                 </div>
 
@@ -164,55 +156,26 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const classroomSelect = document.getElementById('classroomSelect');
-    const subjectSelect = document.getElementById('subjectSelect');
+        document.getElementById('classroomSelect').addEventListener('change', function () {
+            const classroomId = this.value;
+            const subjectSelect = document.getElementById('subjectSelect');
+            
+            subjectSelect.innerHTML = '<option value="">-- Select Subject --</option>';
 
-    // Cache subject options from the DOM, skipping the placeholder
-    const cachedSubjectOptions = Array.from(subjectSelect.querySelectorAll('option[data-classroom]'));
-
-    classroomSelect.addEventListener('change', function () {
-        const selectedClassroom = this.value;
-
-        // Reset subject dropdown with placeholder
-        subjectSelect.innerHTML = '<option value="">-- Select Subject --</option>';
-
-        if (selectedClassroom === '') {
-            subjectSelect.disabled = true;
-            return;
-        }
-
-        subjectSelect.disabled = false; // Enable dropdown after classroom is selected
-
-        let subjectsFound = false;
-
-        cachedSubjectOptions.forEach(option => {
-            if (option.getAttribute('data-classroom') === selectedClassroom) {
-                subjectSelect.appendChild(option.cloneNode(true));
-                subjectsFound = true;
+            if (classroomId) {
+                fetch(`../../public/ajax/get_subjects.php?classroom_id=${classroomId}`)
+                    .then(response => response.json())
+                    .then(subjects => {
+                        subjects.forEach(subject => {
+                            const option = document.createElement('option');
+                            option.value = subject.id;
+                            option.textContent = subject.subject_name;
+                            subjectSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error('Error fetching subjects:', error));
             }
         });
-
-        // Display a "No subjects available" message if no subjects match
-        if (!subjectsFound) {
-            const noSubjectOption = document.createElement('option');
-            noSubjectOption.value = '';
-            noSubjectOption.textContent = 'No subjects available';
-            noSubjectOption.disabled = true;
-            noSubjectOption.selected = true;
-            subjectSelect.appendChild(noSubjectOption);
-        }
-    });
-
-    // Reset on modal open
-    const modal = document.getElementById('selectNoteContextModal');
-    modal.addEventListener('show.bs.modal', () => {
-        subjectSelect.innerHTML = '<option value="">-- Select Subject --</option>';
-        subjectSelect.disabled = true; // Disable subject select initially
-        classroomSelect.value = '';
-    });
-});
-
     </script>
 
 </body>

@@ -2,16 +2,19 @@
 require_once __DIR__ . '/../config/init.php';
 require_once __DIR__ . '/../models/Note.php';
 require_once __DIR__ . '/../models/Classroom.php';
+require_once __DIR__ . '/../models/Subject.php';
 
 class NoteController {
     private $pdo;
     private $noteModel;
     private $classroomModel;
+    private $subjectModel;
 
     public function __construct() {
         $this->pdo = Database::getConnection();
         $this->noteModel = new Note($this->pdo);
         $this->classroomModel = new Classroom($this->pdo);
+        $this->subjectModel = new Subject($this->pdo);
     }
 
     public function showNotesPage() {
@@ -94,5 +97,37 @@ class NoteController {
         exit();
     }
     
-    
+    public function showSubjectNotes() {
+
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: ../auth/login.php");
+            exit();
+        }
+
+        if (!isset($_GET['classroom_id']) || !isset($_GET['subject_id'])) {
+            header("Location: ../main/dashboard.php");
+            exit();
+        }
+
+        $user_id = $_SESSION['user_id'];
+        $classroom_id = $_GET['classroom_id'];
+        $subject_id = $_GET['subject_id'];
+
+        $classroom = $this->classroomModel->getClassroomById($classroom_id);
+        $subject = $this->subjectModel->getSubject($subject_id);
+        $notes = $this->noteModel->getNotesBySubjectId($subject_id);
+
+        if (!$classroom || !$subject) {
+            $_SESSION['error'] = 'An Error Has Occured!';
+            header("Location: ../main/dashboard.php");
+            exit();
+        }
+
+        return [
+            'user_id' => $user_id,
+            'classroom' => $classroom,
+            'subject' => $subject,
+            'notes' => $notes,
+        ];
+    }
 }

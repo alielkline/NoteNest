@@ -110,7 +110,7 @@ $classroom_id = $_GET['classroom_id'];
                         <p class="text-muted"><?= htmlspecialchars($subject['subject_desc']) ?></p>
                         <div class="d-flex justify-content-between text-muted small mt-auto">
                             <span class="notes-count">📝 <?= $subject['notes'] ?> notes</span>
-                            <a href="subjectNotes.php?subject_id=<?= $subject['subject_id'] ?>&classroom_id=<?= $classroom_id ?>" class="view-notes-btn">
+                            <a href="../notes/subject_notes.php?subject_id=<?= $subject['subject_id'] ?>&classroom_id=<?= $classroom_id ?>" class="view-notes-btn">
                                 View Notes →
                             </a>
                         </div>

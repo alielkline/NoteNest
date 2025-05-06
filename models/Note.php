@@ -100,6 +100,15 @@ class Note {
         $stmt->execute([':subject_id' => $subject_id]);
     }
     
+    public function getNotesBySubjectId($subject_id) {
+        $query = "SELECT * FROM classroom_notes
+                  WHERE subject_id = ?";
+
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([$subject_id]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 
 
