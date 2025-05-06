@@ -3,9 +3,9 @@
 require_once __DIR__ . '/../config/init.php';
 
 // Check if the user is logged in
-require_once '../core/database.php';
-require_once '../models/Classroom.php';
-require_once '../models/Subject.php';
+require_once __DIR__ . '/../core/database.php';
+require_once __DIR__ . '/../models/Classroom.php';
+require_once __DIR__ . '/../models/Subject.php';
 
 class SubjectController {
 
@@ -79,6 +79,33 @@ class SubjectController {
         $subjects = $this->classroomModel->getSubjects($classroom_id);
         include '../views/pages/subjects.php';
     }
+
+    public function updateSubject() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $subject_id = $_POST['subject_id'];
+            $classroom_id = $_POST['classroom_id'];
+            $name = $_POST['subjectName'];
+            $desc = $_POST['subjectDesc'];
+
+            $this->subjectModel->updateSubject($subject_id, $name, $desc);
+            $_SESSION['success'] = "Subject updated successfully!";
+            header("Location: ../views/notes/subject_notes.php?classroom_id=$classroom_id&subject_id=$subject_id");
+            exit();
+        }
+    }
+
+    public function deleteSubject() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $subject_id = $_POST['subject_id'];
+            $classroom_id = $_POST['classroom_id'];
+
+            $this->subjectModel->deleteSubject($subject_id);
+            $_SESSION['success'] = "Subject deleted successfully!";
+            header("Location: ../views/pages/subjects.php?classroom_id=$classroom_id");
+            exit();
+        }
+    }
+
 }
 
 // Instantiate the controller
@@ -88,11 +115,16 @@ $subjectController = new SubjectController();
 $subjectController->checkUserLoggedIn();
 
 // If the form is submitted, handle the creation of the subject
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_subject'])) {
-    $classroom_id = $_POST['classroom_id'] ?? null;
-    $subjectController->createSubject($classroom_id);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['create_subject'])) {
+        $classroom_id = $_POST['classroom_id'] ?? null;
+        $subjectController->createSubject($classroom_id);
+    } elseif (isset($_POST['update_subject'])) {
+        $subjectController->updateSubject();
+    } elseif (isset($_POST['delete_subject'])) {
+        $subjectController->deleteSubject();
+    }
 } else {
     $classroom_id = $_GET['classroom_id'] ?? null;
-    // Render the subjects page for the classroom
     $subjectController->renderSubjectsPage($classroom_id);
 }

@@ -18,7 +18,7 @@ class DashboardController {
 
     public function getDashboardData() {
         if (!isset($_SESSION['user_id'])) {
-            header("Location: ../views/auth/login.php");
+            header("Location: ../auth/login.php");
             exit();
         }
 
