@@ -1,0 +1,98 @@
+<?php
+require_once __DIR__ . '/../config/init.php';
+require_once __DIR__ . '/../models/Note.php';
+require_once __DIR__ . '/../models/Classroom.php';
+
+class NoteController {
+    private $pdo;
+    private $noteModel;
+    private $classroomModel;
+
+    public function __construct() {
+        $this->pdo = Database::getConnection();
+        $this->noteModel = new Note($this->pdo);
+        $this->classroomModel = new Classroom($this->pdo);
+    }
+
+    public function showNotesPage() {
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: ../views/auth/login.php");
+            exit();
+        }
+    
+        $user_id = $_SESSION['user_id'];
+    
+        $classroom_id = $_GET['classroom_id'] ?? null;
+        if ($classroom_id === 'all') $classroom_id = null;
+    
+        $sort_likes = $_GET['sort_likes'] ?? null;
+        $sort_date = $_GET['sort_date'] ?? null;
+    
+        // Correct filter format
+        $filters = [
+            'classroom_id' => $classroom_id,
+            'sort_likes' => $sort_likes,
+            'sort_date' => $sort_date
+        ];
+    
+        // Get notes
+        $notes = $this->noteModel->getFilteredNotes($filters);
+        // Get classrooms
+        $classrooms = $this->classroomModel->getClassroomsByUserId($user_id);
+
+        // Return the data to the view
+        return [
+            'notes' => $notes,
+            'classrooms' => $classrooms
+        ];
+    }
+
+    public function save() {
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: ../views/auth/login.php");
+            exit();
+        }
+    
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $_SESSION['error'] = 'Invalid request method.';
+            header("Location: ../views/main/home.php");
+            exit();
+        }
+    
+        $user_id = $_SESSION['user_id'];
+        $title = trim($_POST['noteTitle']);
+        $content = trim($_POST['noteContent']);
+        $visibility = $_POST['visibility'] === 'private' ? 'private' : 'public';
+        $subject_id = $_POST['subject_id'];
+        $classroom_id = $_POST['classroom_id'];
+        $attachmentPath = null;
+    
+        // Handle file upload
+        if (isset($_FILES['attachment']) && $_FILES['attachment']['error'] === UPLOAD_ERR_OK) {
+            $uploadDir = __DIR__ . '/../public/uploads/attachments';
+            if (!file_exists($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+    
+            $fileTmpPath = $_FILES['attachment']['tmp_name'];
+            $fileName = basename($_FILES['attachment']['name']);
+            $fileExt = pathinfo($fileName, PATHINFO_EXTENSION);
+            $newFileName = uniqid('note_', true) . '.' . $fileExt;
+            $destPath = $uploadDir . '/' . $newFileName;
+    
+            if (move_uploaded_file($fileTmpPath, $destPath)) {
+                $attachmentPath = 'uploads/attachments/' . $newFileName;
+            }
+        }
+    
+        // Use model methods
+        $this->noteModel->createNote($user_id, $title, $content, $visibility, $attachmentPath, $subject_id);
+        $this->noteModel->incrementNoteCount($subject_id);
+    
+        $_SESSION['success'] = 'Note created successfully.';
+        header("Location: ../views/subjectNotes.php?subject_id=$subject_id&classroom_id=$classroom_id");
+        exit();
+    }
+    
+    
+}

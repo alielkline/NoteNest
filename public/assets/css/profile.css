@@ -1,0 +1,85 @@
+/*
+Primary Purple: #8b5cf6
+Secondary Purple: #7E69AB
+Tertiary Purple: #6E59A5
+
+Other shades of purple:
+    50: '#f2f0ff',
+    100: '#e5deff',
+    200: '#cac0ff',
+    300: '#b09dff',
+    400: '#9b87f5',
+    500: '#8b5cf6',
+    600: '#7e69ab',
+    700: '#6E59A5',
+    800: '#4c3275',
+    900: '#2c1d4d',
+*/
+body {
+    background-color: #f9f6ff;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .profile-card {
+    transition: 0.3s;
+  }
+  
+  .avatar {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid #eaeaea;
+  }
+  
+  .upload-icon img {
+    width: 28px;
+    height: 28px;
+    background: #9f57ff;
+    padding: 6px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  
+  .upload-icon img:hover {
+    background: #6E59A5;
+  }
+  
+  .tabs {
+    display: flex;
+    gap: 1.5rem;
+  }
+  
+  .tab {
+    font-weight: 600;
+    padding: 0.5rem;
+    cursor: pointer;
+    position: relative;
+  }
+  
+  .tab.active {
+    color: #7b2cbf;
+    border-bottom: 2px solid #7b2cbf;
+  }
+  
+  .tab-content {
+    display: block;
+  }
+  
+  .tab-content.d-none {
+    display: none !important;
+  }
+  
+  .btn-purple {
+    background-color: #9f57ff;
+    color: white;
+    font-weight: 500;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+  }
+  
+  .btn-purple:hover {
+    background-color: #8220ff;
+  }
+  

@@ -1,0 +1,48 @@
+
+
+
+
+#homeHeaderBrand {
+    height: 40px;
+    margin-right: 10px;
+    border-radius: 20%;
+}
+#homeHeaderTop {
+    font-family: 'Inter';
+    font-weight: 600;
+    color:#6E59A5;
+}
+#homeHeaderMiddle{
+    font-family: 'inter';
+    font-weight: 400;
+    color: #020817;
+}
+#homeHeaderBottom {
+     color: #64748B;
+     font-size: 25px;
+}
+#homeLoginButton {
+    border: 1px solid lightgrey;
+    border-radius: 5px;
+}
+#cardsRow {
+    margin-top: 5%;
+}
+#iconCircle {
+    background: #E5DEFF;
+    border-radius: 50%;
+    aspect-ratio: 1;
+    margin-left: 40%;
+    margin-right: 40%;
+    margin-bottom: 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#homeCards {
+    margin-top: 20%;
+    width: 100%;
+}
+#homeCardsTitle {
+    font-weight: 900;
+}

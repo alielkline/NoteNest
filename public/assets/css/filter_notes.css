@@ -1,0 +1,20 @@
+/* Base style */
+.custom-style {
+    background-color: white;
+    color: black;
+    border: 1px solid #ccc;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Hover effect */
+.custom-style:hover {
+    background-color: #d9c5f5;
+    color: #5f2eb5;
+    cursor: pointer;
+}
+
+/* Optional: Focus effect */
+.custom-style:focus {
+    border-color: #5f2eb5;
+    box-shadow: 0 0 0 0.2rem rgba(95, 46, 181, 0.25);
+}
