@@ -262,6 +262,21 @@ class ClassroomController {
             exit();
         }
     }
+
+    public function getSubjectsAjax() {
+        if (!isset($_GET['classroom_id'])) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Missing classroom ID']);
+            return;
+        }
+    
+        $classroom_id = $_GET['classroom_id'];
+        $subjects = $this->classroomModel->getSubjects($classroom_id);
+    
+        header('Content-Type: application/json');
+        echo json_encode($subjects);
+    }
+    
     
 }
 
