@@ -83,6 +83,7 @@
     </form>
 
     <!-- Notes List -->
+
     <!-- Notes List -->
     <div id="notes-container" class="container mt-4">
     <?php if (empty($notes)): ?>

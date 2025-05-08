@@ -1,0 +1,106 @@
+.note-pane {
+    background: white;
+    border-radius: 8px;
+    color: #000000;
+    padding: 18px 20px 8px;
+}
+.date {
+    font-size: 12px;
+}
+.single-note-pfp {
+    height: 40px;
+    margin-right: 10px;
+    border-radius: 50%;
+    aspect-ratio: 1;
+}
+.like-heart {
+    color: #8c7bdb;
+    font-size: 20px;
+}
+.bookmark-icon {
+    color: #8c7bdb;
+    font-size: 20px;
+}
+.note-likes {
+    font-size: 20px;
+}
+
+.note-title {
+    font-size: 32px;
+}
+.bookmark-button {
+    border-radius: 4px;
+    height: 40px;
+    cursor: pointer;
+}
+.like-button {
+    border-radius: 4px;
+    height: 40px;
+    cursor: pointer;
+}
+.like-button:hover {
+    transition: background-color 0.15s ease;
+    background-color: #eddeff;  
+}
+.bookmark-button:hover {
+    transition: background-color 0.15s ease;
+    background-color: #eddeff;  
+}
+
+.subject-pill{
+    display: inline-block;
+    background-color: #F4EBFF;
+    border-radius: 12px;
+    text-align: left;
+    font-size: 85%;
+}
+.download-bg {
+    background: #F4EBFF;
+    border-radius: 8px;
+}
+.attachment-title {
+    font-weight: 600;
+}
+.download-icon-bg {
+    background: #E5DEFF;
+    border-radius: 8px;
+    aspect-ratio: 1;
+}
+.bi-book {
+    font-size: 20px;
+    color:#8b5cf6;
+}
+.download-btn {
+    font-weight: 500;
+}
+.download-btn:hover {
+    background: #ebc7ff;
+    border-radius: 12px;
+}
+.comments-icon {
+    color:#8B5CF6;
+}
+.comments-text {
+    font-weight: 500;
+}
+.comment-textarea {
+    background: #FCFCFD;
+}
+.btn-add-comment {
+    background-color: #8b5cf6;
+    color: white;
+    font-weight: 500;
+    padding: 0.4rem 1rem;
+    border: none;
+    border-radius: 8px;
+}
+.comment-pane {
+    background-color: #FBF8FF;
+    border-radius: 8px;
+}
+.comment-pfp {
+    height: 40px;
+    margin-right: 10px;
+    border-radius: 50%;
+    aspect-ratio: 1;
+}
