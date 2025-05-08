@@ -120,9 +120,7 @@ $user_id = $data['user_id'];
         </div>
 
         <!-- Notes List -->
-        
-            <?php include '../partials/notes.php'; ?>
-        
+        <?php include '../partials/notes.php'; ?>
 
         <!-- Create Classroom Modal -->
         <div class="modal fade" id="createClassroomModal" tabindex="-1" aria-labelledby="createClassroomLabel" aria-hidden="true">

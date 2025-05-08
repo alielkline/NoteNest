@@ -7,21 +7,22 @@ $pdo = Database::getConnection();
 // If the user is logged in, fetch their profile picture
 if (isset($_SESSION['user_id'])) {
 
-    $user_id = $_SESSION['user_id'];
-    
-    // Prepare the query to fetch user information including the profile picture
-    $query = "SELECT * FROM users WHERE id = :user_id";
-    $stmt = $pdo->prepare($query);
-    $stmt->execute([
-      ':user_id' => $user_id
-    ]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-    // If the user exists and has a profile picture
-    $profile_picture = '../../public/uploads/profile_pictures/' . $user['profile_image'];
-    $email = $user['email'];
-    $username = $user['username'];
+  $user_id = $_SESSION['user_id'];
+
+  // Prepare the query to fetch user information including the profile picture
+  $query = "SELECT * FROM users WHERE id = :user_id";
+  $stmt = $pdo->prepare($query);
+  $stmt->execute([
+    ':user_id' => $user_id
+  ]);
+  $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+  // If the user exists and has a profile picture
+  $profile_picture = '../../public/uploads/profile_pictures/' . $user['profile_image'];
+  $email = $user['email'];
+  $username = $user['username'];
 }
+
 ?>
 
 
@@ -40,13 +41,17 @@ if (isset($_SESSION['user_id'])) {
       <span class="navbar-toggler-icon"></span>
     </button>
 
+    <?php
+    $currentPage = basename($_SERVER['PHP_SELF']);
+    ?>
+
     <!-- Navbar links -->
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-link" href="../main/dashboard.php">Dashboard</a>
-        <a class="nav-link" href="../pages/classrooms.php">Classrooms</a>
-        <a class="nav-link" href="../notes/notes.php">Notes</a>
-        <a class="nav-link" href="../pages/contact.php">Contact</a>
+        <a class="nav-link <?= ($currentPage === 'dashboard.php') ? 'active text-primary' : '' ?>" href="../main/dashboard.php">Dashboard</a>
+        <a class="nav-link <?= ($currentPage === 'classrooms.php') ? 'active text-primary' : '' ?>" href="../pages/classrooms.php">Classrooms</a>
+        <a class="nav-link <?= ($currentPage === 'notes.php') ? 'active text-primary' : '' ?>" href="../notes/notes.php">Notes</a>
+        <a class="nav-link <?= ($currentPage === 'contact.php') ? 'active text-primary' : '' ?>" href="../pages/contact.php">Contact</a>
       </div>
 
       <!-- Right side -->
@@ -58,7 +63,7 @@ if (isset($_SESSION['user_id'])) {
 
           <div class="dropdown">
             <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="<?php echo htmlspecialchars($profile_picture); ?>" alt="Profile Picture" width="36" height="36" class="rounded-circle shadow-sm">
+              <img src="<?php echo htmlspecialchars($profile_picture); ?>" alt="Profile Picture" width="36" height="36" class="rounded-circle shadow-sm">
             </a>
             <ul class="dropdown-menu dropdown-menu-end shadow" style="min-width: 230px;">
               <li class="px-3 py-2">

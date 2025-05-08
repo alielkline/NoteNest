@@ -122,3 +122,8 @@ body {
 .dropdown-toggle::after {
     display: none !important;
 }
+
+.nav-link.active {
+    color: var(--primary-color) !important;
+    font-weight: bold;
+}
