@@ -2,3 +2,7 @@
     --primary-color: #5f2eb5;
     --secondary-color: #d9c5f5;
 }
+
+.purple-icon {
+    color: var(--primary-color);
+}

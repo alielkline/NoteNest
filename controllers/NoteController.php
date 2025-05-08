@@ -39,7 +39,7 @@ class NoteController {
         ];
     
         // Get notes
-        $notes = $this->noteModel->getFilteredNotes($filters);
+        $notes = $this->noteModel->getFilteredNotes($user_id, $filters);
         // Get classrooms
         $classrooms = $this->classroomModel->getClassroomsByUserId($user_id);
 

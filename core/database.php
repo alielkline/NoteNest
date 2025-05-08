@@ -8,7 +8,7 @@ class Database
     public static function getConnection()
     {
         if (self::$pdo === null) {
-            $dsn = 'mysql:host=localhost;port=3307;dbname=notenestdb';
+            $dsn = 'mysql:host=localhost;dbname=notenestdb';
             $username = 'root';
             $password = '';
 
