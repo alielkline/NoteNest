@@ -1,7 +1,7 @@
 <?php
 
 // app/controllers/DashboardController.php
-require_once __DIR__ . '/../core/database.php';
+require_once __DIR__ . '/../config/init.php';
 require_once __DIR__ . '/../models/Classroom.php';
 require_once __DIR__ . '/../models/Note.php';
 

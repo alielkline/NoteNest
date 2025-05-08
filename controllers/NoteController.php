@@ -130,6 +130,24 @@ class NoteController {
             'notes' => $notes,
         ];
     }
+
+    public function toggleLike($note_id) {
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: ../auth/login.php");
+            exit();
+        }
+
+        if ($this->noteModel->hasUserLiked($user_id, $note_id)) {
+            $this->noteModel->updateLikes($note_id, false);
+            $this->noteModel->removeLike($user_id, $note_id);
+        } else {
+            $this->noteModel->updateLikes($note_id, true);
+            $this->noteModel->addLike($user_id, $note_id);
+        }
+    
+        header("Location: ../");
+    }
+    
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

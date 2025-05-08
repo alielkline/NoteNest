@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../models/Contact.php';
+require_once __DIR__ . '/../config/init.php';
 
 class ContactController {
     public function showForm() {
@@ -7,7 +8,6 @@ class ContactController {
     }
 
     public function handleForm() {
-        session_start();
 
         $errors = [];
         $name = trim($_POST['name'] ?? '');
