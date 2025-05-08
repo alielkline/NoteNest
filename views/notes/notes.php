@@ -101,7 +101,9 @@
                                 <p class="mx-2">•</p>
                                 <p class="text-muted"><?= $date ?></p>
                             </span>
-                            <h4><?= htmlspecialchars($note['title']) ?></h4>
+                            <a class='title-anchor' href='single.php?note_id=<?= htmlspecialchars($note['note_id']) ?>'>
+                                <h4><?= htmlspecialchars($note['title']) ?></h4>
+                            </a>
                             <p class="text-muted"><?= htmlspecialchars($excerpt) ?></p>
                             <p class="subject-pill px-2 py-1"><?= htmlspecialchars($note['subject_name']) ?></p>
                         </div>

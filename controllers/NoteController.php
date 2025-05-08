@@ -132,22 +132,65 @@ class NoteController {
     }
 
     public function toggleLike($note_id) {
+        $user_id = $_SESSION['user_id'] ?? null;
+    
+        if (!$user_id || !$note_id) {
+            echo json_encode(['success' => false]);
+            return;
+        }
+    
+        $result = $this->noteModel->toggleLike($user_id, $note_id);
+        echo json_encode(['success' => true, 'likes' => $result]);
+    }
+    
+    
+    public function toggleBookmark($note_id) {
+        $user_id = $_SESSION['user_id'] ?? null;
+    
+        if (!$user_id || !$note_id) {
+            echo json_encode(['success' => false]);
+            return;
+        }
+    
+        $result = $this->noteModel->toggleBookmark($user_id, $note_id);
+        echo json_encode(['success' => true]);
+    }
+
+    public function loadNote(){
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: ../auth/login.php");
+            exit();
+        }
+        
+        $user_id = $_SESSION['user_id'];
+        $note_id = $_GET['note_id'];
+
+        $note = $this->noteModel->getNoteWithDetails($note_id);
+        $userHasLiked = $this->noteModel->userHasLiked($user_id, $note_id);
+        $userHasBookmarked = $this->noteModel->userHasBookmarked($user_id, $note_id);
+        $comments = $this->noteModel->getComments($note_id) ?? [];
+
+        return [
+            'note' => $note,
+            'userHasLiked' => $userHasLiked,
+            'userHasBookmarked' => $userHasBookmarked,
+            'comments' => $comments
+        ];
+    }
+
+    public function addComment($note_id, $content){
         if (!isset($_SESSION['user_id'])) {
             header("Location: ../auth/login.php");
             exit();
         }
 
-        if ($this->noteModel->hasUserLiked($user_id, $note_id)) {
-            $this->noteModel->updateLikes($note_id, false);
-            $this->noteModel->removeLike($user_id, $note_id);
-        } else {
-            $this->noteModel->updateLikes($note_id, true);
-            $this->noteModel->addLike($user_id, $note_id);
-        }
-    
-        header("Location: ../");
+        $user_id = $_SESSION['user_id'];
+
+        $this->noteModel->addComment($note_id, $user_id, $content);
+
+        header("Location: ../views/notes/single.php?note_id=$note_id");
+        exit();
     }
-    
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -157,5 +200,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $classroom_id = $_POST['classroom_id'] ?? null;
         $subject_id = $_POST['subject_id'] ?? null;
         $noteController->createNote($classroom_id, $subject_id);
+    }
+
+    if(isset($_POST['action'])){
+    
+    if($_POST['action'] === 'add_comment'){
+        $note_id = $_POST['note_id'];
+        $content = $_POST['content'];
+        $noteController->addComment($note_id, $content);
+    }
+
+    if ($_POST['action'] === 'toggleLike') {
+        $note_id = $_POST['note_id'];
+        $noteController->toggleLike($note_id);
+    }
+
+    if ($_POST['action'] === 'toggleBookmark') {
+        $note_id = $_POST['note_id'];
+        $noteController->toggleBookmark($note_id);
+    }
+
     }
 }

@@ -122,58 +122,70 @@ class Note {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     
-    public function hasUserLiked($user_id, $note_id) {
+    public function toggleLike($user_id, $note_id) {
+        $stmt = $this->pdo->prepare("SELECT * FROM likes WHERE user_id = ? AND note_id = ?");
+        $stmt->execute([$user_id, $note_id]);
+    
+        if ($stmt->rowCount() > 0) {
+            // Unlike
+            $this->pdo->prepare("DELETE FROM likes WHERE user_id = ? AND note_id = ?")->execute([$user_id, $note_id]);
+            $this->pdo->prepare("UPDATE classroom_notes SET likes = likes - 1 WHERE note_id = ?")->execute([$note_id]);
+        } else {
+            // Like
+            $this->pdo->prepare("INSERT INTO likes (user_id, note_id) VALUES (?, ?)")->execute([$user_id, $note_id]);
+            $this->pdo->prepare("UPDATE classroom_notes SET likes = likes + 1 WHERE note_id = ?")->execute([$note_id]);
+        }
+    
+        $countStmt = $this->pdo->prepare("SELECT likes FROM classroom_notes WHERE note_id = ?");
+        $countStmt->execute([$note_id]);
+        return $countStmt->fetchColumn();
+    }
+    
+    public function toggleBookmark($user_id, $note_id) {
+        $stmt = $this->pdo->prepare("SELECT * FROM bookmarks WHERE user_id = ? AND note_id = ?");
+        $stmt->execute([$user_id, $note_id]);
+    
+        if ($stmt->rowCount() > 0) {
+            $this->pdo->prepare("DELETE FROM bookmarks WHERE user_id = ? AND note_id = ?")->execute([$user_id, $note_id]);
+        } else {
+            $this->pdo->prepare("INSERT INTO bookmarks (user_id, note_id) VALUES (?, ?)")->execute([$user_id, $note_id]);
+        }
+    
+        return true;
+    }
+    
+    public function getComments($note_id){
+        $stmt = $this->pdo->prepare("SELECT c.*, username, profile_image
+        FROM comments c
+        JOIN users u ON u.id = c.user_id
+        WHERE c.note_id = ?;");
+        $stmt->execute([$note_id]);
+        $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $comments;
+    }
+
+    public function userHasLiked($user_id, $note_id){
         $stmt = $this->pdo->prepare("SELECT 1 FROM likes WHERE user_id = ? AND note_id = ?");
         $stmt->execute([$user_id, $note_id]);
         return $stmt->fetch() ? true : false;
     }
-    
-    public function hasUserBookmarked($user_id, $note_id) {
+
+    public function userHasBookmarked($user_id, $note_id){
         $stmt = $this->pdo->prepare("SELECT 1 FROM bookmarks WHERE user_id = ? AND note_id = ?");
         $stmt->execute([$user_id, $note_id]);
-        return $stmt->fetch() ? true : false;
+        $userHasBookmarked = $stmt->fetch() ? true : false;
     }
-    
-    public function updateLikes($note_id, $increment = true) {
-        $query = $increment 
-            ? "UPDATE classroom_notes SET likes = likes + 1 WHERE note_id = ?"
-            : "UPDATE classroom_notes SET likes = likes - 1 WHERE note_id = ?";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute([$note_id]);
-    }
-    
-    public function updateBookmarks($note_id, $increment = true) {
-        $query = $increment 
-            ? "UPDATE classroom_notes SET bookmarkes = bookmarkes + 1 WHERE note_id = ?"
-            : "UPDATE classroom_notes SET bookmarkes = bookmarkes - 1 WHERE note_id = ?";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute([$note_id]);
-    }
-    
-    public function getLikeCount($note_id) {
-        $stmt = $this->pdo->prepare("SELECT likes FROM classroom_notes WHERE note_id = ?");
-        $stmt->execute([$note_id]);
-        return $stmt->fetchColumn();
-    }
-    
-    public function addLike($user_id, $note_id) {
-        $stmt = $this->pdo->prepare("INSERT INTO likes (user_id, note_id) VALUES (?, ?)");
-        $stmt->execute([$user_id, $note_id]);
-    }
-    
-    public function removeLike($user_id, $note_id) {
-        $stmt = $this->pdo->prepare("DELETE FROM likes WHERE user_id = ? AND note_id = ?");
-        $stmt->execute([$user_id, $note_id]);
-    }
-    
-    public function addBookmark($user_id, $note_id) {
-        $stmt = $this->pdo->prepare("INSERT INTO bookmarks (user_id, note_id) VALUES (?, ?)");
-        $stmt->execute([$user_id, $note_id]);
-    }
-    
-    public function removeBookmark($user_id, $note_id) {
-        $stmt = $this->pdo->prepare("DELETE FROM bookmarks WHERE user_id = ? AND note_id = ?");
-        $stmt->execute([$user_id, $note_id]);
+
+    public function addComment($note_id, $user_id, $comment_content) {
+        $stmt = $this->pdo->prepare("
+            INSERT INTO comments (note_id, user_id, comment_text, comment_date)
+            VALUES (:note_id, :user_id, :content, NOW())
+        ");
+        $stmt->execute([
+            ':note_id' => $note_id,
+            ':user_id' => $user_id,
+            ':content' => $comment_content
+        ]);
     }
     
 }

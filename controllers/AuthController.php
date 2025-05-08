@@ -1,6 +1,6 @@
 <?php
 // app/controllers/AuthController.php
-require_once '../core/database.php';
+require_once '../config/init.php';
 require_once '../models/User.php';
 
 class AuthController {
@@ -77,7 +77,6 @@ class AuthController {
     }
 }
 
-session_start();
 $controller = new AuthController();
 
 $action = $_GET['action'] ?? '';
