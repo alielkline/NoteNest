@@ -32,7 +32,7 @@
     <div class="container d-flex justify-content-between mt-4">
         <div>
             <h2 class="header p-0 mb-0">All Notes</h2>
-            <p class="text-muted">Browse and discover notes from all classrooms</p>
+            <p class="text-muted">Browse and discover notes from all classrooms you joined</p>
         </div>
         <div class="p-3">
             <button class="btn-login border px-3 d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#selectNoteContextModal">
@@ -83,37 +83,35 @@
     </form>
 
     <!-- Notes List -->
-    <div class="container">
-        <?php if (empty($notes)): ?>
-            <h4>No notes currently!</h4>
-            <a href="classrooms.php" class="btn-no-notes p-1">Join a classroom!</a>
-        <?php else: ?>
-            <?php foreach ($notes as $note): ?>
-                <?php
-                    $excerpt = substr($note['content'], 0, 60) . '...';
-                    $date = date("M d, Y", strtotime($note['upload_date']));
-                ?>
-                <div class="note-pane border mb-3">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <span class="d-flex">
-                                <p><?= htmlspecialchars($note['username']) ?></p>
-                                <p class="mx-2">•</p>
-                                <p class="text-muted"><?= $date ?></p>
-                            </span>
-                            <h4><?= htmlspecialchars($note['title']) ?></h4>
-                            <p class="text-muted"><?= htmlspecialchars($excerpt) ?></p>
-                            <p class="subject-pill px-2 py-1"><?= htmlspecialchars($note['subject_name']) ?></p>
-                        </div>
-                        <div class="d-flex mx-2 align-items-center">
-                            <i class="bi bi-heart-fill like-heart me-1"></i>
-                            <p class="like-counter mb-0"><?= $note['likes'] ?></p>
-                        </div>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        <?php endif; ?>
+    <!-- Notes List -->
+    <div id="notes-container" class="container mt-4">
+    <?php if (empty($notes)): ?>
+        <div class="col-12">
+            <div class="alert alert-secondary text-center" role="alert">
+                No notes found.
+            </div>
+        </div>
+    <?php endif; ?>
+<?php foreach ($notes as $index => $note): ?>
+    <div class="col-12 mb-3 note-card <?= $index >= 4 ? 'd-none extra-note' : '' ?>">
+        <div class="card card-custom p-3 d-flex flex-column position-relative w-100">
+        <span>👤 <?= htmlspecialchars($note['username']) ?></span>
+            <h5 class="fw-semibold mb-2"><?= htmlspecialchars($note['title']) ?></h5>
+            <p class="text-muted mb-3"><?= htmlspecialchars(mb_strimwidth($note['content'], 0, 60, '...')) ?></p>
+            <div class="mt-auto d-flex justify-content-between align-items-center text-muted small">
+                
+                <span>📅 <?= date('M d, Y', strtotime($note['upload_date'])) ?></span>
+                <span><i class="bi bi-heart-fill like-heart me-1 purple-icon"></i> <?= $note['likes'] ?? 0 ?> </span>
+            </div>
+        </div>
     </div>
+<?php endforeach; ?>
+<?php if (count($notes) > 4): ?>
+    <div class="text-center mt-3">
+        <button class="btn veiw-more-btn" id="toggle-notes-btn">View More</button>
+    </div>
+<?php endif; ?>
+</div>
 
     <!-- Create Note Context Modal -->
     <div class="modal fade" id="selectNoteContextModal" tabindex="-1" aria-labelledby="selectNoteContextModalLabel" aria-hidden="true">

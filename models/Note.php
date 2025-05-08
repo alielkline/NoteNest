@@ -36,15 +36,18 @@ class Note {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getFilteredNotes($filters = []) {
+    public function getFilteredNotes($user_id, $filters = []) {
         $query = "
             SELECT cn.*, cs.subject_name, u.username
-            FROM classroom_notes cn
-            JOIN classroom_subjects cs ON cn.subject_id = cs.subject_id
-            JOIN users u ON u.id = cn.uploader_user_id
+        FROM classroom_notes cn
+        JOIN classroom_subjects cs ON cn.subject_id = cs.subject_id
+        JOIN classroom_members cm ON cs.classroom_id = cm.classroom_id
+        JOIN users u ON u.id = cn.uploader_user_id
+        WHERE cm.user_id = ?
+            
         ";
-    
-        $params = [];
+        
+        $params = [$user_id];
         if (!empty($filters['classroom_id']) && $filters['classroom_id'] !== 'all') {
             $query .= " WHERE cs.classroom_id = ?";
             $params[] = $filters['classroom_id'];

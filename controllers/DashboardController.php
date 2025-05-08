@@ -35,7 +35,7 @@ class DashboardController
         $classrooms = $this->classroomModel->getClassroomsByUserId($user_id);
 
         // Fetch notes
-        $notes = $this->noteModel->getNotes($classroom_filter, $sort_order);
+        $notes = $this->noteModel->getNotesByUserId($user_id, $sort_order);
 
         if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
             // Include the partial view and return only the notes section
