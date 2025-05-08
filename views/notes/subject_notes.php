@@ -15,6 +15,7 @@ $subject_id = $_GET['subject_id'];
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,6 +26,7 @@ $subject_id = $_GET['subject_id'];
     <link rel="stylesheet" href="../../public/assets/css/navbar.css">
     <link rel="stylesheet" href="../../public/assets/css/subject_notes.css">
 </head>
+
 <body>
     <?php include '../partials/navbar.php'; ?>
 
@@ -48,7 +50,7 @@ $subject_id = $_GET['subject_id'];
         <div class="row mb-1">
             <div class="col-12">
                 <p class="text-muted">
-                    <a href="../pages/subjects.php?classroom_id=<?= $classroom_id ?>" class="subject-link">Subjects</a> / 
+                    <a href="../pages/subjects.php?classroom_id=<?= $classroom_id ?>" class="subject-link">Subjects</a> /
                     <strong><?= htmlspecialchars($subject['subject_name']) ?></strong>
                 </p>
             </div>
@@ -59,7 +61,7 @@ $subject_id = $_GET['subject_id'];
             <h2 class="fw-bold mb-0"><?= htmlspecialchars($subject['subject_name']) ?> - Notes</h2>
             <?php if ($classroom['creator_id'] == $user_id): ?>
                 <div class="d-flex gap-2">
-                    <a href="../notes/create_note.php?subject_id=<?= $subject_id ?>&classroom_id=<?= $classroom_id?>" class="btn btn-purple text-white">
+                    <a href="../notes/create_note.php?subject_id=<?= $subject_id ?>&classroom_id=<?= $classroom_id ?>" class="btn btn-purple text-white">
                         <i class="bi bi-plus-lg me-1"></i> New Note
                     </a>
                     <button class="btn custom-grey-btn" data-bs-toggle="modal" data-bs-target="#settingsModal">
@@ -88,16 +90,18 @@ $subject_id = $_GET['subject_id'];
         <!-- Notes List -->
         <div class="row g-4 justify-content-center" id="notes-container">
             <?php foreach ($notes as $index => $note): ?>
-                <div class="col-12 note-card <?= $index >= 4 ? 'd-none extra-note' : '' ?>">
-                    <div class="card custom-style card-custom p-3 d-flex flex-column position-relative w-100">
-                        <h5 class="fw-semibold mb-2"><?= htmlspecialchars($note['title']) ?></h5>
-                        <p class="text-muted mb-3"><?= htmlspecialchars(mb_strimwidth($note['content'], 0, 120, '...')) ?></p>
-                        <div class="mt-auto d-flex justify-content-between align-items-center text-muted small">
-                            <span>📅 <?= date('M d, Y', strtotime($note['upload_date'])) ?></span>
-                            <span>👍 <?= $note['likes'] ?? 0 ?> | 🔖 <?= $note['bookmarkes'] ?? 0 ?></span>
+                <a href="../notes/single.php?note_id=<?= $note["note_id"] ?>" class="text-decoration-none text-reset">
+                    <div class="col-12 note-card <?= $index >= 4 ? 'd-none extra-note' : '' ?>">
+                        <div class="card custom-style card-custom p-3 d-flex flex-column position-relative w-100">
+                            <h5 class="fw-semibold mb-2"><?= htmlspecialchars($note['title']) ?></h5>
+                            <p class="text-muted mb-3"><?= htmlspecialchars(mb_strimwidth($note['content'], 0, 120, '...')) ?></p>
+                            <div class="mt-auto d-flex justify-content-between align-items-center text-muted small">
+                                <span>📅 <?= date('M d, Y', strtotime($note['upload_date'])) ?></span>
+                                <span>👍 <?= $note['likes'] ?? 0 ?> | 🔖 <?= $note['bookmarkes'] ?? 0 ?></span>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </a>
             <?php endforeach; ?>
         </div>
 
@@ -130,7 +134,7 @@ $subject_id = $_GET['subject_id'];
                         <form id="editSubjectForm" action="../../controllers/SubjectController.php" method="POST">
                             <input type="hidden" name="subject_id" value="<?= htmlspecialchars($subject['subject_id']) ?>">
                             <input type="hidden" name="classroom_id" value="<?= htmlspecialchars($classroom['classroom_id']) ?>">
-                            <input type="hidden" name="update_subject" value="1"> 
+                            <input type="hidden" name="update_subject" value="1">
 
                             <div class="mb-3">
                                 <label for="subjectName" class="form-label">Subject Name</label>
@@ -159,8 +163,9 @@ $subject_id = $_GET['subject_id'];
             </div>
         </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../public/assets/js/error.js"></script>
-    <script src="../../public/assets/js/success.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="../../public/assets/js/error.js"></script>
+        <script src="../../public/assets/js/success.js"></script>
 </body>
+
 </html>

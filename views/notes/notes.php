@@ -1,30 +1,33 @@
 <?php
-    require_once __DIR__ . '/../../config/init.php';
+require_once __DIR__ . '/../../config/init.php';
 
-    if (!isset($_SESSION['user_id'])) {
-        header("Location: ../auth/login.php");
-        exit();
-    }
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../auth/login.php");
+    exit();
+}
 
-    require_once __DIR__ . '/../../controllers/NoteController.php'; 
-    
-    // Initialize the controller
-    $controller = new NoteController();
-    $data = $controller->showNotesPage();  // Get the data
-    $notes = $data['notes'];  // Extract notes
-    $classrooms = $data['classrooms'];  // Extract classrooms
+require_once __DIR__ . '/../../controllers/NoteController.php';
+
+// Initialize the controller
+$controller = new NoteController();
+$data = $controller->showNotesPage();  // Get the data
+$notes = $data['notes'];  // Extract notes
+$classrooms = $data['classrooms'];  // Extract classrooms
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Notes</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../public/assets/css/main.css">
     <link rel="stylesheet" href="../../public/assets/css/navbar.css">
     <link rel="stylesheet" href="../../public/assets/css/notes.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 </head>
+
 <body>
     <?php include '../partials/navbar.php'; ?>
 
@@ -32,12 +35,12 @@
     <div class="container d-flex justify-content-between mt-4">
         <div>
             <h2 class="header p-0 mb-0">All Notes</h2>
-            <p class="text-muted">Browse and discover notes from all classrooms you joined</p>
+            <p class="text-muted">Browse and discover notes from all classrooms you joined!</p>
         </div>
         <div class="p-3">
             <button class="btn-login border px-3 d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#selectNoteContextModal">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus-lg me-2" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+                    <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
                 </svg>
                 New Note
             </button>
@@ -86,76 +89,79 @@
 
     <!-- Notes List -->
     <div id="notes-container" class="container mt-4">
-    <?php if (empty($notes)): ?>
-        <div class="col-12">
-            <div class="alert alert-secondary text-center" role="alert">
-                No notes found.
+        <?php if (empty($notes)): ?>
+            <div class="col-12">
+                <div class="alert alert-secondary text-center" role="alert">
+                    No notes found.
+                </div>
             </div>
-        </div>
-    <?php endif; ?>
-<?php foreach ($notes as $index => $note): ?>
-    <div class="col-12 mb-3 note-card <?= $index >= 4 ? 'd-none extra-note' : '' ?>">
-        <div class="card card-custom p-3 d-flex flex-column position-relative w-100">
-        <span>👤 <?= htmlspecialchars($note['username']) ?></span>
-            <h5 class="fw-semibold mb-2"><?= htmlspecialchars($note['title']) ?></h5>
-            <p class="text-muted mb-3"><?= htmlspecialchars(mb_strimwidth($note['content'], 0, 60, '...')) ?></p>
-            <div class="mt-auto d-flex justify-content-between align-items-center text-muted small">
-                
-                <span>📅 <?= date('M d, Y', strtotime($note['upload_date'])) ?></span>
-                <span><i class="bi bi-heart-fill like-heart me-1 purple-icon"></i> <?= $note['likes'] ?? 0 ?> </span>
+        <?php else: ?>
+            <?php foreach ($notes as $index => $note): ?>
+                <a href="../notes/single.php?note_id=<?= $note["note_id"] ?>" class="text-decoration-none text-reset">
+                    <div class="col-12 mb-3 note-card <?= $index >= 4 ? 'd-none extra-note' : '' ?>">
+                        <div class="card card-custom p-3 d-flex flex-column position-relative w-100">
+                            <span>👤 <?= htmlspecialchars($note['username']) ?></span>
+                            <h5 class="fw-semibold mb-2"><?= htmlspecialchars($note['title']) ?> <span class='subject-pill px-2 py-1'> <?= htmlspecialchars($note['subject_name']) ?></span></h5>
+                            <p class="text-muted mb-3"><?= htmlspecialchars(mb_strimwidth($note['content'], 0, 60, '...')) ?></p>
+
+                            <div class="mt-auto d-flex justify-content-between align-items-center text-muted small">
+                                <span>📅 <?= date('M d, Y', strtotime($note['upload_date'])) ?></span>
+                                <span><i class="bi bi-heart-fill like-heart me-1 purple-icon"></i> <?= $note['likes'] ?? 0 ?> </span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            <?php endforeach; ?>
+        <?php endif; ?>
+        <?php if (count($notes) > 4): ?>
+            <div class="text-center mt-3">
+                <button class="btn veiw-more-btn" id="toggle-notes-btn">View More</button>
             </div>
-        </div>
+        <?php endif; ?>
     </div>
-<?php endforeach; ?>
-<?php if (count($notes) > 4): ?>
-    <div class="text-center mt-3">
-        <button class="btn veiw-more-btn" id="toggle-notes-btn">View More</button>
-    </div>
-<?php endif; ?>
-</div>
 
     <!-- Create Note Context Modal -->
     <div class="modal fade" id="selectNoteContextModal" tabindex="-1" aria-labelledby="selectNoteContextModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="selectNoteContextModalLabel">Choose Classroom & Subject</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <form action="../notes/create_note.php" method="GET">
-                <div class="mb-3">
-                    <label for="classroomSelect" class="form-label">Select Classroom</label>
-                    <select class="form-select" id="classroomSelect" name="classroom_id" required>
-                    <option value="">-- Select Classroom --</option>
-                    <?php foreach ($classrooms as $classroom): ?>
-                        <option value="<?= htmlspecialchars($classroom['classroom_id']) ?>">
-                        <?= htmlspecialchars($classroom['name']) ?>
-                        </option>
-                    <?php endforeach; ?>
-                    </select>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="selectNoteContextModalLabel">Choose Classroom & Subject</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+                <div class="modal-body">
+                    <form action="../notes/create_note.php" method="GET">
+                        <div class="mb-3">
+                            <label for="classroomSelect" class="form-label">Select Classroom</label>
+                            <select class="form-select" id="classroomSelect" name="classroom_id" required>
+                                <option value="">-- Select Classroom --</option>
+                                <?php foreach ($classrooms as $classroom): ?>
+                                    <option value="<?= htmlspecialchars($classroom['classroom_id']) ?>">
+                                        <?= htmlspecialchars($classroom['name']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
 
-                <div class="mb-3">
-                    <label for="subjectSelect" class="form-label">Select Subject</label>
-                    <select class="form-select" id="subjectSelect" name="subject_id" required disabled>
-                        <option value="">-- Select Subject --</option>
-                    </select>
-                </div>
+                        <div class="mb-3">
+                            <label for="subjectSelect" class="form-label">Select Subject</label>
+                            <select class="form-select" id="subjectSelect" name="subject_id" required disabled>
+                                <option value="">-- Select Subject --</option>
+                            </select>
+                        </div>
 
-                <div class="d-flex justify-content-end">
-                    <button type="submit" class="btn btn-outline-purple">Continue</button>
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-outline-purple">Continue</button>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
-        </div>
-    </div>
     </div>
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.getElementById('classroomSelect').addEventListener('change', function () {
+        document.getElementById('classroomSelect').addEventListener('change', function() {
             const classroomId = this.value;
             const subjectSelect = document.getElementById('subjectSelect');
 
@@ -179,8 +185,8 @@
                 subjectSelect.disabled = true;
             }
         });
-
     </script>
 
 </body>
+
 </html>

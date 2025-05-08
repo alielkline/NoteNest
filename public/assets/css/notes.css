@@ -104,3 +104,29 @@
     color: white;
     background-color: var(--primary-color);
 }
+
+
+.card-custom {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 180px;
+    border-radius: 1rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
+    padding: 2rem;
+    transition: 0.2s ease;
+}
+
+.card-custom:hover {
+    border: 1px solid #6b21a8;
+}
+
+.subject-pill {
+    display: inline-block;
+    background-color: #F4EBFF;
+    border-radius: 12px;
+    text-align: left;
+    font-size: 70%;
+    margin-left: 5px;
+}
