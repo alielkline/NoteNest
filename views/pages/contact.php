@@ -73,4 +73,12 @@
     <script src="../../public/assets/js/error.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+<footer>
+    <p>Contact us:</p>
+    <a href="mailto:alielkline7@gmail.com">alielkline7@gmail.com</a>
+    <a href="tel:+201024291862">+201024291862</a>
+    <a href="https://wa.me/201024291862" target="_blank">Message us on WhatsApp</a>
+
+</footer>
+
 </html>

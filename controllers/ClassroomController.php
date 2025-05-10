@@ -93,7 +93,7 @@ class ClassroomController {
 
             $classroom = $this->classroomModel->getClassroomByInviteCode($invite_code);
 
-            if ($classroom !== 'false') {
+            if ($classroom) {
                 if (!$this->classroomModel->isUserInClassroom($user_id, $classroom['classroom_id'])) {
                     $this->classroomModel->addMember($user_id, $classroom['classroom_id']);
 

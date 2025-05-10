@@ -58,6 +58,10 @@ class AuthController {
                 $errors[] = "Username already exists.";
             }
 
+            if($this->userModel->findByEmail($email)){
+                $errors[] = "Email already exists.";
+            }
+
             if (!empty($errors)) {
                 $_SESSION['signup_errors'] = $errors;
                 header("Location: ../views/auth/signup.php");
