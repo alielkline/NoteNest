@@ -193,15 +193,15 @@ class NoteController {
     }
 
     public function updateNote($noteId, $title, $content, $visibility) {
-    // Handle the file upload if a new file is provided
+    
     $attachmentPath = null;
     
     if (isset($_FILES['attachment']) && $_FILES['attachment']['error'] === UPLOAD_ERR_OK) {
-        // Define the upload directory
+        
         $uploadDir = __DIR__ . '/../public/uploads/attachments';
         
         if (!file_exists($uploadDir)) {
-            mkdir($uploadDir, 0777, true);  // Create the directory if it doesn't exist
+            mkdir($uploadDir, 0777, true);
         }
 
         // Get file info
@@ -211,13 +211,13 @@ class NoteController {
         $newFileName = uniqid('note_', true) . '.' . $fileExt;
         $destPath = $uploadDir . '/' . $newFileName;
 
-        // Move the file to the destination directory
+        
         if (move_uploaded_file($fileTmpPath, $destPath)) {
             $attachmentPath = 'uploads/attachments/' . $newFileName;  // Save the relative file path
         }
     }
     
-    // Update the note (with or without a new attachment)
+    
     $result = $this->noteModel->updateNote($noteId, $title, $content, $visibility, $attachmentPath);
 
     if (!$result) {
