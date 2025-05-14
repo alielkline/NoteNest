@@ -1,4 +1,4 @@
-<div id="notes-container">
+<div id="notes-container" class="container mt-4">
     <?php if (empty($notes)): ?>
         <div class="col-12">
             <div class="alert alert-secondary text-center" role="alert">
@@ -7,7 +7,7 @@
         </div>
     <?php endif; ?>
     <?php foreach ($notes as $index => $note): ?>
-        <a href="../notes/single.php?note_id=<?php $note["note_id"] ?>" class="text-decoration-none text-reset">
+        <a href="../notes/single.php?note_id=<?= $note["note_id"] ?>" class="text-decoration-none text-reset">
             <div class="col-12 mb-3 note-card <?= $index >= 4 ? 'd-none extra-note' : '' ?>">
                 <div class="card card-custom p-3 d-flex flex-column position-relative w-100">
                     <h5 class="fw-semibold mb-2"><?= htmlspecialchars($note['title']) ?></h5>
