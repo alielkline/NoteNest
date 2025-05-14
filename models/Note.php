@@ -105,6 +105,29 @@ class Note
         ]);
     }
 
+    public function updateNote($note_id, $title, $content, $visibility, $attachment) {
+    // Prepare the SQL query, including the attachment field
+    $query = "UPDATE classroom_notes SET title = ?, content = ?, visibility = ?";
+    
+    // If there is a new attachment, update it as well
+    if ($attachment) {
+        $query .= ", attachment = ?";
+    }
+
+    // Add the WHERE clause
+    $query .= " WHERE note_id = ?";
+
+    // Prepare the statement
+    $stmt = $this->pdo->prepare($query);
+    
+    // Bind parameters
+    if ($attachment) {
+        return $stmt->execute([$title, $content, $visibility, $attachment, $note_id]);
+    } else {
+        return $stmt->execute([$title, $content, $visibility, $note_id]);
+    }
+}
+
     public function incrementNoteCount($subject_id)
     {
         $stmt = $this->pdo->prepare("

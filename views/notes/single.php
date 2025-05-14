@@ -37,7 +37,7 @@
         $attachmentPath = __DIR__ . '/../../public/uploads/attachments/' . $attachmentFileName;
         $fileSize = file_exists($attachmentPath) ? round(filesize($attachmentPath) / 1000000, 3) : "Unknown";
         $fileName = $attachmentFileName;
-        $displayName = strlen($fileName) > 30 ? substr($fileName, 0, 10) . "..." : $fileName;
+        $displayName = strlen($fileName) > 30 ? substr($fileName, 0, 20) . "..." : $fileName;
 
         ob_start(); ?>
         <p class='attachment-title'>Attachments</p>
@@ -66,7 +66,7 @@
         <div class="row mt-5">
             <div class="col-12 col-md-8 mb-4">
                 <div class="note-pane border">
-                    <div class='d-flex justify-content-between'>
+                    <div class='d-flex justify-content-between align-items-center'>
                         <div class='d-flex'>
                             <img class='single-note-pfp' src='../../public/uploads/profile_pictures/<?= htmlspecialchars($note['profile_image']) ?>'>
                             <div>
@@ -74,14 +74,24 @@
                                 <p class='text-muted date'><?= htmlspecialchars($date) ?></p>
                             </div>
                         </div>
-                        <div class='d-flex align-items-center'>
-                            <span id='like-btn' data-note-id='<?= $note['note_id'] ?>' onclick='toggleLike(this)' class='d-flex align-items-center px-2 like-button'>
-                                <i class='bi <?= $heartIconClass ?> mx-1 like-heart'></i>
-                                <span class='mx-1 note-likes' id='like-count'><?= htmlspecialchars($note['likes']) ?></span>
-                            </span>
-                            <span id='bookmark-btn' data-note-id='<?= $note['note_id'] ?>' onclick='toggleBookmark(this)' class='mx-3 ms-5 p-2 bookmark-button'>
-                                <i class='bi <?= $bookmarkIconClass ?> bookmark-icon d-flex align-items-center'></i>
-                            </span>
+                        <div class="d-flex justify-content-end">
+                        <?php if ($note['uploader_user_id'] == $_SESSION['user_id']):?>
+                            
+                            <a href="/NoteNest/views/notes/update_note.php?note_id=<?= $note['note_id'] ?>">
+                                <button class="btn btn-secondary">Edit</button>    
+                            <a>
+                            
+                        <?php else: ?>
+                            <div class='d-flex align-items-center'>
+                                <span id='like-btn' data-note-id='<?= $note['note_id'] ?>' onclick='toggleLike(this)' class='d-flex align-items-center px-2 like-button'>
+                                    <i class='bi <?= $heartIconClass ?> mx-1 like-heart'></i>
+                                    <span class='mx-1 note-likes' id='like-count'><?= htmlspecialchars($note['likes']) ?></span>
+                                </span>
+                                <span id='bookmark-btn' data-note-id='<?= $note['note_id'] ?>' onclick='toggleBookmark(this)' class='mx-3 ms-5 p-2 bookmark-button'>
+                                    <i class='bi <?= $bookmarkIconClass ?> bookmark-icon d-flex align-items-center'></i>
+                                </span>
+                            </div>
+                        <?php endif; ?>
                         </div>
                     </div>
                     <h1 class='note-title'><?= htmlspecialchars($note['title']) ?></h1>
