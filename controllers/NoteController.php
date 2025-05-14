@@ -208,6 +208,41 @@ class NoteController {
         header("Location: ../views/notes/single.php?note_id=$note_id");
         exit();
     }
+
+    public function updateNote($noteId, $title, $content, $visibility) {
+    
+    $attachmentPath = null;
+    
+    if (isset($_FILES['attachment']) && $_FILES['attachment']['error'] === UPLOAD_ERR_OK) {
+        
+        $uploadDir = __DIR__ . '/../public/uploads/attachments';
+        
+        if (!file_exists($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+
+        // Get file info
+        $fileTmpPath = $_FILES['attachment']['tmp_name'];
+        $fileName = basename($_FILES['attachment']['name']);
+        $fileExt = pathinfo($fileName, PATHINFO_EXTENSION);
+        $newFileName = uniqid('note_', true) . '.' . $fileExt;
+        $destPath = $uploadDir . '/' . $newFileName;
+
+        
+        if (move_uploaded_file($fileTmpPath, $destPath)) {
+            $attachmentPath = 'uploads/attachments/' . $newFileName;  // Save the relative file path
+        }
+    }
+    
+    
+    $result = $this->noteModel->updateNote($noteId, $title, $content, $visibility, $attachmentPath);
+
+    if (!$result) {
+        $_SESSION['error'] = "Failed to update note.";
+    } else {
+        $_SESSION['success'] = "Note updated successfully.";
+    }
+}
 }
 
 // Handle POST requests and route to the correct method
@@ -220,7 +255,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $noteController->createNote($classroom_id, $subject_id);
     }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_note'])) {
+    $noteId = $_POST['note_id'];
+    $title = $_POST['noteTitle'];
+    $content = $_POST['noteContent'];
+    $visibility = $_POST['visibility'];
+    
+    // Optional: handle file uploads
+
+    $controller = new NoteController();
+    $controller->updateNote($noteId, $title, $content, $visibility);
+
+    header("Location: ../views/notes/single.php?note_id=" . $noteId); // Redirect after update
+    exit();
+}
+
+
     // Handle note creation
+
     if(isset($_POST['action'])){
     
     if($_POST['action'] === 'add_comment'){
