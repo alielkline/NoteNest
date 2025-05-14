@@ -28,7 +28,7 @@ $comments = $data['comments'];
 
     <div class="container">
         <div class="row mt-5">
-            <div class="col-8">
+            <div class="col-12 col-md-8 mb-4">
                 <div class="note-pane border">
                     <?php
                     $d = strtotime($note['upload_date']);
@@ -103,7 +103,7 @@ $comments = $data['comments'];
                     ?>
                 </div>
             </div>
-            <div class="col-4 note-pane border">
+            <div class="col-12 col-md-4 note-pane border">
                 <span class="d-flex align-items-center mb-3">
 
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chat-left comments-icon" viewBox="0 0 16 16">
