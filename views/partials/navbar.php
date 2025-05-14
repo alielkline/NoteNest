@@ -61,11 +61,11 @@ if (isset($_SESSION['user_id'])) {
           <a href="../auth/signup.php"><button class="btn-signup">Sign up</button></a>
         <?php else: ?>
 
-          <div class="dropdown">
+          <div class="dropdown position-relative">
             <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
               <img src="<?php echo htmlspecialchars($profile_picture); ?>" alt="Profile Picture" width="36" height="36" class="rounded-circle shadow-sm">
             </a>
-            <ul class="dropdown-menu dropdown-menu-end shadow" style="min-width: 230px;">
+            <ul class="dropdown-menu shadow custom-dropdown">
               <li class="px-3 py-2">
                 <strong class="d-block"><?php echo htmlspecialchars($username); ?></strong>
                 <small class="text-muted"><?php echo htmlspecialchars($email); ?></small>

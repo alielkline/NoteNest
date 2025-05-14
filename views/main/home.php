@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="../../public/assets/css/main.css">
     <link rel="stylesheet" href="../../public/assets/css/navbar.css">
     <link rel="stylesheet" href="../../public/assets/css/home.css">
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
@@ -20,7 +19,7 @@
 
 <body>
     <?php include '../partials/navbar.php'; ?>
-    <div class="container text-center">
+    <div class="main-content p-4 w-100 container text-center">
         <div class="row mt-5 justify-content-center">
             <div class="col-auto">
                 <div class="d-inline-flex align-items-baseline">

@@ -165,15 +165,24 @@ $user_id = $data['user_id'];
             const filterForm = document.querySelector('form');
             const notesContainer = document.getElementById('notes-container');
 
+            // Delegate click event for dynamic "View More" button
             notesContainer.addEventListener('click', function(event) {
                 if (event.target && event.target.id === 'toggle-notes-btn') {
-                    document.querySelectorAll('.extra-note').forEach(note => {
-                        note.classList.toggle('d-none');
-                    });
-                    event.target.textContent = event.target.textContent === 'View More' ? 'View Less' : 'View More';
+                    const extraNotes = document.querySelectorAll('.extra-note');
+                    const isHidden = extraNotes[0]?.classList.contains('d-none');
+                    extraNotes.forEach(note => note.classList.toggle('d-none'));
+                    event.target.textContent = isHidden ? 'View Less' : 'View More';
+
+                    if (isHidden && extraNotes.length > 0) {
+                        extraNotes[0].scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center'
+                        });
+                    }
                 }
             });
 
+            // Handle form submission for sorting/filtering
             filterForm.addEventListener('submit', function(event) {
                 event.preventDefault();
                 const params = new URLSearchParams(new FormData(filterForm)).toString();
@@ -189,6 +198,7 @@ $user_id = $data['user_id'];
                         notesContainer.scrollIntoView({
                             behavior: 'smooth'
                         });
+                        // No need to re-bind the button — event delegation handles it
                     })
                     .catch(error => console.error('Error:', error));
             });

@@ -14,6 +14,7 @@ $classroom_id = $_GET['classroom_id'];
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Create Note</title>
@@ -23,18 +24,19 @@ $classroom_id = $_GET['classroom_id'];
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
+    <link rel="stylesheet" href="../../public/assets/css/main.css">
     <link rel="stylesheet" href="../../public/assets/css/navbar.css">
     <link rel="stylesheet" href="../../public/assets/css/create_note.css">
 </head>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const fileInput = document.getElementById('attachment');
         const fileNameDisplay = document.getElementById('file-name');
         const uploadIcon = document.querySelector('.upload-icon');
         const uploadTitle = document.querySelector('.upload-title');
         const uploadSubtext = document.querySelector('.upload-subtext');
 
-        fileInput.addEventListener('change', function () {
+        fileInput.addEventListener('change', function() {
             if (fileInput.files.length > 0) {
                 const fileName = fileInput.files[0].name;
                 fileNameDisplay.textContent = `Selected: ${fileName}`;
@@ -52,6 +54,7 @@ $classroom_id = $_GET['classroom_id'];
         });
     });
 </script>
+
 <body>
     <?php include '../partials/navbar.php'; ?>
 
@@ -61,7 +64,7 @@ $classroom_id = $_GET['classroom_id'];
         </div>
         <?php unset($_SESSION['error']); ?>
     <?php endif; ?>
-    
+
     <div class="container my-5">
         <div class="row">
             <!-- Note form -->
@@ -104,8 +107,8 @@ $classroom_id = $_GET['classroom_id'];
                                     <div class="upload-icon">
                                         <!-- Upload Icon SVG -->
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-upload" viewBox="0 0 16 16">
-                                            <path d="M.5 9.9a.5.5 0 0 1 .5.6v3a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3a.5.5 0 0 1 1 0v3a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-3a.5.5 0 0 1 .5-.6z"/>
-                                            <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V10.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+                                            <path d="M.5 9.9a.5.5 0 0 1 .5.6v3a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3a.5.5 0 0 1 1 0v3a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-3a.5.5 0 0 1 .5-.6z" />
+                                            <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V10.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z" />
                                         </svg>
                                     </div>
                                     <div class="upload-title">Upload Attachments</div>
@@ -155,9 +158,10 @@ $classroom_id = $_GET['classroom_id'];
         </div>
     </div>
 
-<!-- Bootstrap JS -->
+    <!-- Bootstrap JS -->
     <script src="../../public/assets/js/error.js"></script>
     <script src="../../public/assets/js/success.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
