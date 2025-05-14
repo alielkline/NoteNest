@@ -49,7 +49,7 @@
         </div>
         <div class="row" id="cardsRow">
             <!-- Card 1: Create Classrooms -->
-            <div class="col-4">
+            <div class="col-12 col-md-6 col-lg-4">
                 <div class="card shadow p-3 mb-5 bg-white rounded w-100">
                     <div class="card-body">
                         <div id="iconCircle">
@@ -64,7 +64,7 @@
             </div>
 
             <!-- Card 2: Take Rich Notes -->
-            <div class="col-4">
+            <div class="col-12 col-md-6 col-lg-4">
                 <div class="card shadow p-3 mb-5 bg-white rounded w-100">
                     <div class="card-body">
                         <div id="iconCircle">
@@ -80,7 +80,7 @@
             </div>
 
             <!-- Card 3: Collaborate -->
-            <div class="col-4">
+            <div class="col-12 col-md-6 col-lg-4">
                 <div class="card shadow p-3 mb-5 bg-white rounded w-100">
                     <div class="card-body">
                         <div id="iconCircle">
