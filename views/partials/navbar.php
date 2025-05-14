@@ -1,23 +1,12 @@
 <?php
-require_once '../../core/database.php';
+require_once __DIR__ .'/../../config/init.php';
+require_once __DIR__ .'/../../controllers/ProfileController.php';
 
-$pdo = Database::getConnection();
-
-
-// If the user is logged in, fetch their profile picture
 if (isset($_SESSION['user_id'])) {
-
   $user_id = $_SESSION['user_id'];
+  $controller = new ProfileController($user_id);
+  $user = $controller->getUserData();
 
-  // Prepare the query to fetch user information including the profile picture
-  $query = "SELECT * FROM users WHERE id = :user_id";
-  $stmt = $pdo->prepare($query);
-  $stmt->execute([
-    ':user_id' => $user_id
-  ]);
-  $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-  // If the user exists and has a profile picture
   $profile_picture = '../../public/uploads/profile_pictures/' . $user['profile_image'];
   $email = $user['email'];
   $username = $user['username'];

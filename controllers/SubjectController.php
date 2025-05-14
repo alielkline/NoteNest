@@ -31,6 +31,8 @@ class SubjectController {
 
     // Check if classroom exists and the user is a member
     public function checkClassroom($classroom_id) {
+        $classroom_id = intval($classroom_id);
+
         if (empty($classroom_id)) {
             header("Location: ../views/pages/classrooms.php");
             exit();
@@ -55,9 +57,10 @@ class SubjectController {
     // Handle the creation of a subject
     public function createSubject($classroom_id) {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_subject'])) {
-            $subject_name = trim($_POST['subject_name']);
-            $subject_desc = trim($_POST['subject_desc']);
-            
+            $subject_name = htmlspecialchars(trim($_POST['subject_name'] ?? ''), ENT_QUOTES, 'UTF-8');
+            $subject_desc = htmlspecialchars(trim($_POST['subject_desc'] ?? ''), ENT_QUOTES, 'UTF-8');
+            $classroom_id = intval($classroom_id);
+
             // Validate inputs
             if (empty($subject_name) || empty($subject_desc)) {
                 $_SESSION['error'] = "All fields are required.";
@@ -81,26 +84,37 @@ class SubjectController {
     }
 
     public function updateSubject() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $subject_id = $_POST['subject_id'];
-            $classroom_id = $_POST['classroom_id'];
-            $name = $_POST['subjectName'];
-            $desc = $_POST['subjectDesc'];
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_subject'])) {
+            $subject_id = intval($_POST['subject_id'] ?? 0);
+            $classroom_id = intval($_POST['classroom_id'] ?? 0);
+            $name = htmlspecialchars(trim($_POST['subjectName'] ?? ''), ENT_QUOTES, 'UTF-8');
+            $desc = htmlspecialchars(trim($_POST['subjectDesc'] ?? ''), ENT_QUOTES, 'UTF-8');
 
-            $this->subjectModel->updateSubject($subject_id, $name, $desc);
-            $_SESSION['success'] = "Subject updated successfully!";
-            header("Location: ../views/notes/subject_notes.php?classroom_id=$classroom_id&subject_id=$subject_id");
+            if ($subject_id > 0 && $classroom_id > 0 && $name && $desc) {
+                $this->subjectModel->updateSubject($subject_id, $name, $desc);
+                $_SESSION['success'] = "Subject updated successfully!";
+                header("Location: ../views/notes/subject_notes.php?classroom_id=$classroom_id&subject_id=$subject_id");
+            } else {
+                $_SESSION['error'] = "Invalid input for update.";
+                header("Location: ../views/pages/subjects.php?classroom_id=$classroom_id");
+            }
             exit();
         }
     }
 
+    // Delete a subject
     public function deleteSubject() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $subject_id = $_POST['subject_id'];
-            $classroom_id = $_POST['classroom_id'];
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_subject'])) {
+            $subject_id = intval($_POST['subject_id'] ?? 0);
+            $classroom_id = intval($_POST['classroom_id'] ?? 0);
 
-            $this->subjectModel->deleteSubject($subject_id);
-            $_SESSION['success'] = "Subject deleted successfully!";
+            if ($subject_id > 0 && $classroom_id > 0) {
+                $this->subjectModel->deleteSubject($subject_id);
+                $_SESSION['success'] = "Subject deleted successfully!";
+            } else {
+                $_SESSION['error'] = "Invalid deletion request.";
+            }
+
             header("Location: ../views/pages/subjects.php?classroom_id=$classroom_id");
             exit();
         }

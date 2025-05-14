@@ -25,22 +25,21 @@ class NoteController {
     
         $user_id = $_SESSION['user_id'];
     
-        $classroom_id = $_GET['classroom_id'] ?? null;
+        // Sanitize GET inputs
+        $classroom_id = filter_input(INPUT_GET, 'classroom_id', FILTER_SANITIZE_NUMBER_INT);
+        $sort_likes = filter_input(INPUT_GET, 'sort_likes', FILTER_SANITIZE_STRING);
+        $sort_date = filter_input(INPUT_GET, 'sort_date', FILTER_SANITIZE_STRING);
+
         if ($classroom_id === 'all') $classroom_id = null;
     
-        $sort_likes = $_GET['sort_likes'] ?? null;
-        $sort_date = $_GET['sort_date'] ?? null;
-    
-        // Correct filter format
         $filters = [
             'classroom_id' => $classroom_id,
             'sort_likes' => $sort_likes,
             'sort_date' => $sort_date
         ];
     
-        // Get notes
+        // Fetch notes and classrooms for the logged-in user
         $notes = $this->noteModel->getFilteredNotes($user_id, $filters);
-        // Get classrooms
         $classrooms = $this->classroomModel->getClassroomsByUserId($user_id);
 
         // Return the data to the view
@@ -57,17 +56,20 @@ class NoteController {
             exit();
         }
     
-        // Validate input
-        if (empty($_POST['noteTitle']) || empty($_POST['noteContent'])) {
+       // Validate and sanitize inputs
+        $title = trim($_POST['noteTitle'] ?? '');
+        $content = trim($_POST['noteContent'] ?? '');
+        $visibility = ($_POST['visibility'] ?? '') === 'private' ? 'private' : 'public';
+
+        if (empty($title) || empty($content)) {
             $_SESSION['error'] = 'Please fill in all required fields.';
             header("Location: ../controllers/NoteController.php?action=create&classroom_id=$classroom_id&subject_id=$subject_id");
             exit();
         }
-    
+
+        $title = htmlspecialchars($title);
+        $content = htmlspecialchars($content);
         $user_id = $_SESSION['user_id'];
-        $title = trim($_POST['noteTitle']);
-        $content = trim($_POST['noteContent']);
-        $visibility = ($_POST['visibility'] === 'private') ? 'private' : 'public';
         $attachmentPath = null;
     
         // Handle file upload
@@ -88,7 +90,7 @@ class NoteController {
             }
         }
     
-        // Save to DB
+        // Save the note to the database
         $this->noteModel->createNote($user_id, $title, $content, $visibility, $attachmentPath, $subject_id);
         $this->noteModel->incrementNoteCount($subject_id);
     
@@ -97,6 +99,7 @@ class NoteController {
         exit();
     }
     
+    // Displays notes for a specific subject
     public function showSubjectNotes() {
 
         if (!isset($_SESSION['user_id'])) {
@@ -109,10 +112,17 @@ class NoteController {
             exit();
         }
 
-        $user_id = $_SESSION['user_id'];
-        $classroom_id = $_GET['classroom_id'];
-        $subject_id = $_GET['subject_id'];
+        
+        // Sanitize GET inputs
+        $classroom_id = filter_input(INPUT_GET, 'classroom_id', FILTER_SANITIZE_NUMBER_INT);
+        $subject_id = filter_input(INPUT_GET, 'subject_id', FILTER_SANITIZE_NUMBER_INT);
 
+        if (!$classroom_id || !$subject_id) {
+            header("Location: ../main/dashboard.php");
+            exit();
+        }
+
+        $user_id = $_SESSION['user_id'];
         $classroom = $this->classroomModel->getClassroomById($classroom_id);
         $subject = $this->subjectModel->getSubject($subject_id);
         $notes = $this->noteModel->getNotesBySubjectId($subject_id);
@@ -131,8 +141,10 @@ class NoteController {
         ];
     }
 
+    // Toggles a like for a note via AJAX
     public function toggleLike($note_id) {
         $user_id = $_SESSION['user_id'] ?? null;
+        $note_id = filter_var($note_id, FILTER_SANITIZE_NUMBER_INT);
     
         if (!$user_id || !$note_id) {
             echo json_encode(['success' => false]);
@@ -143,10 +155,11 @@ class NoteController {
         echo json_encode(['success' => true, 'likes' => $result]);
     }
     
-    
+    // Toggles bookmark for a note via AJAX
     public function toggleBookmark($note_id) {
         $user_id = $_SESSION['user_id'] ?? null;
-    
+        $note_id = filter_var($note_id, FILTER_SANITIZE_NUMBER_INT);
+
         if (!$user_id || !$note_id) {
             echo json_encode(['success' => false]);
             return;
@@ -156,6 +169,7 @@ class NoteController {
         echo json_encode(['success' => true]);
     }
 
+    // Loads a single note and related data
     public function loadNote(){
         if (!isset($_SESSION['user_id'])) {
             header("Location: ../auth/login.php");
@@ -163,7 +177,7 @@ class NoteController {
         }
         
         $user_id = $_SESSION['user_id'];
-        $note_id = $_GET['note_id'];
+        $note_id = filter_input(INPUT_GET, 'note_id', FILTER_SANITIZE_NUMBER_INT);
 
         $note = $this->noteModel->getNoteWithDetails($note_id);
         $userHasLiked = $this->noteModel->userHasLiked($user_id, $note_id);
@@ -177,7 +191,8 @@ class NoteController {
             'comments' => $comments
         ];
     }
-
+    
+    // Adds a comment to a note
     public function addComment($note_id, $content){
         if (!isset($_SESSION['user_id'])) {
             header("Location: ../auth/login.php");
@@ -185,6 +200,8 @@ class NoteController {
         }
 
         $user_id = $_SESSION['user_id'];
+        $note_id = filter_var($note_id, FILTER_SANITIZE_NUMBER_INT);
+        $content = trim(htmlspecialchars($content));
 
         $this->noteModel->addComment($note_id, $user_id, $content);
 
@@ -228,12 +245,13 @@ class NoteController {
 }
 }
 
+// Handle POST requests and route to the correct method
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $noteController = new NoteController();
 
     if (isset($_POST['create_note'])) {
-        $classroom_id = $_POST['classroom_id'] ?? null;
-        $subject_id = $_POST['subject_id'] ?? null;
+        $classroom_id = filter_input(INPUT_POST, 'classroom_id', FILTER_SANITIZE_NUMBER_INT);
+        $subject_id = filter_input(INPUT_POST, 'subject_id', FILTER_SANITIZE_NUMBER_INT);
         $noteController->createNote($classroom_id, $subject_id);
     }
 
@@ -252,21 +270,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_note'])) {
     exit();
 }
 
+
+    // Handle note creation
+
     if(isset($_POST['action'])){
     
     if($_POST['action'] === 'add_comment'){
-        $note_id = $_POST['note_id'];
+        $note_id = filter_input(INPUT_POST, 'note_id', FILTER_SANITIZE_NUMBER_INT);
         $content = $_POST['content'];
         $noteController->addComment($note_id, $content);
     }
 
     if ($_POST['action'] === 'toggleLike') {
-        $note_id = $_POST['note_id'];
+        $note_id = filter_input(INPUT_POST, 'note_id', FILTER_SANITIZE_NUMBER_INT);
         $noteController->toggleLike($note_id);
     }
 
     if ($_POST['action'] === 'toggleBookmark') {
-        $note_id = $_POST['note_id'];
+        $note_id = filter_input(INPUT_POST, 'note_id', FILTER_SANITIZE_NUMBER_INT);
         $noteController->toggleBookmark($note_id);
     }
 

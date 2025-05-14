@@ -198,7 +198,6 @@ $user_id = $data['user_id'];
                         notesContainer.scrollIntoView({
                             behavior: 'smooth'
                         });
-                        // No need to re-bind the button — event delegation handles it
                     })
                     .catch(error => console.error('Error:', error));
             });
