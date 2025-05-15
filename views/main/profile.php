@@ -44,14 +44,16 @@ $imagePath = !empty($user['profile_image'])
 <body>
     <?php include '../partials/navbar.php'; ?>
 
-    <?php if (isset($_GET['error'])): ?>
+    <?php if (isset($_SESSION['error'])): ?>
         <div class="alert error-message" id="error-message">
-            <?php echo htmlspecialchars($_GET['error']); ?>
+            <?php echo htmlspecialchars($_SESSION['error']); ?>
         </div>
-    <?php elseif (isset($_GET['password_changed'])): ?>
+        <?php unset($_SESSION['error']); ?>
+    <?php elseif (isset($_SESSION['password_changed'])): ?>
         <div class="alert success-message" id="success-message">
             Password changed successfully.
         </div>
+        <?php unset($_SESSION['password_success']); ?>
     <?php endif; ?>
 
     <div class="container py-5">

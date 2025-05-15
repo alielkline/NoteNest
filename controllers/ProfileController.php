@@ -45,7 +45,8 @@ class ProfileController {
 
             // Validate file extension
             if (!in_array($fileExtension, $allowedExtensions)) {
-                header("Location: ../main/profile.php?error=invalid_file_extension");
+                $_SESSION['error'] = "Invalid file type!";
+                header("Location: ../main/profile.php");
                 exit();
             }
     
@@ -64,14 +65,17 @@ class ProfileController {
             // Move file and update DB
             if (move_uploaded_file($fileTmpPath, $destPath)) {
                 $this->userModel->updateProfileImage($this->userId, $newFileName);
-                header("Location: ../main/profile.php?success=photo_updated");
+                $_SESSION['success'] = "Profile photo updated successfully!";
+                header("Location: ../main/profile.php");
                 exit();
             } else {
-                header("Location: ../main/profile.php?error=file_upload_failed");
+                $_SESSION['error'] = "Failed to upload the file.";
+                header("Location: ../main/profile.php");
                 exit();
             }
         } else {
-            header("Location: ../main/profile.php?error=file_upload_error");
+            $_SESSION['error'] = "Error uploading file.";
+            header("Location: ../main/profile.php");
             exit();
         }
     }
