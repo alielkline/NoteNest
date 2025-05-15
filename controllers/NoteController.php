@@ -98,6 +98,46 @@ class NoteController {
         header("Location: ../views/notes/subject_notes.php?subject_id=$subject_id&classroom_id=$classroom_id");
         exit();
     }
+
+    public function deleteNote($note_id) {
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: ../views/auth/login.php");
+            exit();
+        }
+    
+        $user_id = $_SESSION['user_id'];
+    
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $note_id = $_POST['note_id'] ?? null;
+    
+            if (!$note_id) {
+                $_SESSION['error'] = "Missing note ID.";
+                header("Location: ../views/pages/notes.php");
+                exit();
+            }
+    
+            $note = $this->noteModel->getNoteWithDetails($note_id);
+    
+            if (!$note) {
+                $_SESSION['error'] = "Note not found.";
+                header("Location: ../views/pages/notes.php");
+                exit();
+            }
+    
+            // Check if user is authorized
+            if ($note['uploader_user_id'] != $user_id) {
+                $_SESSION['error'] = "You are not authorized to delete this note.";
+                header("Location: ../views/main/dashboard.php");
+                exit();
+            }
+            
+            $deleted = $this->noteModel->deleteNote($note_id);
+    
+            $_SESSION[$deleted ? 'success' : 'error'] = $deleted ? "Note deleted successfully." : "Failed to delete note.";
+            header("Location: ../views/main/dashboard.php");
+            exit();
+        }
+    }
     
     // Displays notes for a specific subject
     public function showSubjectNotes() {
@@ -274,6 +314,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_note'])) {
     // Handle note creation
 
     if(isset($_POST['action'])){
+
+    if($_POST['action'] === 'delete'){
+        $note_id = filter_input(INPUT_POST, 'note_id', FILTER_SANITIZE_NUMBER_INT);
+        $noteController->deleteNote($note_id);
+    }
     
     if($_POST['action'] === 'add_comment'){
         $note_id = filter_input(INPUT_POST, 'note_id', FILTER_SANITIZE_NUMBER_INT);
