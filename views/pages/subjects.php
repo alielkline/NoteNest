@@ -33,6 +33,7 @@ $classroom_id = $_GET['classroom_id'];
     <title><?= htmlspecialchars($classroom_name) ?> - Subjects</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../public/assets/css/main.css">
     <link rel="stylesheet" href="../../public/assets/css/navbar.css">
     <link rel="stylesheet" href="../../public/assets/css/subjetcs.css">
 </head>
@@ -64,29 +65,31 @@ $classroom_id = $_GET['classroom_id'];
             </div>
         </div>
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="fw-bold mb-0"><?= htmlspecialchars($classroom_name) ?> - Subjects</h2>
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
+            <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center gap-3 flex-wrap w-100">
+                <h2 class="fw-bold mb-0 flex-grow-1"><?= htmlspecialchars($classroom_name) ?> - Subjects</h2>
 
-            <?php if ($classroom['creator_id'] == $user_id): ?>
-                <div class="d-flex gap-2">
-                    <button class="btn btn-purple text-white" data-bs-toggle="modal" data-bs-target="#createSubjectModal">
-                        <i class="bi bi-plus-lg me-1"></i> New Subject
-                    </button>
-                    <button class="btn custom-grey-btn" data-bs-toggle="modal" data-bs-target="#settingsModal">
-                        <i class="bi bi-gear me-1"></i> Settings
-                    </button>
-                </div>
-            <?php endif; ?>
+                <?php if ($classroom['creator_id'] == $user_id): ?>
+                    <div class="d-flex flex-wrap gap-2">
+                        <button class="btn btn-purple text-white" data-bs-toggle="modal" data-bs-target="#createSubjectModal">
+                            <i class="bi bi-plus-lg me-1"></i> New Subject
+                        </button>
+                        <button class="btn custom-grey-btn" data-bs-toggle="modal" data-bs-target="#settingsModal">
+                            <i class="bi bi-gear me-1"></i> Settings
+                        </button>
+                    </div>
+                <?php endif; ?>
+            </div>
 
             <?php if ($is_member && $classroom['creator_id'] != $user_id): ?>
-                <form action="../../controllers/ClassroomController.php?action=leave" method="POST" class="ms-2">
+                <form action="../../controllers/ClassroomController.php?action=leave" method="POST">
                     <input type="hidden" name="classroom_id" value="<?= $classroom_id ?>">
                     <button class="btn btn-outline-danger" type="submit">
                         <i class="bi bi-box-arrow-left me-1"></i> Leave Classroom
                     </button>
                 </form>
             <?php elseif (!$is_member): ?>
-                <form action="../../controllers/ClassroomController.php?action=join" method="POST" class="ms-2">
+                <form action="../../controllers/ClassroomController.php?action=join" method="POST">
                     <input type="hidden" name="classroom_id" value="<?= $classroom_id ?>">
                     <button class="btn btn-outline-success" type="submit">
                         <i class="bi bi-box-arrow-in-right me-1"></i> Join Classroom

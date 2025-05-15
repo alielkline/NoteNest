@@ -66,7 +66,7 @@
         <div class="row mt-5">
             <div class="col-12 col-md-8 mb-4">
                 <div class="note-pane border">
-                    <div class='d-flex justify-content-between'>
+                    <div class='d-flex justify-content-between align-items-center'>
                         <div class='d-flex'>
                             <img class='single-note-pfp' src='../../public/uploads/profile_pictures/<?= htmlspecialchars($note['profile_image']) ?>'>
                             <div>
@@ -74,18 +74,38 @@
                                 <p class='text-muted date'><?= htmlspecialchars($date) ?></p>
                             </div>
                         </div>
-                        <div class='d-flex align-items-center'>
-                            <span id='like-btn' data-note-id='<?= $note['note_id'] ?>' onclick='toggleLike(this)' class='d-flex align-items-center px-2 like-button'>
-                                <i class='bi <?= $heartIconClass ?> mx-1 like-heart'></i>
-                                <span class='mx-1 note-likes' id='like-count'><?= htmlspecialchars($note['likes']) ?></span>
-                            </span>
-                            <span id='bookmark-btn' data-note-id='<?= $note['note_id'] ?>' onclick='toggleBookmark(this)' class='mx-3 ms-5 p-2 bookmark-button'>
-                                <i class='bi <?= $bookmarkIconClass ?> bookmark-icon d-flex align-items-center'></i>
-                            </span>
+                        <div class="d-flex justify-content-end">
+
+
+                            <div class='d-flex align-items-center'>
+                                <span id='like-btn' data-note-id='<?= $note['note_id'] ?>' onclick='toggleLike(this)' class='d-flex align-items-center px-2 like-button'>
+                                    <i class='bi <?= $heartIconClass ?> mx-1 like-heart'></i>
+                                    <span class='mx-1 note-likes' id='like-count'><?= htmlspecialchars($note['likes']) ?></span>
+                                </span>
+                                <span id='bookmark-btn' data-note-id='<?= $note['note_id'] ?>' onclick='toggleBookmark(this)' class='mx-2 p-2 bookmark-button'>
+                                    <i class='bi <?= $bookmarkIconClass ?> bookmark-icon d-flex align-items-center'></i>
+                                </span>
+
+
+                            </div>
+
                         </div>
                     </div>
-                    <h1 class='note-title'><?= htmlspecialchars($note['title']) ?></h1>
-                    <p class='subject-pill px-2 py-1'><?= htmlspecialchars($note['subject_name']) ?></p>
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mt-3">
+                        <h1 class="note-title mb-0 text-break" style="word-break: break-word; max-width: 100%;">
+                            <?= htmlspecialchars($note['title']) ?>
+                        </h1>
+
+                        <?php if ($note['uploader_user_id'] == $_SESSION['user_id']): ?>
+                            <span class="d-flex align-items-center mt-2 mt-md-0">
+                                <a href="/NoteNest/views/notes/update_note.php?note_id=<?= $note['note_id'] ?>">
+                                    <button class="btn btn-secondary">Edit</button>
+                                </a>
+                            </span>
+                        <?php endif; ?>
+                    </div>
+
+                    <p class='subject-pill px-2 py-1 mt-2'><?= htmlspecialchars($note['subject_name']) ?></p>
                     <p><?= htmlspecialchars($note['content']) ?></p>
                     <div><?= $fileSegment ?></div>
                 </div>

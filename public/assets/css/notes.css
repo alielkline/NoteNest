@@ -11,7 +11,7 @@
     text-align: left;
 }
 
-.dropdown-item {
+/* .dropdown-item {
     background: white;
     border: none;
     color: #333;
@@ -20,12 +20,12 @@
     transition: all 0.3s ease;
     min-width: 8rem;
     text-align: left;
-}
+} */
 
-.dropdown-item:hover {
+/* .dropdown-item:hover {
     background: #cac0ff;
 
-}
+} */
 
 .note-pane {
     background: white;
