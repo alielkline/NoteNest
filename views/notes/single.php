@@ -17,7 +17,14 @@
     require_once __DIR__ . '/../../controllers/NoteController.php';
     $controller = new NoteController();
     $data = $controller->loadNote();
+
     $note = $data['note'];
+
+    if (!$note) {
+        header("Location: /NoteNest/views/pages/404page.php");
+    exit;
+    }
+
     $userHasLiked = $data['userHasLiked'];
     $userHasBookmarked = $data['userHasBookmarked'];
     $comments = $data['comments'];
@@ -99,8 +106,13 @@
                         <?php if ($note['uploader_user_id'] == $_SESSION['user_id']): ?>
                             <span class="d-flex align-items-center mt-2 mt-md-0">
                                 <a href="/NoteNest/views/notes/update_note.php?note_id=<?= $note['note_id'] ?>">
-                                    <button class="btn btn-secondary">Edit</button>
+                                    <button class="btn btn-secondary"><i class="bi bi-gear me-1"></i>Edit</button>
                                 </a>
+                                <form action="../../controllers/NoteController.php" method="POST" onsubmit="return confirm('Are you sure you want to delete this note?');">
+                                    <input type="hidden" name="note_id" value="<?= $note['note_id'] ?>">
+                                    <input type="hidden" name="action" value="delete">
+                                    <button type="submit" class="btn btn-danger mx-2">Delete</button>
+                                    </form>
                             </span>
                         <?php endif; ?>
                     </div>

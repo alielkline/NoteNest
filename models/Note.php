@@ -105,6 +105,11 @@ class Note
         ]);
     }
 
+    public function deleteNote($note_id) {
+        $stmt = $this->pdo->prepare("DELETE FROM classroom_notes WHERE note_id = ?");
+        return $stmt->execute([$note_id]);
+    }
+
     public function updateNote($note_id, $title, $content, $visibility, $attachment) {
     
     $query = "UPDATE classroom_notes SET title = ?, content = ?, visibility = ?";

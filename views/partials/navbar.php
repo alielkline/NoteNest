@@ -54,7 +54,7 @@ if (isset($_SESSION['user_id'])) {
             <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
               <img src="<?php echo htmlspecialchars($profile_picture); ?>" alt="Profile Picture" width="36" height="36" class="rounded-circle shadow-sm">
             </a>
-            <ul class="dropdown-menu shadow custom-dropdown">
+            <ul class="dropdown-menu shadow custom-dropdown w-50">
               <li class="px-3 py-2">
                 <strong class="d-block"><?php echo htmlspecialchars($username); ?></strong>
                 <small class="text-muted"><?php echo htmlspecialchars($email); ?></small>
