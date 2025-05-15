@@ -1,64 +1,71 @@
+<?php
+require_once __DIR__ . '/../../controllers/NoteController.php';
+$controller = new NoteController();
+$data = $controller->loadNote();
+$note = $data['note'];
+$userHasLiked = $data['userHasLiked'];
+$userHasBookmarked = $data['userHasBookmarked'];
+$comments = $data['comments'];
+
+$d = strtotime($note['upload_date']);
+$date = date("M d, Y, h:i A", $d);
+$heartIconClass = $userHasLiked ? "bi-heart-fill" : "bi-heart";
+$bookmarkIconClass = $userHasBookmarked ? "bi-bookmark-fill" : "bi-bookmark";
+
+if (!$note['profile_image']) {
+    $note['profile_image'] = 'profile-default.jpg';
+}
+
+$fileSegment = '';
+if (!empty($note['attachment'])) {
+    $attachmentFileName = basename($note['attachment']);
+    $attachmentPath = __DIR__ . '/../../public/uploads/attachments/' . $attachmentFileName;
+    $fileSize = file_exists($attachmentPath) ? round(filesize($attachmentPath) / 1000000, 3) : "Unknown";
+    $fileName = $attachmentFileName;
+    $displayName = strlen($fileName) > 30 ? substr($fileName, 0, 10) . "..." : $fileName;
+
+    ob_start(); ?>
+    <p class='attachment-title'>Attachments</p>
+    <div class='d-flex justify-content-between download-bg'>
+        <div class='d-flex'>
+            <div class='download-icon-bg p-2 px-3 m-3'>
+                <i class='bi bi-book'></i>
+            </div>
+            <div>
+                <p class='mt-3 mb-0 attachment-filename'><?= htmlspecialchars($displayName) ?></p>
+                <p class='text-muted'><?= htmlspecialchars($fileSize) ?> MB</p>
+            </div>
+        </div>
+        <div>
+            <a class='btn download-btn m-4' href='../../public/uploads/attachments/<?= htmlspecialchars($fileName) ?>' download>Download</a>
+        </div>
+    </div>
+<?php
+    $fileSegment = ob_get_clean();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../../public/assets/css/main.css">
-    <link rel="stylesheet" href="../../public/assets/css/navbar.css">
-    <link rel="stylesheet" href="../../public/assets/css/single_note.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-    <title>Note</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="View and interact with notes on NoteNest. Read, like, bookmark, comment, and download attachments." />
+    <meta name="author" content="NoteNest Team" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../../public/assets/css/main.css" />
+    <link rel="stylesheet" href="../../public/assets/css/navbar.css" />
+    <link rel="stylesheet" href="../../public/assets/css/single_note.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+    <title><?= htmlspecialchars($note['title']) ?> - Note</title>
 </head>
 
 <body>
-    <?php
-    require_once __DIR__ . '/../../controllers/NoteController.php';
-    $controller = new NoteController();
-    $data = $controller->loadNote();
-    $note = $data['note'];
-    $userHasLiked = $data['userHasLiked'];
-    $userHasBookmarked = $data['userHasBookmarked'];
-    $comments = $data['comments'];
-
-    $d = strtotime($note['upload_date']);
-    $date = date("M d, Y, h:i A", $d);
-    $heartIconClass = $userHasLiked ? "bi-heart-fill" : "bi-heart";
-    $bookmarkIconClass = $userHasBookmarked ? "bi-bookmark-fill" : "bi-bookmark";
-
-    if (!$note['profile_image']) {
-        $note['profile_image'] = 'profile-default.jpg';
-    }
-
-    $fileSegment = '';
-    if (!empty($note['attachment'])) {
-        $attachmentFileName = basename($note['attachment']);
-        $attachmentPath = __DIR__ . '/../../public/uploads/attachments/' . $attachmentFileName;
-        $fileSize = file_exists($attachmentPath) ? round(filesize($attachmentPath) / 1000000, 3) : "Unknown";
-        $fileName = $attachmentFileName;
-        $displayName = strlen($fileName) > 30 ? substr($fileName, 0, 10) . "..." : $fileName;
-
-        ob_start(); ?>
-        <p class='attachment-title'>Attachments</p>
-        <div class='d-flex justify-content-between download-bg'>
-            <div class='d-flex'>
-                <div class='download-icon-bg p-2 px-3 m-3'>
-                    <i class='bi bi-book'></i>
-                </div>
-                <div>
-                    <p class='mt-3 mb-0 attachment-filename'><?= htmlspecialchars($displayName) ?></p>
-                    <p class='text-muted'><?= htmlspecialchars($fileSize) ?> MB</p>
-                </div>
-            </div>
-            <div>
-                <a class='btn download-btn m-4' href='../../public/uploads/attachments/<?= htmlspecialchars($fileName) ?>' download>Download</a>
-            </div>
-        </div>
-    <?php
-        $fileSegment = ob_get_clean();
-    }
-    ?>
 
     <?php include '../partials/navbar.php'; ?>
 
@@ -68,15 +75,13 @@
                 <div class="note-pane border">
                     <div class='d-flex justify-content-between align-items-center'>
                         <div class='d-flex'>
-                            <img class='single-note-pfp' src='../../public/uploads/profile_pictures/<?= htmlspecialchars($note['profile_image']) ?>'>
+                            <img class='single-note-pfp' src='../../public/uploads/profile_pictures/<?= htmlspecialchars($note['profile_image']) ?>' />
                             <div>
                                 <p class='my-0'><?= htmlspecialchars($note['username']) ?></p>
                                 <p class='text-muted date'><?= htmlspecialchars($date) ?></p>
                             </div>
                         </div>
                         <div class="d-flex justify-content-end">
-
-
                             <div class='d-flex align-items-center'>
                                 <span id='like-btn' data-note-id='<?= $note['note_id'] ?>' onclick='toggleLike(this)' class='d-flex align-items-center px-2 like-button'>
                                     <i class='bi <?= $heartIconClass ?> mx-1 like-heart'></i>
@@ -85,10 +90,7 @@
                                 <span id='bookmark-btn' data-note-id='<?= $note['note_id'] ?>' onclick='toggleBookmark(this)' class='mx-2 p-2 bookmark-button'>
                                     <i class='bi <?= $bookmarkIconClass ?> bookmark-icon d-flex align-items-center'></i>
                                 </span>
-
-
                             </div>
-
                         </div>
                     </div>
                     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mt-3">
@@ -119,23 +121,22 @@
                     <p class='px-2 my-0 comments-text'>Comments (<?= count($comments) ?>)</p>
                 </span>
                 <form method="post" class="form-group" action="../../controllers/NoteController.php">
-                    <input type="hidden" name="action" value="add_comment">
-                    <input type="hidden" name="note_id" value="<?= $note['note_id'] ?>">
+                    <input type="hidden" name="action" value="add_comment" />
+                    <input type="hidden" name="note_id" value="<?= $note['note_id'] ?>" />
                     <textarea class="form-control w-100 comment-textarea" name="content" rows="3" placeholder="Write a comment..." required></textarea>
                     <button type="submit" class="btn-add-comment mt-2">Add Comment</button>
                 </form>
-                <hr class="text-black-50">
-                <?php foreach ($comments as $comment): ?>
-                    <?php
+                <hr class="text-black-50" />
+                <?php foreach ($comments as $comment):
                     $d = strtotime($comment['comment_date']);
-                    $date = date("M d, Y, h:i A", $d);
-                    ?>
+                    $commentDate = date("M d, Y, h:i A", $d);
+                ?>
                     <div class='comment-pane'>
                         <div class='d-flex p-2'>
-                            <img class='comment-pfp' src='../../public/uploads/profile_pictures/<?= htmlspecialchars($comment['profile_image']) ?>'>
+                            <img class='comment-pfp' src='../../public/uploads/profile_pictures/<?= htmlspecialchars($comment['profile_image']) ?>' />
                             <div>
                                 <p class='my-0'><?= htmlspecialchars($comment['username']) ?></p>
-                                <p class='text-muted date mb-0'><?= htmlspecialchars($date) ?></p>
+                                <p class='text-muted date mb-0'><?= htmlspecialchars($commentDate) ?></p>
                             </div>
                         </div>
                         <p class='p-3 pb-2 pt-0'><?= htmlspecialchars($comment['comment_text']) ?></p>
@@ -145,8 +146,4 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../public/assets/js/single_note.js"></script>
-</body>
-
-</html>
+    <?php include '../partials/footer.php'; ?>

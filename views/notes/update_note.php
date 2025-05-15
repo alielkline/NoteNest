@@ -29,6 +29,11 @@ if (!$note) {
     <title>Update Note</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Update your personal note securely and easily. Modify your saved notes with attachments and visibility options.">
+    <meta name="keywords" content="note, update note, edit note, personal notes, attachments">
+    <meta name="author" content="NoteNest Team">
+
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
@@ -142,10 +147,4 @@ if (!$note) {
         </div>
     </div>
 
-    <!-- Bootstrap JS -->
-    <script src="../../public/assets/js/error.js"></script>
-    <script src="../../public/assets/js/success.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-
-</html>
+<?php include '../partials/footer.php'; ?>

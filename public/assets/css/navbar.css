@@ -135,7 +135,7 @@ body {
 
 
 
-@media (max-width: 576px) {
+@media (max-width: 995px) {
     .custom-dropdown {
         left: 0 !important;
         right: auto !important;
@@ -166,11 +166,9 @@ body {
 }
 
 /* Mobile: align to the left (full-width or safe margin) */
-@media (max-width: 576px) {
+@media (max-width: 995px) {
     .dropdown-menu[data-bs-popper] {
         left: 0 !important;
         right: auto !important;
-        width: 90vw;
-        border-radius: 0;
     }
 }
