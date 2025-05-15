@@ -260,8 +260,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_note'])) {
     $title = $_POST['noteTitle'];
     $content = $_POST['noteContent'];
     $visibility = $_POST['visibility'];
-    
-    // Optional: handle file uploads
 
     $controller = new NoteController();
     $controller->updateNote($noteId, $title, $content, $visibility);
