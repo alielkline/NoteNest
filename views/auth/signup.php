@@ -17,6 +17,8 @@ require_once __DIR__ .'/../../config/init.php';
     <title>NoteNest - Create Account</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="../../public/assets/css/main.css">
     <link rel="stylesheet" href="../../public/assets/css/signup.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 </head>
@@ -59,6 +61,11 @@ require_once __DIR__ .'/../../config/init.php';
                     <label for="confirmPassword">Confirm Password</label>
                     <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="•••••••" required>
                     <div id="passwordError" class="password-error">Passwords don't match</div>
+                </div>
+
+                <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                <label class="form-check-label mt-3" for="remember">Remember Me</label>
                 </div>
                 
                 <div class="divider"></div>

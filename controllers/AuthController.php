@@ -44,6 +44,27 @@ class AuthController {
                 $_SESSION['email'] = $user['email'];
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['profile_image'] = $user['profile_image'];
+                
+                // after successful login check
+                if (isset($_POST['remember'])) {
+                    // Generate a secure random token
+                    $token = bin2hex(random_bytes(32)); // 64 chars
+                    
+                    // Set token expiry (e.g., 30 days from now)
+                    $expiry = date('Y-m-d H:i:s', time() + 30 * 24 * 60 * 60);
+                    
+                    // Save token and expiry to DB for the user
+                    $this->userModel->updateRememberToken($user['id'], $token, $expiry);
+                    
+                    // Set cookie with token, expires in 30 days, HttpOnly, Secure if HTTPS
+                    setcookie('remember_token', $token, time() + 30*24*60*60, "/", "", false, true);
+                } else {
+                    // Clear any existing token in DB and cookie
+                    $this->userModel->updateRememberToken($user['id'], null, null);
+                    if (isset($_COOKIE['remember_token'])) {
+                        setcookie('remember_token', '', time() - 3600, "/");
+                    }
+                }
 
                 // Redirect to dashboard
                 header("Location: ../views/main/dashboard.php");
@@ -61,6 +82,11 @@ class AuthController {
         // Start session if not already started
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
+        }
+
+        if (isset($_COOKIE['remember_token'])) {
+            $this->userModel->updateRememberToken($_SESSION['user_id'], null, null);
+            setcookie('remember_token', '', time() - 3600, "/");
         }
 
         // Clear session data and destroy session
@@ -122,9 +148,25 @@ class AuthController {
             
             // Attempt to create the user in the database
             if ($this->userModel->create($username, $email, $hashedPassword)) {
-                $_SESSION['signup_success'] = "Registration successful!";
-                header("Location: ../views/auth/login.php");
-            } else {
+            // ✅ Auto-login after successful signup
+            $user = $this->userModel->findByEmail($email);
+
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['email'] = $user['email'];
+            $_SESSION['username'] = $user['username'];
+            $_SESSION['profile_image'] = $user['profile_image'];
+
+            // ✅ Optional: Remember me token (if checkbox was added on signup form)
+            if (isset($_POST['remember'])) {
+                $token = bin2hex(random_bytes(32));
+                $expiry = date('Y-m-d H:i:s', time() + 30 * 24 * 60 * 60); // 30 days
+                $this->userModel->updateRememberToken($user['id'], $token, $expiry);
+                setcookie('remember_token', $token, time() + 30 * 24 * 60 * 60, "/", "", false, true);
+            }
+
+            header("Location: ../views/main/dashboard.php");
+            exit;
+        } else {
                 $_SESSION['signup_errors'] = ["There was an error with registration!"];
                 header("Location: ../views/auth/signup.php");
             }

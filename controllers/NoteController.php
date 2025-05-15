@@ -104,11 +104,11 @@ class NoteController {
             header("Location: ../views/auth/login.php");
             exit();
         }
-    
+        
         $user_id = $_SESSION['user_id'];
-    
+        $classroom_id = filter_input(INPUT_GET, 'classroom_id', FILTER_SANITIZE_NUMBER_INT);
+        
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $note_id = $_POST['note_id'] ?? null;
     
             if (!$note_id) {
                 $_SESSION['error'] = "Missing note ID.";
@@ -117,7 +117,7 @@ class NoteController {
             }
     
             $note = $this->noteModel->getNoteWithDetails($note_id);
-    
+        
             if (!$note) {
                 $_SESSION['error'] = "Note not found.";
                 header("Location: ../views/pages/notes.php");
@@ -131,7 +131,24 @@ class NoteController {
                 exit();
             }
             
-            $deleted = $this->noteModel->deleteNote($note_id);
+            if($note['uploader_user_id'] === $user_id){
+                $subject_id = $note['subject_id'];
+                $attachmentPath = $note['attachment'];
+                $file = '../public/' . $attachmentPath;
+
+                $deleted = $this->noteModel->deleteNote($note_id, $subject_id);
+
+                if (file_exists($file)) {
+                    unlink($file);
+                }
+
+
+            }
+            else{
+                $_SESSION['error'] = "Invalid request!";
+                header("Location: ../views/main/dashboard.php");
+                exit();
+            }
     
             $_SESSION[$deleted ? 'success' : 'error'] = $deleted ? "Note deleted successfully." : "Failed to delete note.";
             header("Location: ../views/main/dashboard.php");
@@ -194,20 +211,6 @@ class NoteController {
         $result = $this->noteModel->toggleLike($user_id, $note_id);
         echo json_encode(['success' => true, 'likes' => $result]);
     }
-    
-    // Toggles bookmark for a note via AJAX
-    public function toggleBookmark($note_id) {
-        $user_id = $_SESSION['user_id'] ?? null;
-        $note_id = filter_var($note_id, FILTER_SANITIZE_NUMBER_INT);
-
-        if (!$user_id || !$note_id) {
-            echo json_encode(['success' => false]);
-            return;
-        }
-    
-        $result = $this->noteModel->toggleBookmark($user_id, $note_id);
-        echo json_encode(['success' => true]);
-    }
 
     // Loads a single note and related data
     public function loadNote(){
@@ -221,13 +224,11 @@ class NoteController {
 
         $note = $this->noteModel->getNoteWithDetails($note_id);
         $userHasLiked = $this->noteModel->userHasLiked($user_id, $note_id);
-        $userHasBookmarked = $this->noteModel->userHasBookmarked($user_id, $note_id);
         $comments = $this->noteModel->getComments($note_id) ?? [];
 
         return [
             'note' => $note,
             'userHasLiked' => $userHasLiked,
-            'userHasBookmarked' => $userHasBookmarked,
             'comments' => $comments
         ];
     }
@@ -327,11 +328,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_note'])) {
     if ($_POST['action'] === 'toggleLike') {
         $note_id = filter_input(INPUT_POST, 'note_id', FILTER_SANITIZE_NUMBER_INT);
         $noteController->toggleLike($note_id);
-    }
-
-    if ($_POST['action'] === 'toggleBookmark') {
-        $note_id = filter_input(INPUT_POST, 'note_id', FILTER_SANITIZE_NUMBER_INT);
-        $noteController->toggleBookmark($note_id);
     }
 
     }

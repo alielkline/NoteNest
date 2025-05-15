@@ -1,5 +1,8 @@
 <?php
 require_once __DIR__ .'/../../config/init.php';
+
+$email = isset($_COOKIE['remember_email']) ? htmlspecialchars($_COOKIE['remember_email']) : '';
+
 ?>
 
 <!DOCTYPE html>
@@ -16,6 +19,7 @@ require_once __DIR__ .'/../../config/init.php';
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../public/assets/css/main.css">
     <link rel="stylesheet" href="../../public/assets/css/signup.css">
 
     <title>NoteNest - Log in</title>
@@ -43,7 +47,7 @@ require_once __DIR__ .'/../../config/init.php';
             
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
+                <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required value="<?php echo $email; ?>">
             </div>
             
             <div class="form-group">
@@ -55,6 +59,11 @@ require_once __DIR__ .'/../../config/init.php';
             
             <button type="submit" class="btn btn-primary">Log in</button>
             
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                <label class="form-check-label mt-3" for="remember">Remember Me</label>
+            </div>
+
             <p class="login-link">
                 Don't have an account? <a href="signup.php">Sign Up</a>
             </p>

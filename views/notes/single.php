@@ -4,13 +4,11 @@ $controller = new NoteController();
 $data = $controller->loadNote();
 $note = $data['note'];
 $userHasLiked = $data['userHasLiked'];
-$userHasBookmarked = $data['userHasBookmarked'];
 $comments = $data['comments'];
 
 $d = strtotime($note['upload_date']);
 $date = date("M d, Y, h:i A", $d);
 $heartIconClass = $userHasLiked ? "bi-heart-fill" : "bi-heart";
-$bookmarkIconClass = $userHasBookmarked ? "bi-bookmark-fill" : "bi-bookmark";
 
 if (!$note['profile_image']) {
     $note['profile_image'] = 'profile-default.jpg';
@@ -54,7 +52,7 @@ if (!empty($note['attachment'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="View and interact with notes on NoteNest. Read, like, bookmark, comment, and download attachments." />
+    <meta name="description" content="View and interact with notes on NoteNest. Read, like, comment, and download attachments." />
     <meta name="author" content="NoteNest Team" />
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -85,9 +83,6 @@ if (!empty($note['attachment'])) {
                                 <span id='like-btn' data-note-id='<?= $note['note_id'] ?>' onclick='toggleLike(this)' class='d-flex align-items-center px-2 like-button'>
                                     <i class='bi <?= $heartIconClass ?> mx-1 like-heart'></i>
                                     <span class='mx-1 note-likes' id='like-count'><?= htmlspecialchars($note['likes']) ?></span>
-                                </span>
-                                <span id='bookmark-btn' data-note-id='<?= $note['note_id'] ?>' onclick='toggleBookmark(this)' class='mx-2 p-2 bookmark-button'>
-                                    <i class='bi <?= $bookmarkIconClass ?> bookmark-icon d-flex align-items-center'></i>
                                 </span>
                             </div>
                         </div>
