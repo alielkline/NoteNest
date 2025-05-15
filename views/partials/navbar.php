@@ -16,7 +16,7 @@ if (isset($_SESSION['user_id'])) {
 
 
 <nav class="navbar navbar-expand-lg">
-  <div class="container">
+  <div class="container ">
     <!-- Logo + Name -->
     <a class="navbar-brand" href="../main/home.php">
       <img src="../../public/assets/images/logo.png" alt="NoteNest Logo">

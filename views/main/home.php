@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ .'/../../config/init.php';
+require_once __DIR__ . '/../../config/init.php';
 ?>
 
 <!DOCTYPE html>
@@ -44,7 +44,7 @@ require_once __DIR__ .'/../../config/init.php';
             </div>
         </div>
         <div class="row mt-4 mb-4"></div>
-        <div class="col mx-auto">
+        <div class="col-12 d-flex flex-column flex-md-row justify-content-center align-items-center">
             <?php if (!isset($_SESSION['user_id'])): ?>
                 <a href="../auth/login.php" class="btn-login p-3 px-5 mx-2 border text-decoration-none">Log in</a>
                 <a href="../auth/signup.php" class="btn-signup p-3 px-5 mx-2 text-decoration-none">Get Started For Free</a>
