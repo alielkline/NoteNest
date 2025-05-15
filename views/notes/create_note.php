@@ -79,7 +79,6 @@ $classroom_id = $_GET['classroom_id'];
                 <div class="card">
                     <div class="card-body">
                         <h2 class="card-title mb-3">Create a New Note</h2>
-                        <p class="text-muted mb-4">Add a new note to Web Development / JavaScript Fundamentals</p>
 
                         <form action="../../controllers/NoteController.php" method="POST" enctype="multipart/form-data">
                             <input type="hidden" name="subject_id" value="<?= htmlspecialchars($subject_id) ?>">
