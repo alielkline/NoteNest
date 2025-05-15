@@ -20,13 +20,20 @@ $classrooms = $data['classrooms'];
 
 <head>
     <meta charset="UTF-8">
-    <title>Classrooms</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Join or create classrooms to collaborate and share knowledge easily. Manage your learning groups efficiently.">
+    <meta name="keywords" content="classrooms, join classroom, create classroom, collaboration, study groups, online classroom">
+    <meta name="author" content="NoteNest">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="../../public/assets/css/main.css">
     <link rel="stylesheet" href="../../public/assets/css/navbar.css">
     <link rel="stylesheet" href="../../public/assets/css/classroom.css">
+
+    <title>Classrooms</title>
 </head>
 
 <body>
@@ -137,9 +144,4 @@ $classrooms = $data['classrooms'];
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../public/assets/js/error.js"></script>
-    <script src="../../public/assets/js/success.js"></script>
-</body>
-
-</html>
+<?php include '../partials/footer.php'; ?>

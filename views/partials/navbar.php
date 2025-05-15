@@ -12,6 +12,7 @@ if (isset($_SESSION['user_id'])) {
   $username = $user['username'];
 }
 
+$currentPage = basename($_SERVER['PHP_SELF']);
 ?>
 
 
@@ -30,9 +31,6 @@ if (isset($_SESSION['user_id'])) {
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <?php
-    $currentPage = basename($_SERVER['PHP_SELF']);
-    ?>
 
     <!-- Navbar links -->
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
@@ -54,7 +52,7 @@ if (isset($_SESSION['user_id'])) {
             <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
               <img src="<?php echo htmlspecialchars($profile_picture); ?>" alt="Profile Picture" width="36" height="36" class="rounded-circle shadow-sm">
             </a>
-            <ul class="dropdown-menu shadow custom-dropdown">
+            <ul class="dropdown-menu w-50 shadow custom-dropdown">
               <li class="px-3 py-2">
                 <strong class="d-block"><?php echo htmlspecialchars($username); ?></strong>
                 <small class="text-muted"><?php echo htmlspecialchars($email); ?></small>

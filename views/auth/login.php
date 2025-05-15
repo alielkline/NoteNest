@@ -6,10 +6,17 @@ require_once __DIR__ .'/../../config/init.php';
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO Meta Tags -->
+    <meta name="title" content="Log in - NoteNest">
+    <meta name="description" content="Access your NoteNest account to collaborate on notes, join classrooms, and enhance your learning experience.">
+    <meta name="keywords" content="NoteNest, login, student collaboration, notes, study groups">
+    <meta name="author" content="NoteNest Team">
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../public/assets/css/signup.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../public/assets/css/signup.css">
 
     <title>NoteNest - Log in</title>
 </head>

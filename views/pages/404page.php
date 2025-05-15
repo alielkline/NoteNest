@@ -19,6 +19,4 @@
     </div>
   </div>
 
-  <script src="../../public/assets/js/404page.js"></script>
-</body>
-</html>
+<?php include '../partials/footer.php'; ?>

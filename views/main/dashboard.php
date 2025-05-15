@@ -1,5 +1,5 @@
 <?php
-// app/views/main/dashboard.php
+// NoteNest/views/main/dashboard.php
 require_once __DIR__ . '/../../controllers/DashboardController.php';
 
 $controller = new DashboardController();
@@ -15,8 +15,15 @@ $user_id = $data['user_id'];
 
 <head>
     <meta charset="UTF-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Dashboard - Manage your classrooms and notes effectively on NoteNest.">
+    <meta name="keywords" content="NoteNest, dashboard, notes, classrooms, study, student tools">
+    <meta name="author" content="NoteNest Team">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="../../public/assets/css/main.css">
     <link rel="stylesheet" href="../../public/assets/css/navbar.css">
@@ -156,10 +163,6 @@ $user_id = $data['user_id'];
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../public/assets/js/dashboard.js"></script>
-    <script src="../../public/assets/js/error.js"></script>
-    <script src="../../public/assets/js/success.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const filterForm = document.querySelector('form');
@@ -204,6 +207,4 @@ $user_id = $data['user_id'];
         });
     </script>
 
-</body>
-
-</html>
+    <?php include '../partials/footer.php'; ?>
