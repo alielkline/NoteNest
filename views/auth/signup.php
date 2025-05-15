@@ -6,13 +6,19 @@ require_once __DIR__ .'/../../config/init.php';
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../public/assets/css/signup.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
+    <!-- SEO Meta Tags -->
+    <meta name="title" content="Create Account - NoteNest">
+    <meta name="description" content="Sign up to NoteNest and start organizing your notes, collaborating in classrooms, and streamlining your study sessions.">
+    <meta name="keywords" content="NoteNest, signup, student notes, create account, classroom collaboration">
+    <meta name="author" content="NoteNest Team">
 
     <title>NoteNest - Create Account</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../public/assets/css/signup.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 </head>
     <body>
         <?php if (isset($_SESSION['signup_errors'])): ?>

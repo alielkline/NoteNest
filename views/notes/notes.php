@@ -20,13 +20,15 @@ $classrooms = $data['classrooms'];  // Extract classrooms
 
 <head>
     <meta charset="UTF-8">
-    <title>Notes</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="description" content="Browse and discover notes from all classrooms you have joined. Find, filter, and explore notes by classroom, subject, and likes.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../public/assets/css/main.css">
     <link rel="stylesheet" href="../../public/assets/css/navbar.css">
     <link rel="stylesheet" href="../../public/assets/css/notes.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <title>Notes</title>
 </head>
 
 <body>
@@ -160,8 +162,6 @@ $classrooms = $data['classrooms'];  // Extract classrooms
         </div>
     </div>
 
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.getElementById('classroomSelect').addEventListener('change', function() {
             const classroomId = this.value;
@@ -211,8 +211,4 @@ $classrooms = $data['classrooms'];  // Extract classrooms
             });
         });
     </script>
-
-
-</body>
-
-</html>
+<?php include '../partials/footer.php'; ?>

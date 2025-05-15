@@ -7,8 +7,16 @@ require_once __DIR__ . '/../../config/init.php';
 
 <head>
     <meta charset="UTF-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="NoteNest is a collaborative note-taking platform where students can create classrooms, share rich notes, and learn together.">
+    <meta name="keywords" content="NoteNest, note-taking, collaborative learning, classroom notes, student collaboration">
+    <meta name="author" content="NoteNest Team">
+
+    <!-- Styles and Fonts -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../public/assets/css/main.css">
     <link rel="stylesheet" href="../../public/assets/css/navbar.css">
     <link rel="stylesheet" href="../../public/assets/css/home.css">
@@ -26,7 +34,7 @@ require_once __DIR__ . '/../../config/init.php';
         <div class="row mt-5 justify-content-center">
             <div class="col-auto">
                 <div class="d-inline-flex align-items-baseline">
-                    <img src="../../public/assets/images/logo.png" alt="NoteNest_Logo" id="homeHeaderBrand">
+                    <img src="../../public/assets/images/logo.png" alt="NoteNest Logo" id="homeHeaderBrand">
                     <h1 class="display-5 mb-0" id="homeHeaderTop">NoteNest</h1>
                 </div>
             </div>
@@ -100,7 +108,4 @@ require_once __DIR__ . '/../../config/init.php';
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-
-</html>
+    <?php include '../partials/footer.php'; ?>

@@ -17,14 +17,21 @@ $subject_id = $_GET['subject_id'];
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars($subject['subject_name']) ?> - Notes</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Explore notes for <?= htmlspecialchars($subject['subject_name']) ?> in <?= htmlspecialchars($classroom['classroom_name'] ?? 'your classroom') ?>. Read, bookmark, and interact with notes." />
+    <meta name="author" content="NoteNest Team" />
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="../../public/assets/css/main.css">
     <link rel="stylesheet" href="../../public/assets/css/navbar.css">
     <link rel="stylesheet" href="../../public/assets/css/subject_notes.css">
+
+    <title><?= htmlspecialchars($subject['subject_name']) ?> - Notes</title>
 </head>
 
 <body>
@@ -163,9 +170,4 @@ $subject_id = $_GET['subject_id'];
             </div>
         </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="../../public/assets/js/error.js"></script>
-        <script src="../../public/assets/js/success.js"></script>
-</body>
-
-</html>
+<?php include '../partials/footer.php'; ?>
