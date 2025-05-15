@@ -26,17 +26,6 @@ USE `notenestdb`;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `bookmarks`
---
-
-CREATE TABLE `bookmarks` (
-  `note_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `classrooms`
 --
 

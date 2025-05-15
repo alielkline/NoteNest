@@ -52,4 +52,20 @@ class User {
         $stmt = $this->pdo->prepare("UPDATE users SET profile_image = ? WHERE id = ?");
         return $stmt->execute([$filename, $id]);
     }
+
+    public function updateRememberToken($userId, $token, $expiry) {
+        $sql = "UPDATE users SET remember_token = :token, remember_token_expiry = :expiry WHERE id = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            ':token' => $token,
+            ':expiry' => $expiry,
+            ':id' => $userId
+        ]);
+    }
+    public function findByRememberToken($token) {
+        $sql = "SELECT * FROM users WHERE remember_token = :token LIMIT 1";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':token' => $token]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }

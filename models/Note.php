@@ -26,6 +26,7 @@ class Note
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+
     public function getNotesByUserId($user_id, $classroom_filter = null, $sort_order = 'DESC')
     {
         $query = "SELECT cn.* FROM classroom_notes cn
@@ -105,7 +106,10 @@ class Note
         ]);
     }
 
-    public function deleteNote($note_id) {
+    public function deleteNote($note_id, $subject_id) {
+        $stmt = $this->pdo->prepare("UPDATE classroom_subjects SET notes = notes - 1 WHERE subject_id = ?");
+        $stmt->execute([$subject_id]);
+
         $stmt = $this->pdo->prepare("DELETE FROM classroom_notes WHERE note_id = ?");
         return $stmt->execute([$note_id]);
     }
@@ -118,6 +122,7 @@ class Note
     if ($attachment) {
         $query .= ", attachment = ?";
     }
+
 
     
     $query .= " WHERE note_id = ?";
@@ -187,20 +192,6 @@ class Note
         return $countStmt->fetchColumn();
     }
 
-    public function toggleBookmark($user_id, $note_id)
-    {
-        $stmt = $this->pdo->prepare("SELECT * FROM bookmarks WHERE user_id = ? AND note_id = ?");
-        $stmt->execute([$user_id, $note_id]);
-
-        if ($stmt->rowCount() > 0) {
-            $this->pdo->prepare("DELETE FROM bookmarks WHERE user_id = ? AND note_id = ?")->execute([$user_id, $note_id]);
-        } else {
-            $this->pdo->prepare("INSERT INTO bookmarks (user_id, note_id) VALUES (?, ?)")->execute([$user_id, $note_id]);
-        }
-
-        return true;
-    }
-
     public function getComments($note_id)
     {
         $stmt = $this->pdo->prepare("SELECT c.*, username, profile_image
@@ -219,12 +210,6 @@ class Note
         return $stmt->fetch() ? true : false;
     }
 
-    public function userHasBookmarked($user_id, $note_id)
-    {
-        $stmt = $this->pdo->prepare("SELECT 1 FROM bookmarks WHERE user_id = ? AND note_id = ?");
-        $stmt->execute([$user_id, $note_id]);
-        $userHasBookmarked = $stmt->fetch() ? true : false;
-    }
 
     public function addComment($note_id, $user_id, $comment_content)
     {
