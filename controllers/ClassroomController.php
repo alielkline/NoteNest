@@ -100,41 +100,38 @@ class ClassroomController {
     }
 
     public function joinClassroomWithCode() {
-        // Redirect if user is not logged in
-        if (!isset($_SESSION['user_id'])) {
-            header("Location: ../views/auth/login.php");
-            exit();
-        }
-
-        $user_id = $_SESSION['user_id'];
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Sanitize and validate invite code
-            $invite_code = $this->sanitize($_POST['invite_code'] ?? '');
-
-            // Get the classroom with the invite code
-            $classroom = $this->classroomModel->getClassroomByInviteCode($invite_code);
-
-            if ($classroom) {
-                // Prevent duplicate joining
-                if (!$this->classroomModel->isUserInClassroom($user_id, $classroom['classroom_id'])) {
-                    $this->classroomModel->addMember($user_id, $classroom['classroom_id']);
-
-                    $_SESSION['success'] = 'Joined classroom successfully';
-                    header("Location: ../views/pages/classrooms.php");
-                    exit();
-                } else {
-                    $_SESSION['error'] = 'Already in this classroom';
-                    header("Location: ../views/pages/classrooms.php");
-                    exit();
-                }
-            } else {
-                $_SESSION['error'] = 'Invalid invite code';
-                header("Location: ../views/pages/classrooms.php");
-                exit();
-            }
-        }
+    if (!isset($_SESSION['user_id'])) {
+        header("Location: ../views/auth/login.php");
+        exit();
     }
+
+    $user_id = $_SESSION['user_id'];
+    $invite_code = $this->sanitize($_POST['invite_code'] ?? $_GET['invite_code'] ?? '');
+
+    if (!$invite_code) {
+        $_SESSION['error'] = 'No invite code provided.';
+        header("Location: ../views/pages/classrooms.php");
+        exit();
+    }
+
+    $classroom = $this->classroomModel->getClassroomByInviteCode($invite_code);
+
+    if ($classroom) {
+        if (!$this->classroomModel->isUserInClassroom($user_id, $classroom['classroom_id'])) {
+            $this->classroomModel->addMember($user_id, $classroom['classroom_id']);
+            $_SESSION['success'] = 'Joined classroom successfully';
+            header("Location: ../views/pages/subjects.php?classroom_id={$classroom['classroom_id']}");
+        } else {
+            $_SESSION['error'] = 'Already in this classroom';
+            header("Location: ../views/pages/classrooms.php");
+        }
+    } else {
+        $_SESSION['error'] = 'Invalid invite code';
+        header("Location: ../views/pages/classrooms.php");
+    }
+
+    exit();
+}
 
     public function joinClassroom() {
         // Redirect if user is not logged in
@@ -351,3 +348,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
             exit();
     }
 }
+elseif ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
+    $controller = new ClassroomController();
+
+    switch ($_GET['action']) {
+        case 'Codejoin':
+            $controller->joinClassroomWithCode();
+    }
+}
+

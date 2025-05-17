@@ -139,6 +139,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $subjectController->deleteSubject();
     }
 } else {
+    if(isset($_GET['join'])) {
+       
+    }
     $classroom_id = $_GET['classroom_id'] ?? null;
     $subjectController->renderSubjectsPage($classroom_id);
 }
