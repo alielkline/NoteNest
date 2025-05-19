@@ -74,7 +74,7 @@ class NoteController {
     
         // Handle file upload
         if (isset($_FILES['attachment']) && $_FILES['attachment']['error'] === UPLOAD_ERR_OK) {
-            $maxFileSize = 50 * 1024 * 1024; // 50MB
+            $maxFileSize = 30 * 1024 * 1024; // 30MB
             if ($_FILES['attachment']['size'] > $maxFileSize) {
                 $_SESSION['error'] = 'File size exceeds the 5MB limit.';
                 header("Location: ../views/notes/create_note.php?classroom_id=$classroom_id&subject_id=$subject_id");
@@ -92,15 +92,12 @@ class NoteController {
             $newFileName = uniqid('note_', true) . '.' . $fileExt;
             $destPath = $uploadDir . '/' . $newFileName;
 
-            
-
             $allowedExtensions = ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png', 'gif'];
             if (!in_array($fileExt, $allowedExtensions)) {
                 $_SESSION['error'] = 'Invalid file type. Only PDF, DOC/DOCX, and images are allowed.';
                 header("Location: ../views/notes/create_note.php?classroom_id=$classroom_id&subject_id=$subject_id");
                 exit();
     }
-    
             if (move_uploaded_file($fileTmpPath, $destPath)) {
                 $attachmentPath = 'uploads/attachments/' . $newFileName;
             }
@@ -283,7 +280,7 @@ class NoteController {
             $newFileName = uniqid('note_', true) . '.' . $fileExt;
             $destPath = $uploadDir . '/' . $newFileName;
 
-            $maxFileSize = 50 * 1024 * 1024; // 50MB
+            $maxFileSize = 30 * 1024 * 1024; // 30MB
             if ($_FILES['attachment']['size'] > $maxFileSize) {
                 $_SESSION['error'] = 'File size exceeds the 5MB limit.';
                 header("Location: ../controllers/NoteController.php?action=create&classroom_id=$classroom_id&subject_id=$subject_id");
