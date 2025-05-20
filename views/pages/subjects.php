@@ -182,7 +182,7 @@ $classroom_id = $_GET['classroom_id'];
                             <div class="mb-3">
                                 <label for="inviteCode" class="form-label">Invite Code:</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="inviteCode" value="<?= htmlspecialchars($classroom_invCode); ?>" readonly>
+                                    <input type="text" class="form-control" id="inviteCode" value="localhost\NoteNest\controllers\ClassroomController.php?action=Codejoin&invite_code=<?= htmlspecialchars($classroom_invCode); ?>" readonly>
                                     <button class="btn btn-purple text-white" type="button" onclick="copyInviteCode()">Copy</button>
                                 </div>
                             </div>
