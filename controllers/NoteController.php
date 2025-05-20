@@ -74,6 +74,13 @@ class NoteController {
     
         // Handle file upload
         if (isset($_FILES['attachment']) && $_FILES['attachment']['error'] === UPLOAD_ERR_OK) {
+            $maxFileSize = 30 * 1024 * 1024; // 30MB
+            if ($_FILES['attachment']['size'] > $maxFileSize) {
+                $_SESSION['error'] = 'File size exceeds the 5MB limit.';
+                header("Location: ../views/notes/create_note.php?classroom_id=$classroom_id&subject_id=$subject_id");
+                exit();
+            }
+
             $uploadDir = __DIR__ . '/../public/uploads/attachments';
             if (!file_exists($uploadDir)) {
                 mkdir($uploadDir, 0777, true);
@@ -84,7 +91,13 @@ class NoteController {
             $fileExt = pathinfo($fileName, PATHINFO_EXTENSION);
             $newFileName = uniqid('note_', true) . '.' . $fileExt;
             $destPath = $uploadDir . '/' . $newFileName;
-    
+
+            $allowedExtensions = ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png', 'gif'];
+            if (!in_array($fileExt, $allowedExtensions)) {
+                $_SESSION['error'] = 'Invalid file type. Only PDF, DOC/DOCX, and images are allowed.';
+                header("Location: ../views/notes/create_note.php?classroom_id=$classroom_id&subject_id=$subject_id");
+                exit();
+    }
             if (move_uploaded_file($fileTmpPath, $destPath)) {
                 $attachmentPath = 'uploads/attachments/' . $newFileName;
             }
@@ -252,38 +265,50 @@ class NoteController {
 
     public function updateNote($noteId, $title, $content, $visibility) {
     
-    $attachmentPath = null;
-    
-    if (isset($_FILES['attachment']) && $_FILES['attachment']['error'] === UPLOAD_ERR_OK) {
+        $attachmentPath = null;
         
-        $uploadDir = __DIR__ . '/../public/uploads/attachments';
-        
-        if (!file_exists($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
+        if (isset($_FILES['attachment']) && $_FILES['attachment']['error'] === UPLOAD_ERR_OK) {
+            $uploadDir = __DIR__ . '/../public/uploads/attachments';
+            if (!file_exists($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
 
-        // Get file info
-        $fileTmpPath = $_FILES['attachment']['tmp_name'];
-        $fileName = basename($_FILES['attachment']['name']);
-        $fileExt = pathinfo($fileName, PATHINFO_EXTENSION);
-        $newFileName = uniqid('note_', true) . '.' . $fileExt;
-        $destPath = $uploadDir . '/' . $newFileName;
+            // Get file info
+            $fileTmpPath = $_FILES['attachment']['tmp_name'];
+            $fileName = basename($_FILES['attachment']['name']);
+            $fileExt = pathinfo($fileName, PATHINFO_EXTENSION);
+            $newFileName = uniqid('note_', true) . '.' . $fileExt;
+            $destPath = $uploadDir . '/' . $newFileName;
 
+            $maxFileSize = 30 * 1024 * 1024; // 30MB
+            if ($_FILES['attachment']['size'] > $maxFileSize) {
+                $_SESSION['error'] = 'File size exceeds the 5MB limit.';
+                header("Location: ../controllers/NoteController.php?action=create&classroom_id=$classroom_id&subject_id=$subject_id");
+                exit();
+            }
+
+            $allowedExtensions = ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png', 'gif'];
+            if (!in_array($fileExt, $allowedExtensions)) {
+                $_SESSION['error'] = 'Invalid file type. Only PDF, DOC/DOCX, and images are allowed.';
+                header("Location: ../controllers/NoteController.php?action=create&classroom_id=$classroom_id&subject_id=$subject_id");
+                exit();
+
+
+                if (move_uploaded_file($fileTmpPath, $destPath)) {
+                    $attachmentPath = 'uploads/attachments/' . $newFileName;  // Save the relative file path
+                }
+            }
         
-        if (move_uploaded_file($fileTmpPath, $destPath)) {
-            $attachmentPath = 'uploads/attachments/' . $newFileName;  // Save the relative file path
+        
+            $result = $this->noteModel->updateNote($noteId, $title, $content, $visibility, $attachmentPath);
+
+            if (!$result) {
+                $_SESSION['error'] = "Failed to update note.";
+            } else {
+                $_SESSION['success'] = "Note updated successfully.";
+            }
         }
     }
-    
-    
-    $result = $this->noteModel->updateNote($noteId, $title, $content, $visibility, $attachmentPath);
-
-    if (!$result) {
-        $_SESSION['error'] = "Failed to update note.";
-    } else {
-        $_SESSION['success'] = "Note updated successfully.";
-    }
-}
 }
 
 // Handle POST requests and route to the correct method
