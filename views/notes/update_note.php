@@ -13,7 +13,8 @@ $controller = new NoteController();
 $data = $controller->loadNote();
 $note = $data['note'];
 
-if (!$note) {
+
+if (!isset($note)) {
     die('Note not found or access denied.');
 }
 
@@ -43,25 +44,39 @@ if (!$note) {
     <link rel="stylesheet" href="../../public/assets/css/create_note.css">
 </head>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const fileInput = document.getElementById('attachment');
         const fileNameDisplay = document.getElementById('file-name');
         const uploadIcon = document.querySelector('.upload-icon');
         const uploadTitle = document.querySelector('.upload-title');
         const uploadSubtext = document.querySelector('.upload-subtext');
 
-        fileInput.addEventListener('change', function() {
+        const MAX_FILE_SIZE = 30 * 1024 * 1024; // 30MB in bytes
+
+        fileInput.addEventListener('change', function () {
             if (fileInput.files.length > 0) {
-                const fileName = fileInput.files[0].name;
+                const file = fileInput.files[0];
+
+                if (file.size > MAX_FILE_SIZE) {
+                    alert("The file size exceeds the 30MB limit.");
+                    fileInput.value = ""; // Clear the input
+                    fileNameDisplay.textContent = '';
+                    uploadIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-upload" viewBox="0 0 16 16">
+                        <path d="M.5 9.9a.5.5 0 0 1 .5.6v3a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3a.5.5 0 0 1 1 0v3a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-3a.5.5 0 0 1 .5-.6z"/>
+                        <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V10.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+                    </svg>`;
+                    uploadTitle.textContent = 'Upload Attachments';
+                    uploadSubtext.textContent = 'Click to browse files';
+                    return;
+                }
+
+                const fileName = file.name;
                 fileNameDisplay.textContent = `Selected: ${fileName}`;
                 uploadIcon.innerHTML = '<i class="bi bi-file-earmark-check" style="font-size: 1.5rem; color: green;"></i>';
                 uploadTitle.textContent = 'File Attached';
             } else {
                 fileNameDisplay.textContent = '';
-                uploadIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-upload" viewBox="0 0 16 16">
-                    <path d="M.5 9.9a.5.5 0 0 1 .5.6v3a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3a.5.5 0 0 1 1 0v3a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-3a.5.5 0 0 1 .5-.6z"/>
-                    <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V10.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
-                </svg>`;
+                uploadIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-upload" viewBox="0 0 16 16">...</svg>`;
                 uploadTitle.textContent = 'Upload Attachments';
                 uploadSubtext.textContent = 'Click to browse files';
             }
