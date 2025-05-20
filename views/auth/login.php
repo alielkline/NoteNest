@@ -1,8 +1,12 @@
 <?php
 require_once __DIR__ .'/../../config/init.php';
 
-$email = isset($_COOKIE['remember_email']) ? htmlspecialchars($_COOKIE['remember_email']) : '';
+if (isset($_SESSION['user_id'])) {
+    header("Location: ../main/home.php"); 
+    exit();
+}
 
+$email = isset($_COOKIE['remember_email']) ? htmlspecialchars($_COOKIE['remember_email']) : '';
 ?>
 
 <!DOCTYPE html>
