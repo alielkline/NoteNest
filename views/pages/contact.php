@@ -74,9 +74,6 @@
             </div>
         </div>
     </div>
-    <script src="../../public/assets/js/success.js"></script>
-    <script src="../../public/assets/js/error.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 <footer>
     <p>Contact us:</p>

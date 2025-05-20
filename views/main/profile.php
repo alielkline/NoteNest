@@ -54,6 +54,11 @@ $imagePath = !empty($user['profile_image'])
             Password changed successfully.
         </div>
         <?php unset($_SESSION['password_success']); ?>
+    <?php elseif (isset($_SESSION['success'])): ?>
+        <div class="alert success-message" id="success-message">
+            <?php echo htmlspecialchars($_SESSION['success']); ?>
+        </div>
+        <?php unset($_SESSION['success']); ?>
     <?php endif; ?>
 
     <div class="container py-5">
